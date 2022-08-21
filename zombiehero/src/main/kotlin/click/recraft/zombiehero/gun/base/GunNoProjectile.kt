@@ -15,7 +15,6 @@ import java.util.*
 open class GunNoProjectile(
     final override val material: Material,
     final override val data: Short,
-    final override val customModelData: Int,
     override val fireRate: Long,
     final override val name: String,
     override val knockBack: Int,
@@ -31,7 +30,8 @@ open class GunNoProjectile(
     override val walkingSpeed: Float = 0.2F,
     private val particle: Particle = Particle.ASH,
     // 一つ一つロードするか確認する｡
-    override val reloadOneBullet: Boolean = false
+    override val reloadOneBullet: Boolean = false,
+    override val customModelValue: Int
 ) : GunBase {
     override val fireRateHandle: HashMap<UUID, Long> = hashMapOf()
     override fun getItem(armo: Int, reloading: Boolean): ItemStack {
@@ -39,7 +39,7 @@ open class GunNoProjectile(
         return item(
             material,
             data = data,
-            customModelData = customModelData,
+            customModelData = customModelValue,
             displayName = "${nameColor}$name${ChatColor.WHITE} $flag [$armo]"
         )
     }
@@ -74,11 +74,17 @@ open class GunNoProjectile(
         loc.apply { x += 0.5; y += 0.5; z+=0.5 }
         loc.world!!.spawnParticle(Particle.BLOCK_CRACK, loc, 100, block.type.createBlockData())
     }
+
+    override fun isItem(itemStack: ItemStack?): GunBase? {
+        val customItem = super.isItem(itemStack) ?: return null
+        return customItem as GunBase
+    }
+
     private fun getGunStats(player: Player): GunStats? {
         val item = player.inventory.itemInMainHand
         var gun: GunBase? = null
         ZombieHero.plugin.guns.forEach {
-            if (it.isGun(item) != null) {
+            if (it.isItem(item) != null) {
                 gun = it
             }
         }

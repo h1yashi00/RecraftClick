@@ -13,7 +13,7 @@ import java.util.*
 open class GunProjectile (
     final override val material: Material,
     final override val data: Short,
-    final override val customModelData: Int,
+    final override val customModelValue: Int,
     private val projectile: Class<Snowball>,
     private val bulletSpeed: Double,
     override val fireRate: Long,
@@ -32,7 +32,7 @@ open class GunProjectile (
 ) : GunBase {
     override val fireRateHandle: HashMap<UUID, Long> = hashMapOf()
 
-    private val item = item(material, data = data, customModelData = customModelData)
+    private val item = item(material, data = data, customModelData = customModelValue)
 
     override fun gunAction(player: Player) {
         val projectileEntity = player.launchProjectile(projectile)
@@ -54,4 +54,7 @@ open class GunProjectile (
     override fun decArmo(gunStats: GunStats, itemInMainHand: ItemStack): ItemStack? {
         TODO("Not yet implemented")
     }
+
+    override val reloadOneBullet: Boolean
+        get() = TODO("Not yet implemented")
 }

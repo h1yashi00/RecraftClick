@@ -14,7 +14,7 @@ import java.util.*
 open class GunScope(
     material: Material,
     data: Short,
-    customModelData: Int,
+    customModelValue: Int,
     fireRate: Long,
     name: String,
     knockBack: Int,
@@ -30,7 +30,6 @@ open class GunScope(
 ): GunNoProjectile (
     material,
     data,
-    customModelData,
     fireRate,
     name,
     knockBack,
@@ -38,6 +37,7 @@ open class GunScope(
     maxArmo,
     nameColor,
     reloadTime,
+    customModelValue = customModelValue,
     spread = spread,
     recoilZ = recoilZ,
     recoilY = recoilY,
@@ -65,7 +65,7 @@ open class GunScope(
                     return@forEach
                 }
                 val currentItemCustomModelData = meta.customModelData
-                if (currentItemCustomModelData != customModelData) {
+                if (currentItemCustomModelData != customModelValue) {
                     player.removePotionEffect(magnification.potionEffect.type)
                     saved.remove(uuid)
                     return@forEach
@@ -74,7 +74,7 @@ open class GunScope(
                 player.addPotionEffect(magnification.potionEffect)
             }
             Bukkit.getOnlinePlayers().forEach {player ->
-                val gun = isGun(player.inventory.itemInMainHand) ?: return@forEach
+                val gun = isItem(player.inventory.itemInMainHand) ?: return@forEach
                 if (gun !is GunScope) return@forEach
                 val loc = player.location
                 loc.pitch = 0F

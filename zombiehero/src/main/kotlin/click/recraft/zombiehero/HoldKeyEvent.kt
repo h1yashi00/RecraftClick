@@ -39,7 +39,7 @@ class HoldKeyEvent: Listener {
                 }
                 // 処理をすることろ
                 ZombieHero.plugin.guns.forEach { gun ->
-                    if (gun.isGun(item) != null) {
+                    if (gun.isItem(item) != null) {
                         gun.shoot(player)
                     }
                 }
@@ -51,7 +51,7 @@ class HoldKeyEvent: Listener {
     @EventHandler
     fun gunReloadQDrop(event: PlayerDropItemEvent) {
         ZombieHero.plugin.guns.forEach {
-            if (it.isGun(event.itemDrop.itemStack) != null) {
+            if (it.isItem(event.itemDrop.itemStack) != null) {
                 event.isCancelled = true
                 val item = it.getItem(0, false)
                 event.itemDrop.itemStack = item
@@ -71,7 +71,7 @@ class HoldKeyEvent: Listener {
         val item = player.inventory.itemInMainHand
         if (event.action == Action.LEFT_CLICK_BLOCK || event.action == Action.LEFT_CLICK_AIR) {
             ZombieHero.plugin.guns.forEach { gun ->
-                if (gun.isGun(item) != null) {
+                if (gun.isItem(item) != null) {
                     if (gun is RightClickAction) {
                         gun.rightClickAction(player)
                     }

@@ -5,7 +5,7 @@ import org.bukkit.Material
 
 class Saiga: ShotGun(
     Material.PINK_DYE,
-    customModelData = 25543,
+    customModelValue = 25543,
     fireRate = 200,
     name = "Saiga",
     knockBack = 3,

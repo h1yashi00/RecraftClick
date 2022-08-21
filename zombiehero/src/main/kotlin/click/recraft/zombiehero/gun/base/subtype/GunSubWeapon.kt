@@ -11,7 +11,7 @@ import org.bukkit.inventory.ItemStack
 class GunSubWeapon(
     material: Material,
     data: Short,
-    customModelData: Int,
+    customModelValue: Int,
     fireRate: Long,
     name: String,
     knockBack: Int,
@@ -27,7 +27,6 @@ class GunSubWeapon(
 ): GunNoProjectile(
     material,
     data,
-    customModelData,
     fireRate,
     name,
     knockBack,
@@ -35,6 +34,7 @@ class GunSubWeapon(
     maxArmo,
     nameColor,
     reloadTime,
+    customModelValue = customModelValue,
     spread = spread,
     recoilY = recoilY,
     recoilZ = recoilZ,

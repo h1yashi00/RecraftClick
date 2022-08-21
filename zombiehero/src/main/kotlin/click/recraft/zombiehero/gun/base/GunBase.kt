@@ -1,13 +1,13 @@
 package click.recraft.zombiehero.gun.base
 
+import click.recraft.zombiehero.CustomItem
 import org.bukkit.ChatColor
-import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import java.util.*
 
 
-interface GunBase {
+interface GunBase: CustomItem {
     // 発射する際に､レートをチェックして､レートよりも低い場合は何もせずに
     // 高かった場合は撃てるのでgunActionで処理する
     fun shoot(player: Player) {
@@ -17,14 +17,10 @@ interface GunBase {
             fireRateHandle[player.uniqueId] = System.currentTimeMillis()
         }
     }
-    fun isGun(itemStack: ItemStack?): GunBase? {
-        if (itemStack == null) return null
-        val meta = if (!itemStack.hasItemMeta()) return null else {itemStack.itemMeta} ?: return null
-        val data = if (!meta.hasCustomModelData()) return null else meta.customModelData
-        if (customModelData != data) {
-            return null
-        }
-        return this
+
+    override fun isItem(itemStack: ItemStack?): GunBase? {
+        val customItem = super.isItem(itemStack) ?: return null
+        return customItem as GunBase
     }
     fun getCurrentGunStats(itemStack: ItemStack): GunStats {
         val meta = if (itemStack.hasItemMeta()) itemStack.itemMeta ?: return GunStats(this,0,0,false) else return GunStats(this,0,0,true)
@@ -42,9 +38,7 @@ interface GunBase {
     fun decArmo(gunStats: GunStats, itemInMainHand: ItemStack): ItemStack?
 
     val walkingSpeed: Float
-    val material: Material
     val data: Short
-    val customModelData: Int
     val name: String
     val maxArmo: Int
     val nameColor: ChatColor

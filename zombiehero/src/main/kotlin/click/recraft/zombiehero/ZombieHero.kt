@@ -43,7 +43,7 @@ class ZombieHero: KotlinPlugin(), Listener {
         val item = player.inventory.itemInMainHand
         var walkSpeed = 0.2F
         guns.forEach {
-            val gun = it.isGun(item) ?: return@forEach
+            val gun = it.isItem(item) ?: return@forEach
             walkSpeed = gun.walkingSpeed
         }
         swords.forEach {

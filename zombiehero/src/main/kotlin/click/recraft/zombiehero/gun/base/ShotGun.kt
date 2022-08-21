@@ -6,7 +6,7 @@ import org.bukkit.Material
 open class ShotGun (
     material: Material,
     data: Short = 0,
-    customModelData: Int,
+    customModelValue: Int,
     fireRate: Long,
     name: String,
     knockBack: Int,
@@ -22,7 +22,6 @@ open class ShotGun (
 ) : GunNoProjectile (
     material,
     data,
-    customModelData,
     fireRate,
     name,
     knockBack,
@@ -31,6 +30,7 @@ open class ShotGun (
     nameColor,
     reloadTime,
     spread,
+    customModelValue = customModelValue,
     recoilY = recoilY,
     recoilZ = recoilZ,
     bulletRange = bulletRange,
