@@ -1,5 +1,6 @@
 package click.recraft.zombiehero.gun.base.scope
 
+import click.recraft.zombiehero.Util
 import click.recraft.zombiehero.ZombieHero
 import click.recraft.zombiehero.gun.base.GunNoProjectile
 import click.recraft.zombiehero.gun.base.RightClickAction
@@ -112,7 +113,6 @@ open class GunScope(
     override fun rightClickAction(player: Player) {
         player.addPotionEffect(magnification.potionEffect)
         if (saved.containsKey(player.uniqueId)) {
-            val data = saved[player.uniqueId]!!
             player.removePotionEffect(magnification.potionEffect.type)
             saved.remove(player.uniqueId)
         }
