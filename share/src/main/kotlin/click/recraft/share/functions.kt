@@ -1,0 +1,154 @@
+package click.recraft.share
+
+import org.bukkit.Bukkit
+import org.bukkit.ChatColor
+import org.bukkit.Material
+import org.bukkit.entity.Player
+import org.bukkit.event.EventHandler
+import org.bukkit.event.Listener
+import org.bukkit.event.inventory.InventoryClickEvent
+import org.bukkit.inventory.Inventory
+import org.bukkit.inventory.ItemStack
+import org.bukkit.plugin.java.JavaPlugin
+import javax.annotation.Nullable
+
+fun item(material: Material, amount: Int = 1, data: Short = 0, displayName: String = "", @Nullable vararg lore: String, customModelData: Int = 0): ItemStack {
+    val item = ItemStack(material, amount, data)
+    val meta = item.itemMeta!!
+    if (customModelData != 0) {
+        meta.setCustomModelData(customModelData)
+    }
+    if (displayName != "") {
+        meta.setDisplayName(displayName)
+    }
+    if (lore.isNotEmpty()) {
+        meta.lore = lore.asList()
+    }
+    item.itemMeta = meta
+    return item
+}
+class ShowingDSL(private val itemStack: ItemStack) {
+    lateinit var player: Player
+    private val lore = arrayListOf<String>()
+    fun setUnlock(boolean: Boolean) {
+        val addLore = if (boolean) "${ChatColor.GREEN}アンロック" else "${ChatColor.RED}ロック"
+        lore.add(addLore)
+    }
+    fun getITem(): ItemStack {
+        val item = itemStack.clone()
+        val meta = item.itemMeta
+        meta!!.lore = lore
+        item.itemMeta = meta
+        return item
+    }
+}
+class OnClickDSL {
+    lateinit var player: Player
+}
+
+class SlotDSL(val menuDSL: MenuDSL, val index: Int, val item: ItemStack) {
+}
+
+fun SlotDSL.onClick(function: OnClickDSL.()-> Unit) {
+    menuDSL.onClick[index] = function
+}
+
+fun SlotDSL.onRender(function: ShowingDSL.()->Unit) {
+    menuDSL.onRender[index] = function
+}
+
+class MenuDSL(
+    private val title: String,
+    private val isCancel: Boolean,
+    private val plugin: JavaPlugin
+) {
+    val onRender   = hashMapOf<Int, ShowingDSL.()->Unit>()
+    val onClick = hashMapOf<Int, OnClickDSL.()->Unit>()
+    val slotDSLs   = hashMapOf<Int, SlotDSL>()
+
+    var maxSize = 0
+    fun load() {
+        val listener = object: Listener {
+            @EventHandler
+            fun click(event: InventoryClickEvent) {
+                if (event.view.title != title) return
+                event.isCancelled = isCancel
+                event.currentItem ?: return
+                val player = event.whoClicked as Player
+                val currentSlot = event.slot
+                val action = onClick[currentSlot] ?: return
+                val onclick = OnClickDSL()
+                onclick.player = player
+                action.invoke(onclick)
+            }
+        }
+        val pm = plugin.server.pluginManager
+        pm.registerEvents(listener, plugin)
+    }
+    fun createInv(player: Player): Inventory {
+        val size = when {
+            maxSize <= 9 -> 9
+            maxSize <= 9 * 2 -> 9 * 2
+            maxSize <= 9 * 3 -> 9 * 3
+            maxSize <= 9 * 4 -> 9 * 4
+            maxSize <= 9 * 5 -> 9 * 5
+            maxSize <= 9 * 6 -> 9 * 6
+            else -> {9}
+        }
+        return Bukkit.createInventory(null, size, title)
+            .apply {
+                slotDSLs.forEach { (index, slotDsl) ->
+                    if (!onRender.contains(index)) {
+                        setItem(index, slotDsl.item)
+                        return@forEach
+                    }
+                    val renderFunc = onRender[slotDsl.index]!!
+                    val showingDSL = ShowingDSL(slotDsl.item)
+                    showingDSL.player = player
+                    renderFunc.invoke(showingDSL)
+                    setItem(index, showingDSL.getITem())
+                }
+            }
+    }
+}
+
+// クリックした時のイベントを作成
+fun MenuDSL.slot(
+    line: Int,
+    slot: Int,
+    item: ItemStack,
+    action: SlotDSL.() -> Unit
+) {
+    val index = (line * 9) + slot
+    val slotDSL = SlotDSL(this, index, item)
+    slotDSLs[index] = slotDSL
+    if (slot >= index) {
+        maxSize = index
+    }
+    action.invoke(slotDSL)
+}
+
+fun KotlinPlugin.menu(
+    title: String,
+    cancelOnClick: Boolean,
+    action: MenuDSL.() -> Unit
+): MenuDSL {
+    val menuDsl = MenuDSL(title, cancelOnClick, this)
+    menuDsls.add(menuDsl)
+    action.invoke(menuDsl)
+    return menuDsl
+}
+
+// Menuを作成して､slotを大量に設定して､設定しているEventを実行する
+open class KotlinPlugin: JavaPlugin() {
+    val menuDsls = arrayListOf<MenuDSL>()
+    val interceptItemsDSLs = arrayListOf<InteractItemDSL>()
+    override fun onEnable() {
+        menuDsls.forEach {
+            it.load()
+        }
+        interceptItemsDSLs.forEach {
+            it.load()
+        }
+    }
+}

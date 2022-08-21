@@ -1,0 +1,32 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.6.21'
+}
+repositories {
+    mavenCentral()
+}
+
+subprojects {
+    apply plugin: 'kotlin'
+
+    group 'org.example'
+    version '1.0-SNAPSHOT'
+    repositories {
+        maven {
+            name = 'spigot-repo'
+            url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
+        }
+        mavenCentral()
+    }
+    dependencies {
+        implementation "org.jetbrains.kotlin:kotlin-stdlib"
+        implementation "org.spigotmc:spigot-api:1.19-R0.1-SNAPSHOT" // mavenLocalを使うので.m2.org.spigotがあることを確認する
+    }
+    jar {
+        from { configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+    }
+}
+project("zombiehero") {
+    dependencies {
+        implementation project(":share")
+    }
+}

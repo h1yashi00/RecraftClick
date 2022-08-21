@@ -1,0 +1,6 @@
+# Project exclude paths
+/.gradle/
+/share/build/
+/share/build/classes/kotlin/main/
+/zombiehero/build/
+/zombiehero/build/classes/kotlin/main/

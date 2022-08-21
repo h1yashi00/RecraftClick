@@ -1,0 +1,3 @@
+rootProject.name = 'RecraftClick'
+
+include 'bungee', 'lobby', 'share', 'zombiehero'

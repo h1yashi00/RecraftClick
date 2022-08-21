@@ -1,0 +1,4 @@
+name: ZombieHero
+main: click.recraft.zombiehero.ZombieHero
+version: 0.0.1
+api-version: 1.19
