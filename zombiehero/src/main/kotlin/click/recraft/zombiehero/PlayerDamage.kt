@@ -1,6 +1,6 @@
 package click.recraft.zombiehero
 
-import click.recraft.zombiehero.ZombieHeroData.damagePluginHealth
+import click.recraft.zombiehero.player.HealthManager.damagePluginHealth
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Location

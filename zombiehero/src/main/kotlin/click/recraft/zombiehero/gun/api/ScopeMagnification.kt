@@ -1,4 +1,4 @@
-package click.recraft.zombiehero.gun.base.scope
+package click.recraft.zombiehero.gun.api
 
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
