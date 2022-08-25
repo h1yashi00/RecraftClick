@@ -11,6 +11,8 @@ class MultiShot (
     override val spread: Double,
     override val recoilY: Float,
     override val recoilZ: Float,
+    override val knockBackManager: KnockBackManager,
+    override val knockBackAccumulateTime: Tick,
     override val particle: Particle = Particle.ASH,
 ) : Shot {
     override var lastShot: Long = System.currentTimeMillis()

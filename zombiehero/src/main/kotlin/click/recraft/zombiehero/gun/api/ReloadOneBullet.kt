@@ -31,13 +31,15 @@ class ReloadOneBullet (
             gunStats.reloading = false
             gunStats.totalArmo += -1
             gunStats.currentArmo += 1
-            player.playSound(player.location, Sound.BLOCK_WOODEN_DOOR_OPEN, 1f,2f)
             player.sendExperienceChange(1F, gunStats.totalArmo)
             val reloadItem = player.inventory.itemInMainHand.clone()
                 .apply {
                     amount = gunStats.currentArmo
                 }
             player.inventory.setItemInMainHand(reloadItem)
+            if (gunStats.currentArmo == armo) {
+                player.playSound(player.location, Sound.BLOCK_WOODEN_DOOR_CLOSE,1f, 2f)
+            }
             reload(player, gunStats)
         }
         Bukkit.getScheduler().runTaskLater(ZombieHero.plugin, task, reloadTime.tick.toLong())

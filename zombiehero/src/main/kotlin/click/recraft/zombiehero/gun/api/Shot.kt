@@ -15,6 +15,8 @@ import org.bukkit.util.Vector
 import java.util.*
 
 interface Shot {
+    val knockBackManager: KnockBackManager
+    val knockBackAccumulateTime: Tick
     private fun bulletHitBlockEffect(block: Block) {
         val loc = block.location.clone()
         loc.apply { x += 0.5; y += 0.5; z+=0.5 }
@@ -71,8 +73,8 @@ interface Shot {
                 if (entity is Zombie) {
                     entity.target = player
                 }
-                val dir = player.location.direction.multiply(0.5)
-                entity.velocity = Vector(dir.x,  0.1, dir.z)
+                val dir = player.location.direction.clone()
+                knockBackManager.register(entity, dir, knockBack, knockBackAccumulateTime.getMilliseconds().toLong())
                 entity.noDamageTicks = 0
                 return
             }

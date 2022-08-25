@@ -40,10 +40,12 @@ class PlayerJoin: Listener {
                 Tick.sec(0.5),
                 10,
                 5,
-                1.0,
+                0.1,
                 0.1,
                 0.0F,
                 0.0F,
+                ZombieHero.plugin.knockBackManager,
+                Tick.sec(0.1)
             ),
             walkSpeed = 0.25F
         )
@@ -64,6 +66,8 @@ class PlayerJoin: Listener {
                 0.01,
                 0.0F,
                 0.0F,
+                ZombieHero.plugin.knockBackManager,
+                Tick.sec(0.05)
             ),
             walkSpeed = 0.25F
         )

@@ -2,6 +2,7 @@ package click.recraft.zombiehero
 
 import click.recraft.share.*
 import click.recraft.zombiehero.grenade.GrenadeEvents
+import click.recraft.zombiehero.gun.api.KnockBackManager
 import click.recraft.zombiehero.item.PlayerGunListener
 import click.recraft.zombiehero.item.PlayerGunManager
 import click.recraft.zombiehero.item.gun.ShootManager
@@ -16,6 +17,7 @@ class ZombieHero: KotlinPlugin(), Listener {
     }
     val playerGunManager : PlayerGunManager by lazy { PlayerGunManager() }
     val shootManager     : ShootManager     by lazy { ShootManager()     }
+    val knockBackManager : KnockBackManager by lazy { KnockBackManager() }
     override fun onEnable() {
         plugin = this
         ShopMenu.load()
@@ -26,6 +28,7 @@ class ZombieHero: KotlinPlugin(), Listener {
         val oneTickTask = Util.createTask {
             WalkSpeedManager.loopEveryOneTick()
         }
+        Bukkit.getScheduler().runTaskTimer(this, fiveTickTask, 10, 5)
         Bukkit.getScheduler().runTaskTimer(this, oneTickTask, 10, 1)
         server.pluginManager.registerEvents(PlayerJoin(), this)
         server.pluginManager.registerEvents(PlayerQuit(), this)
