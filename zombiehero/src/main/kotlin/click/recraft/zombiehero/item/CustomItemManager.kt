@@ -12,7 +12,12 @@ interface CustomItemManager {
 
     fun getItem(itemStack: ItemStack?): CustomItem? {
         val meta = itemStack?.itemMeta ?: return null
-        val uuid = UUID.fromString(meta.localizedName) ?: return null
+        val uuid = try {
+            UUID.fromString(meta.localizedName)
+        } catch (e: IllegalArgumentException) {
+            null
+        }
+        uuid ?: return null
         return save[uuid]
     }
 
