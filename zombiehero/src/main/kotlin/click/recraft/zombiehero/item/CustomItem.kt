@@ -1,5 +1,6 @@
 package click.recraft.zombiehero.item
 
+import click.recraft.share.item
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.ClickType
 import org.bukkit.event.player.PlayerInteractEvent
@@ -9,23 +10,31 @@ import java.util.*
 
 
 // dont stack custom item
-interface CustomItem {
+abstract class CustomItem(
+    private val manager: CustomItemManager,
+    private val item: ItemStack
+) {
     val uuid: UUID
-    val manager: CustomItemManager
-    val customModelData: Int
-    val itemStack: ItemStack
-
-    fun initialize() {
-        val item = ItemStack(itemStack.type)
+    init {
+        val strUUID= item.itemMeta!!.localizedName
+        uuid = UUID.fromString(strUUID)!!
+    }
+    open fun createItemStack(): ItemStack {
         val meta = item.itemMeta!!
-        meta.setCustomModelData(customModelData)
-        meta.setLocalizedName(uuid.toString())
-        itemStack.itemMeta = meta
+        return item(
+            material = item.type,
+            customModelData = meta.customModelData,
+            displayName = meta.displayName,
+            lore = meta.lore!!,
+            localizedName = uuid.toString()
+        )
+    }
+    fun initialize() {
         manager.register(uuid, this)
     }
 
-    fun inInvItemClick(clickType: ClickType?, player: Player?)
-    fun itemInteract(event: PlayerInteractEvent?, equipmentSlot: EquipmentSlot?)
+    abstract fun inInvItemClick(clickType: ClickType?, player: Player?)
+    abstract fun itemInteract(event: PlayerInteractEvent?, equipmentSlot: EquipmentSlot?)
     fun isDroppable(): Boolean {
         return false
     }

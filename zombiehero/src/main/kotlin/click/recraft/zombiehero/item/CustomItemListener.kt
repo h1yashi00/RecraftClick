@@ -29,7 +29,6 @@ interface CustomItemListener: Listener {
     @EventHandler
     fun invClick(e: InventoryClickEvent) {
         val player = e.whoClicked as Player
-        player.sendMessage(e.clickedInventory!!.type.toString())
         val currentItem = if (e.click == ClickType.NUMBER_KEY) {
             // NumberKeyの場合はプレイヤーのインベントリのタイムが移動するのでプレイヤーのインベントリから取り出す
             player.inventory.getItem(e.hotbarButton)

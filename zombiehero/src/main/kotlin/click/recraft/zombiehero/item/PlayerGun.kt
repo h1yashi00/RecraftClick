@@ -14,15 +14,27 @@ import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
 import java.util.*
 
-class PlayerGun(
-    override val manager: CustomItemManager,
-    override val customModelData: Int,
+class PlayerGun (
+    material: Material,
+    name: String,
+    customModeValue: Int,
+    manager: CustomItemManager,
     private val shootManager: ShootManager,
-    private val name: String,
     private val reload: Reload,
     private val shot: Shot,
     private val walkSpeed: Float,
-) : CustomItem {
+) : CustomItem (
+    manager,
+    item (
+        material = material,
+        localizedName = UUID.randomUUID().toString(),
+        displayName = "${ChatColor.GOLD}$name",
+        customModelData = customModeValue,
+        lore = listOf(
+            "reloadTime: ${reload.reloadTime}"
+        )
+    )
+) {
     data class GunStats (
         var totalArmo:   Int,
         var currentArmo: Int,
@@ -38,30 +50,43 @@ class PlayerGun(
         false,
         name
     )
+    fun playerGiveItem(player: Player) {
+        val item = createItemStack()
+        if (!player.inventory.contains(item)) {
+            player.inventory.addItem(createItemStack())
+        }
+        player.sendExperienceChange(1.0F, stats.totalArmo)
+    }
 
-    override val uuid: UUID = UUID.randomUUID()
-    override val itemStack: ItemStack =
-        item(
-            Material.STICK,
-            displayName = "${ChatColor.GOLD}$name",
-            lore = arrayOf(
-                "リロード: ${reload.reloadTime}"
-            )
-        )
-    fun shootAction(player: Player) {
+    fun shootAction(player: Player): Boolean {
+        if (stats.reloading) {
+            return false
+        }
+        if (stats.currentArmo <= 0) {
+            reload(player)
+            return false
+        }
+        stats.currentArmo += -1
+        if (stats.currentArmo != 0) {
+            if (isSimilar(player.inventory.itemInMainHand)) {
+                player.inventory.setItemInMainHand(createItemStack())
+            }
+        }
         shot.shoot(player, stats)
+        return true
+    }
+
+    override fun createItemStack(): ItemStack {
+        return super.createItemStack().apply {amount = stats.currentArmo}
     }
 
     private fun shoot(player: Player) {
+        shootAction(player)
         shootManager.register(player, this)
     }
 
     fun reload(player: Player) {
         reload.reload(player, stats)
-    }
-
-    override fun isDroppable(): Boolean {
-        return super.isDroppable()
     }
 
     override fun inInvItemClick(clickType: ClickType?, player: Player?) {

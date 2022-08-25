@@ -16,7 +16,8 @@ object ShopMenu {
     val shop = ZombieHero.plugin.interactItem(
         item(Material.EMERALD,
             displayName = "${ChatColor.GOLD}ショップ",
-            customModelData = 1000),
+            customModelData = 1000
+        ),
         rightClick = true,
         leftClick  = false
     ) {

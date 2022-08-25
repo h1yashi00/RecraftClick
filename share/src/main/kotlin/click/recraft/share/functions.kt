@@ -12,7 +12,15 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.java.JavaPlugin
 import javax.annotation.Nullable
 
-fun item(material: Material, amount: Int = 1, data: Short = 0, displayName: String = "", @Nullable vararg lore: String, customModelData: Int = 0): ItemStack {
+fun item(
+    material: Material,
+    amount: Int = 1,
+    data: Short = 0,
+    displayName: String = "",
+    @Nullable lore: List<String> = arrayListOf(),
+    customModelData: Int = 0,
+    localizedName: String = ""
+): ItemStack {
     val item = ItemStack(material, amount, data)
     val meta = item.itemMeta!!
     if (customModelData != 0) {
@@ -21,8 +29,11 @@ fun item(material: Material, amount: Int = 1, data: Short = 0, displayName: Stri
     if (displayName != "") {
         meta.setDisplayName(displayName)
     }
+    if (localizedName != "") {
+        meta.setLocalizedName(localizedName)
+    }
     if (lore.isNotEmpty()) {
-        meta.lore = lore.asList()
+        meta.lore = lore
     }
     item.itemMeta = meta
     return item

@@ -10,36 +10,43 @@ import kotlin.collections.HashMap
 
 class ShootManager {
     private val manager: HashMap<UUID, Data> = hashMapOf()
-    private data class Data(val gun: PlayerGun, val tick: Long = System.currentTimeMillis())
+    private data class Data(val uuid: UUID, val gun: PlayerGun, val tick: Long = System.currentTimeMillis())
     init {
         val task = Util.createTask {
+                // 処理をすることろ
+                // GunSatsの影響で球が打てなかった場合に､タスクをなくすうようにする
             manager.iterator().forEach {
-                val uuid = it.key
+                val itemUUID = it.key
                 val data = it.value
+                val uuid = data.uuid
+                val gun  = data.gun
+                val tick = data.tick
                 val player = Bukkit.getPlayer(uuid) ?: return@forEach
                 val item = player.inventory.itemInMainHand
-                if (data.gun.itemStack != item) {
-                    manager.remove(player.uniqueId)
+                if (!gun.isSimilar(item)) {
+                    manager.remove(itemUUID)
                     return@forEach
                 }
-                val passed = System.currentTimeMillis() - data.tick
+                val passed = System.currentTimeMillis() - tick
                 if (passed <= 10) {
-                    manager[player.uniqueId] = Data(data.gun)
+                    manager.remove(itemUUID)
+                    return@forEach
                 }
                 if (passed >= 200) {
-                    manager.remove(player.uniqueId)
+                    manager.remove(itemUUID)
                     return@forEach
                 }
                 // 処理をすることろ
-                data.gun.shootAction(player)
+                // GunStatsの影響で球が打てなかった場合に､タスクをなくすうようにする
+                if (!gun.shootAction(player)) {
+                    manager.remove(itemUUID)
+                    return@forEach
                 }
             }
-            Bukkit.getScheduler().runTaskTimer(ZombieHero.plugin, task, 0,1)
         }
-    fun register(player: Player, playerGun: PlayerGun) {
-        manager[player.uniqueId] = Data(playerGun)
+        Bukkit.getScheduler().runTaskTimer(ZombieHero.plugin, task, 10,1)
     }
-    fun remove(player: Player) {
-        manager.remove(player.uniqueId)
+    fun register(player: Player, playerGun: PlayerGun) {
+        manager[playerGun.uuid] =  Data(player.uniqueId, playerGun)
     }
 }
