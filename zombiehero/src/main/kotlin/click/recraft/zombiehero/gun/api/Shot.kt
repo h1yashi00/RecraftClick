@@ -90,6 +90,8 @@ interface Shot {
         }
     }
 
+    var lastShot: Long
+
     val rate:   Tick
     val damage: Int
     val knockBack: Double

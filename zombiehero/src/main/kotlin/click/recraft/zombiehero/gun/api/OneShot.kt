@@ -12,5 +12,6 @@ class OneShot(
     override val recoilZ: Float,
     override val particle: Particle = Particle.ASH,
 ) : Shot {
+    override var lastShot: Long = System.currentTimeMillis()
     override val shootAmmo: Int = 1
 }

@@ -33,7 +33,6 @@ class ZombieHero: KotlinPlugin(), Listener {
         server.pluginManager.registerEvents(HoldKeyEvent(), this)
         server.pluginManager.registerEvents(PlayerDamage(), this)
         server.pluginManager.registerEvents(MonsterSpawn(), this)
-//        server.pluginManager.registerEvents(SwordEvents(), this)
         server.pluginManager.registerEvents(GrenadeEvents(), this)
         server.pluginManager.registerEvents(PlayerGunListener(playerGunManager), this)
         super.onEnable()

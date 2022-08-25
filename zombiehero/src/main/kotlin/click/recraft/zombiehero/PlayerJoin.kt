@@ -2,6 +2,7 @@ package click.recraft.zombiehero
 
 import click.recraft.zombiehero.gun.api.MultiShot
 import click.recraft.zombiehero.gun.api.OneShot
+import click.recraft.zombiehero.gun.api.ReloadFullBullet
 import click.recraft.zombiehero.gun.api.ReloadOneBullet
 import click.recraft.zombiehero.gun.base.Tick
 import click.recraft.zombiehero.item.PlayerGun
@@ -31,15 +32,15 @@ class PlayerJoin: Listener {
             customModeValue = 30,
             manager = ZombieHero.plugin.playerGunManager,
             shootManager = ZombieHero.plugin.shootManager,
-            reload = ReloadOneBullet(
-                30,
-                Tick.sec(1.3)
+            reload = ReloadOneBullet (
+                7,
+                Tick.sec(0.7)
             ),
-            shot = MultiShot(
-                Tick.sec(0.3),
+            shot = MultiShot (
+                Tick.sec(0.5),
                 10,
                 5,
-                0.3,
+                1.0,
                 0.1,
                 0.0F,
                 0.0F,
@@ -52,12 +53,12 @@ class PlayerJoin: Listener {
             customModeValue = 30,
             manager = ZombieHero.plugin.playerGunManager,
             shootManager = ZombieHero.plugin.shootManager,
-            reload = ReloadOneBullet(
+            reload = ReloadFullBullet (
                 30,
                 Tick.sec(1.3)
             ),
             shot = OneShot(
-                Tick.sec(0.3),
+                Tick.sec(0.1),
                 10,
                 0.3,
                 0.01,

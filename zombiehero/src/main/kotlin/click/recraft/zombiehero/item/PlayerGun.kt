@@ -66,6 +66,11 @@ class PlayerGun (
             reload(player)
             return false
         }
+        val passedTick = System.currentTimeMillis() - shot.lastShot
+        if (passedTick < shot.rate.getMilliseconds()) {
+            return false
+        }
+        shot.lastShot = System.currentTimeMillis()
         stats.currentArmo += -1
         if (stats.currentArmo != 0) {
             if (isSimilar(player.inventory.itemInMainHand)) {
