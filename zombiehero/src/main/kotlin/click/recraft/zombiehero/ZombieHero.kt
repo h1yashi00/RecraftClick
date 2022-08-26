@@ -2,7 +2,7 @@ package click.recraft.zombiehero
 
 import click.recraft.share.*
 import click.recraft.zombiehero.grenade.GrenadeEvents
-import click.recraft.zombiehero.gun.api.KnockBackManager
+import click.recraft.zombiehero.gun.api.ReloadManager
 import click.recraft.zombiehero.item.PlayerGunListener
 import click.recraft.zombiehero.item.PlayerGunManager
 import click.recraft.zombiehero.item.gun.ShootManager
@@ -17,7 +17,7 @@ class ZombieHero: KotlinPlugin(), Listener {
     }
     val playerGunManager : PlayerGunManager by lazy { PlayerGunManager() }
     val shootManager     : ShootManager     by lazy { ShootManager()     }
-    val knockBackManager : KnockBackManager by lazy { KnockBackManager() }
+    val reloadManager    : ReloadManager    by lazy { ReloadManager()    }
     override fun onEnable() {
         plugin = this
         ShopMenu.load()

@@ -1,8 +1,10 @@
 package click.recraft.zombiehero.gun.api
 
 import click.recraft.zombiehero.Util
+import click.recraft.zombiehero.ZombieHero
 import click.recraft.zombiehero.gun.base.Tick
 import click.recraft.zombiehero.item.PlayerGun
+import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Particle
 import org.bukkit.Sound
@@ -13,10 +15,11 @@ import org.bukkit.entity.Player
 import org.bukkit.entity.Zombie
 import org.bukkit.util.Vector
 import java.util.*
+import kotlin.collections.HashMap
 
 interface Shot {
-    val knockBackManager: KnockBackManager
     val knockBackAccumulateTime: Tick
+    val saveKnockBack: HashMap<UUID, Double>
     private fun bulletHitBlockEffect(block: Block) {
         val loc = block.location.clone()
         loc.apply { x += 0.5; y += 0.5; z+=0.5 }
@@ -74,14 +77,48 @@ interface Shot {
                     entity.target = player
                 }
                 val dir = player.location.direction.clone()
-                knockBackManager.register(entity, dir, knockBack, knockBackAccumulateTime.getMilliseconds().toLong())
                 entity.noDamageTicks = 0
+                if (saveKnockBack.containsKey(entity.uniqueId)) {
+                    val data = saveKnockBack[entity.uniqueId]!!
+                    val newValue = data + knockBack
+                    saveKnockBack[entity.uniqueId] = newValue
+                }
+                else {
+                    saveKnockBack[entity.uniqueId] = knockBack
+                    val lateTask = Util.createTask {
+                        val accumulateKnockBack = saveKnockBack[entity.uniqueId]!!
+                        player.sendMessage("accumulate ${accumulateKnockBack}")
+                        entity.velocity = dir.multiply(accumulateKnockBack).apply { y = if (y < 0) {y * -1} else {y} }
+                        saveKnockBack.remove(entity.uniqueId)
+                    }
+                    Bukkit.getScheduler().runTaskLater(ZombieHero.plugin, lateTask, 1)
+                }
                 return
             }
         }
     }
 
-    fun shoot(player: Player, stats: PlayerGun.GunStats) {
+    fun shootAction(player: Player, playerGun: PlayerGun): Boolean {
+        val stats = playerGun.stats
+        if (stats.reloading) {
+            return false
+        }
+        val passedTick = System.currentTimeMillis() - lastShot
+        if (passedTick < rate.getMilliseconds()) {
+            return false
+        }
+        lastShot = System.currentTimeMillis()
+        stats.currentArmo += -1
+        if (stats.currentArmo != 0) {
+            if (playerGun.isSimilar(player.inventory.itemInMainHand)) {
+                player.inventory.setItemInMainHand(playerGun.createItemStack())
+            }
+        }
+        shoot(player)
+        return true
+    }
+
+    fun shoot(player: Player) {
         forceRecoil(player)
         player.world.playSound(player.location, Sound.ENTITY_IRON_GOLEM_HURT, 1f, 3F)
         val dir = player.location.direction

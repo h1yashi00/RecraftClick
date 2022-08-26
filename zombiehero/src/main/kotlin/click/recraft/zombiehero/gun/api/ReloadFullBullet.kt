@@ -11,8 +11,10 @@ import org.bukkit.entity.Player
 class ReloadFullBullet(
     override var armo : Int = 0,
     override var reloadTime: Tick = Tick.sec(0.0),
+    override val reloadManager: ReloadManager,
 ) : Reload {
-    override fun reload(player: Player, gunStats: PlayerGun.GunStats) {
+    override fun reload(player: Player, gun: PlayerGun) {
+        val gunStats = gun.stats
         val item = player.inventory.itemInMainHand
         var checkTick = reloadTime.tick
         if (!check(gunStats)) {

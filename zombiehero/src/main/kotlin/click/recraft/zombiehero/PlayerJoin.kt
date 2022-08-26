@@ -34,18 +34,18 @@ class PlayerJoin: Listener {
             shootManager = ZombieHero.plugin.shootManager,
             reload = ReloadOneBullet (
                 7,
-                Tick.sec(0.7)
+                Tick.sec(1.0),
+                ZombieHero.plugin.reloadManager
             ),
             shot = MultiShot (
                 Tick.sec(0.5),
                 10,
                 5,
-                0.1,
+                0.2,
                 0.1,
                 0.0F,
                 0.0F,
-                ZombieHero.plugin.knockBackManager,
-                Tick.sec(0.1)
+                Tick.sec(0.3)
             ),
             walkSpeed = 0.25F
         )
@@ -57,7 +57,8 @@ class PlayerJoin: Listener {
             shootManager = ZombieHero.plugin.shootManager,
             reload = ReloadFullBullet (
                 30,
-                Tick.sec(1.3)
+                Tick.sec(1.3),
+                ZombieHero.plugin.reloadManager
             ),
             shot = OneShot(
                 Tick.sec(0.1),
@@ -66,16 +67,39 @@ class PlayerJoin: Listener {
                 0.01,
                 0.0F,
                 0.0F,
-                ZombieHero.plugin.knockBackManager,
                 Tick.sec(0.05)
+            ),
+            walkSpeed = 0.25F
+        )
+        val gun3 = PlayerGun (
+            material = Material.PINK_DYE,
+            name = "WIWIWI",
+            customModeValue = 30,
+            manager = ZombieHero.plugin.playerGunManager,
+            shootManager = ZombieHero.plugin.shootManager,
+            reload = ReloadFullBullet (
+                7,
+                Tick.sec(1.3),
+                ZombieHero.plugin.reloadManager
+            ),
+            shot = OneShot(
+                Tick.sec(0.7),
+                70,
+                1.0,
+                0.01,
+                0.0F,
+                0.0F,
+                Tick.sec(0.5)
             ),
             walkSpeed = 0.25F
         )
         gun.initialize()
         gun2.initialize()
+        gun3.initialize()
         val task = Util.createTask {
             gun.playerGiveItem(player)
             gun2.playerGiveItem(player)
+            gun3.playerGiveItem(player)
         }
         Bukkit.getScheduler().runTaskLater(ZombieHero.plugin, task, 1)
     }

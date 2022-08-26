@@ -20,7 +20,7 @@ class PlayerGun (
     customModeValue: Int,
     manager: CustomItemManager,
     private val shootManager: ShootManager,
-    private val reload: Reload,
+    val reload: Reload,
     private val shot: Shot,
     private val walkSpeed: Float,
 ) : CustomItem (
@@ -43,7 +43,7 @@ class PlayerGun (
         var gunName: String,
     ) {
     }
-    private val stats = GunStats(
+    val stats = GunStats(
         reload.armo * 5,
         reload.armo,
         reload.armo,
@@ -59,26 +59,11 @@ class PlayerGun (
     }
 
     fun shootAction(player: Player): Boolean {
-        if (stats.reloading) {
-            return false
-        }
         if (stats.currentArmo <= 0) {
             reload(player)
             return false
         }
-        val passedTick = System.currentTimeMillis() - shot.lastShot
-        if (passedTick < shot.rate.getMilliseconds()) {
-            return false
-        }
-        shot.lastShot = System.currentTimeMillis()
-        stats.currentArmo += -1
-        if (stats.currentArmo != 0) {
-            if (isSimilar(player.inventory.itemInMainHand)) {
-                player.inventory.setItemInMainHand(createItemStack())
-            }
-        }
-        shot.shoot(player, stats)
-        return true
+        return shot.shootAction(player, this)
     }
 
     override fun createItemStack(): ItemStack {
@@ -91,7 +76,7 @@ class PlayerGun (
     }
 
     fun reload(player: Player) {
-        reload.reload(player, stats)
+        reload.reload(player, this)
     }
 
     override fun inInvItemClick(clickType: ClickType?, player: Player?) {
