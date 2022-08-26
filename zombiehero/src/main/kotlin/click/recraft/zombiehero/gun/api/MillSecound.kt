@@ -1,4 +1,4 @@
-package click.recraft.zombiehero.gun.base
+package click.recraft.zombiehero.gun.api
 
 class Tick private constructor (
     val tick: Int

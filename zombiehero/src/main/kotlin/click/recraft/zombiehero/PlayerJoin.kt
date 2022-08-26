@@ -1,13 +1,15 @@
 package click.recraft.zombiehero
 
+import click.recraft.zombiehero.grenade.Grenade
 import click.recraft.zombiehero.gun.api.MultiShot
 import click.recraft.zombiehero.gun.api.OneShot
 import click.recraft.zombiehero.gun.api.ReloadFullBullet
 import click.recraft.zombiehero.gun.api.ReloadOneBullet
-import click.recraft.zombiehero.gun.base.Tick
+import click.recraft.zombiehero.gun.api.Tick
 import click.recraft.zombiehero.item.PlayerGun
 import org.bukkit.Bukkit
 import org.bukkit.Material
+import org.bukkit.Sound
 import org.bukkit.entity.EntityType
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -93,6 +95,26 @@ class PlayerJoin: Listener {
             ),
             walkSpeed = 0.25F
         )
+        val grenade = Grenade(ZombieHero.plugin.grenadeManager, "creeper", Tick.sec(1.5)) {loc ->
+            val entities = loc.world!!.getNearbyEntities(Util.makeBoundingBox(loc, 5.0))
+            loc.world!!.playSound(loc, Sound.ENTITY_GENERIC_EXPLODE, 0.5f,0.5f)
+            entities.forEach {
+                val vec = it.location.apply { y += 1 }.toVector().subtract(loc.toVector())
+                if (vec.x == 0.0 && vec.y == 0.0 && vec.z == 0.0) return@forEach
+                it.velocity = vec.normalize().multiply(1.8)
+            }
+        }
+        val touchGrenade = TouchGrenade(ZombieHero.plugin.touchGrenadeManager, "touchCreeper", Tick.sec(3.0)) { loc ->
+            val entities = loc.world!!.getNearbyEntities(Util.makeBoundingBox(loc, 5.0))
+            loc.world!!.playSound(loc, Sound.ENTITY_GENERIC_EXPLODE, 0.5f,0.5f)
+            entities.forEach {
+                val vec = it.location.apply { y += 1 }.toVector().subtract(loc.toVector())
+                if (vec.x == 0.0 && vec.y == 0.0 && vec.z == 0.0) return@forEach
+                it.velocity = vec.normalize().multiply(1.8)
+            }
+        }
+        touchGrenade.initialize()
+        grenade.initialize()
         gun.initialize()
         gun2.initialize()
         gun3.initialize()
@@ -100,6 +122,8 @@ class PlayerJoin: Listener {
             gun.playerGiveItem(player)
             gun2.playerGiveItem(player)
             gun3.playerGiveItem(player)
+            player.inventory.addItem(grenade.createItemStack())
+            player.inventory.addItem(touchGrenade.createItemStack())
         }
         Bukkit.getScheduler().runTaskLater(ZombieHero.plugin, task, 1)
     }

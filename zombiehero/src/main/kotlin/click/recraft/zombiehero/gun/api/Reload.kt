@@ -1,6 +1,5 @@
 package click.recraft.zombiehero.gun.api
 
-import click.recraft.zombiehero.gun.base.Tick
 import click.recraft.zombiehero.item.PlayerGun
 import org.bukkit.entity.Player
 

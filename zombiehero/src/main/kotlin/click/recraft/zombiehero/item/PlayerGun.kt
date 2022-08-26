@@ -79,11 +79,11 @@ class PlayerGun (
         reload.reload(player, this)
     }
 
-    override fun inInvItemClick(clickType: ClickType?, player: Player?) {
+    override fun inInvItemClick(clickType: ClickType, player: Player) {
     }
 
-    override fun itemInteract(event: PlayerInteractEvent?, equipmentSlot: EquipmentSlot?) {
-        val action = event!!.action
+    override fun itemInteract(event: PlayerInteractEvent, equipmentSlot: EquipmentSlot) {
+        val action = event.action
         val player = event.player
         if (action == Action.RIGHT_CLICK_BLOCK || action == Action.RIGHT_CLICK_AIR) {
             shoot(player)

@@ -25,7 +25,7 @@ abstract class CustomItem(
             material = item.type,
             customModelData = meta.customModelData,
             displayName = meta.displayName,
-            lore = meta.lore!!,
+            lore = meta.lore ?: listOf(),
             localizedName = uuid.toString()
         )
     }
@@ -33,8 +33,8 @@ abstract class CustomItem(
         manager.register(uuid, this)
     }
 
-    abstract fun inInvItemClick(clickType: ClickType?, player: Player?)
-    abstract fun itemInteract(event: PlayerInteractEvent?, equipmentSlot: EquipmentSlot?)
+    abstract fun inInvItemClick(clickType: ClickType, player: Player)
+    abstract fun itemInteract(event: PlayerInteractEvent, equipmentSlot: EquipmentSlot)
     fun isDroppable(): Boolean {
         return false
     }

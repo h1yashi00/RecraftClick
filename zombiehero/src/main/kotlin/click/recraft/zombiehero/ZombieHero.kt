@@ -1,7 +1,7 @@
 package click.recraft.zombiehero
 
 import click.recraft.share.*
-import click.recraft.zombiehero.grenade.GrenadeEvents
+import click.recraft.zombiehero.gun.GrenadeListener
 import click.recraft.zombiehero.gun.api.ReloadManager
 import click.recraft.zombiehero.item.PlayerGunListener
 import click.recraft.zombiehero.item.PlayerGunManager
@@ -18,6 +18,8 @@ class ZombieHero: KotlinPlugin(), Listener {
     val playerGunManager : PlayerGunManager by lazy { PlayerGunManager() }
     val shootManager     : ShootManager     by lazy { ShootManager()     }
     val reloadManager    : ReloadManager    by lazy { ReloadManager()    }
+    val grenadeManager   : GrenadeManager   by lazy { GrenadeManager()   }
+    val touchGrenadeManager: TouchGrenadeManager by lazy { TouchGrenadeManager() }
     override fun onEnable() {
         plugin = this
         ShopMenu.load()
@@ -33,11 +35,11 @@ class ZombieHero: KotlinPlugin(), Listener {
         server.pluginManager.registerEvents(PlayerJoin(), this)
         server.pluginManager.registerEvents(PlayerQuit(), this)
         server.pluginManager.registerEvents(this, this)
-        server.pluginManager.registerEvents(HoldKeyEvent(), this)
         server.pluginManager.registerEvents(PlayerDamage(), this)
         server.pluginManager.registerEvents(MonsterSpawn(), this)
-        server.pluginManager.registerEvents(GrenadeEvents(), this)
+        server.pluginManager.registerEvents(GrenadeListener(grenadeManager), this)
         server.pluginManager.registerEvents(PlayerGunListener(playerGunManager), this)
+        server.pluginManager.registerEvents(TouchGrenadeListener(touchGrenadeManager), this)
         super.onEnable()
     }
 

@@ -2,7 +2,6 @@ package click.recraft.zombiehero.gun.api
 
 import click.recraft.zombiehero.Util
 import click.recraft.zombiehero.ZombieHero
-import click.recraft.zombiehero.gun.base.Tick
 import click.recraft.zombiehero.item.PlayerGun
 import org.bukkit.Bukkit
 import org.bukkit.Location
@@ -87,7 +86,6 @@ interface Shot {
                     saveKnockBack[entity.uniqueId] = knockBack
                     val lateTask = Util.createTask {
                         val accumulateKnockBack = saveKnockBack[entity.uniqueId]!!
-                        player.sendMessage("accumulate ${accumulateKnockBack}")
                         entity.velocity = dir.multiply(accumulateKnockBack).apply { y = if (y < 0) {y * -1} else {y} }
                         saveKnockBack.remove(entity.uniqueId)
                     }
@@ -131,7 +129,7 @@ interface Shot {
 
     var lastShot: Long
 
-    val rate:   Tick
+    val rate: Tick
     val damage: Int
     val knockBack: Double
     val shootAmmo: Int

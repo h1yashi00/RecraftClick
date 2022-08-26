@@ -1,12 +1,11 @@
 package click.recraft.zombiehero.gun.api
 
-import click.recraft.zombiehero.gun.base.Tick
 import org.bukkit.Particle
 import java.util.*
 import kotlin.collections.HashMap
 
 class OneShot(
-    override val rate:    Tick,
+    override val rate: Tick,
     override val damage:  Int,
     override val knockBack: Double,
     override val spread:  Double,

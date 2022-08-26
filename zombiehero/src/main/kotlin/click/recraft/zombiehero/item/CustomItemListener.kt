@@ -60,6 +60,6 @@ interface CustomItemListener: Listener {
         val player = e.player
         val itemStack = player.inventory.itemInMainHand
         val item = getItem(itemStack) ?: return
-        item.itemInteract(e, e.hand)
+        item.itemInteract(e, e.hand!!)
     }
 }
