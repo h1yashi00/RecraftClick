@@ -7,6 +7,7 @@ import click.recraft.zombiehero.gun.api.ReloadFullBullet
 import click.recraft.zombiehero.gun.api.ReloadOneBullet
 import click.recraft.zombiehero.gun.api.Tick
 import click.recraft.zombiehero.item.PlayerGun
+import click.recraft.zombiehero.melee.Sword
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.Sound
@@ -113,17 +114,33 @@ class PlayerJoin: Listener {
                 it.velocity = vec.normalize().multiply(1.8)
             }
         }
+        val melee = Sword(
+            ZombieHero.plugin.meleeManager,
+            ZombieHero.plugin.meleeCoolDownManager,
+            100,
+            Tick.sec(1.0),
+        )
+        val melee2 = Sword(
+            ZombieHero.plugin.meleeManager,
+            ZombieHero.plugin.meleeCoolDownManager,
+            10,
+            Tick.sec(0.3),
+        )
         touchGrenade.initialize()
         grenade.initialize()
+        melee2.initialize()
         gun.initialize()
         gun2.initialize()
         gun3.initialize()
+        melee.initialize()
         val task = Util.createTask {
+            player.inventory.addItem(melee2.createItemStack())
             gun.playerGiveItem(player)
             gun2.playerGiveItem(player)
             gun3.playerGiveItem(player)
             player.inventory.addItem(grenade.createItemStack())
             player.inventory.addItem(touchGrenade.createItemStack())
+            player.inventory.addItem(melee.createItemStack())
         }
         Bukkit.getScheduler().runTaskLater(ZombieHero.plugin, task, 1)
     }
