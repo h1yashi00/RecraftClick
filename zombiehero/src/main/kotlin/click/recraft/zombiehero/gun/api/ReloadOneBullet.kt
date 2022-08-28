@@ -1,6 +1,6 @@
 package click.recraft.zombiehero.gun.api
 
-import click.recraft.zombiehero.item.PlayerGun
+import click.recraft.zombiehero.item.gun.PlayerGun
 import org.bukkit.Sound
 import org.bukkit.entity.Player
 

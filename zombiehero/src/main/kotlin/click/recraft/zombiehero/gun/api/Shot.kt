@@ -2,7 +2,7 @@ package click.recraft.zombiehero.gun.api
 
 import click.recraft.zombiehero.Util
 import click.recraft.zombiehero.ZombieHero
-import click.recraft.zombiehero.item.PlayerGun
+import click.recraft.zombiehero.item.gun.PlayerGun
 import org.bukkit.*
 import org.bukkit.block.Block
 import org.bukkit.entity.ArmorStand

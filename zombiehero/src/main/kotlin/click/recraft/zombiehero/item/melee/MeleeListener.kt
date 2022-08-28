@@ -1,7 +1,6 @@
-package click.recraft.zombiehero
+package click.recraft.zombiehero.item.melee
 
 import click.recraft.zombiehero.item.CustomItemListener
-import click.recraft.zombiehero.melee.MeleeManager
 
 class MeleeListener(
     override val manager: MeleeManager

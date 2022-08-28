@@ -1,4 +1,4 @@
-package click.recraft.zombiehero.grenade
+package click.recraft.zombiehero.item.grenade
 
 import click.recraft.share.item
 import click.recraft.zombiehero.ZombieHero

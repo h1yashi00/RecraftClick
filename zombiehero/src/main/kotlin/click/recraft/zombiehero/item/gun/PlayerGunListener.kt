@@ -1,12 +1,12 @@
-package click.recraft.zombiehero.item
+package click.recraft.zombiehero.item.gun
 
 import click.recraft.zombiehero.Util
 import click.recraft.zombiehero.ZombieHero
+import click.recraft.zombiehero.item.CustomItemListener
 import org.bukkit.Bukkit
 import org.bukkit.event.EventHandler
 import org.bukkit.event.player.PlayerDropItemEvent
 import org.bukkit.event.player.PlayerItemHeldEvent
-import org.bukkit.event.player.PlayerSwapHandItemsEvent
 
 class PlayerGunListener(
     override val manager: PlayerGunManager

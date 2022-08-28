@@ -1,9 +1,10 @@
-package click.recraft.zombiehero.item
+package click.recraft.zombiehero.item.gun
 
 import click.recraft.share.item
 import click.recraft.zombiehero.gun.api.Reload
 import click.recraft.zombiehero.gun.api.Shot
-import click.recraft.zombiehero.item.gun.ShootManager
+import click.recraft.zombiehero.item.CustomItem
+import click.recraft.zombiehero.item.CustomItemManager
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -23,7 +24,7 @@ class PlayerGun (
     val reload: Reload,
     private val shot: Shot,
     private val walkSpeed: Float,
-) : CustomItem (
+) : CustomItem(
     manager,
     item (
         material = material,

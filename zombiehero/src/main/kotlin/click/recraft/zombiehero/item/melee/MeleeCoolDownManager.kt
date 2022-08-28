@@ -1,4 +1,4 @@
-package click.recraft.zombiehero.melee
+package click.recraft.zombiehero.item.melee
 
 import click.recraft.zombiehero.Util
 import click.recraft.zombiehero.ZombieHero

@@ -1,6 +1,7 @@
-package click.recraft.zombiehero
+package click.recraft.zombiehero.item.grenade
 
 import click.recraft.share.item
+import click.recraft.zombiehero.ZombieHero
 import click.recraft.zombiehero.gun.api.Tick
 import click.recraft.zombiehero.item.CustomItem
 import org.bukkit.Bukkit

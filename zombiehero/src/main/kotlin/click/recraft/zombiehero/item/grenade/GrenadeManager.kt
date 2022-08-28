@@ -1,4 +1,4 @@
-package click.recraft.zombiehero
+package click.recraft.zombiehero.item.grenade
 
 import click.recraft.zombiehero.item.CustomItem
 import click.recraft.zombiehero.item.CustomItemManager

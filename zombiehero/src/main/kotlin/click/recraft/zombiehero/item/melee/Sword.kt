@@ -1,4 +1,4 @@
-package click.recraft.zombiehero.melee
+package click.recraft.zombiehero.item.melee
 
 import click.recraft.share.item
 import click.recraft.zombiehero.Util
@@ -15,7 +15,6 @@ import org.bukkit.event.block.Action
 import org.bukkit.event.inventory.ClickType
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.EquipmentSlot
-import org.bukkit.inventory.ItemStack
 import java.util.*
 
 class Sword (

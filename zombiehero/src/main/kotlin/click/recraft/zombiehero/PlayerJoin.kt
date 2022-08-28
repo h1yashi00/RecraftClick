@@ -1,17 +1,21 @@
 package click.recraft.zombiehero
 
-import click.recraft.zombiehero.grenade.Grenade
+import click.recraft.zombiehero.item.grenade.Grenade
 import click.recraft.zombiehero.gun.api.MultiShot
 import click.recraft.zombiehero.gun.api.OneShot
 import click.recraft.zombiehero.gun.api.ReloadFullBullet
 import click.recraft.zombiehero.gun.api.ReloadOneBullet
 import click.recraft.zombiehero.gun.api.Tick
-import click.recraft.zombiehero.item.PlayerGun
-import click.recraft.zombiehero.melee.Sword
+import click.recraft.zombiehero.item.grenade.HitGrenade
+import click.recraft.zombiehero.item.grenade.TouchGrenade
+import click.recraft.zombiehero.item.gun.PlayerGun
+import click.recraft.zombiehero.item.melee.Sword
 import org.bukkit.Bukkit
 import org.bukkit.Material
+import org.bukkit.Particle
 import org.bukkit.Sound
 import org.bukkit.entity.EntityType
+import org.bukkit.entity.LivingEntity
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerInteractAtEntityEvent
@@ -51,7 +55,9 @@ class PlayerJoin: Listener {
                 Tick.sec(0.3)
             ),
             walkSpeed = 0.25F
-        )
+        ).apply {
+            initialize()
+        }
         val gun2 = PlayerGun (
             material = Material.PINK_DYE,
             name = "WIWIWI",
@@ -73,7 +79,7 @@ class PlayerJoin: Listener {
                 Tick.sec(0.05)
             ),
             walkSpeed = 0.25F
-        )
+        ).apply { initialize() }
         val gun3 = PlayerGun (
             material = Material.PINK_DYE,
             name = "WIWIWI",
@@ -95,7 +101,7 @@ class PlayerJoin: Listener {
                 Tick.sec(0.5)
             ),
             walkSpeed = 0.25F
-        )
+        ).apply {initialize()}
         val grenade = Grenade(ZombieHero.plugin.grenadeManager, "creeper", Tick.sec(1.5)) {loc ->
             val entities = loc.world!!.getNearbyEntities(Util.makeBoundingBox(loc, 5.0))
             loc.world!!.playSound(loc, Sound.ENTITY_GENERIC_EXPLODE, 0.5f,0.5f)
@@ -104,7 +110,7 @@ class PlayerJoin: Listener {
                 if (vec.x == 0.0 && vec.y == 0.0 && vec.z == 0.0) return@forEach
                 it.velocity = vec.normalize().multiply(1.8)
             }
-        }
+        }.apply { initialize() }
         val touchGrenade = TouchGrenade(ZombieHero.plugin.touchGrenadeManager, "touchCreeper", Tick.sec(3.0)) { loc ->
             val entities = loc.world!!.getNearbyEntities(Util.makeBoundingBox(loc, 5.0))
             loc.world!!.playSound(loc, Sound.ENTITY_GENERIC_EXPLODE, 0.5f,0.5f)
@@ -113,34 +119,49 @@ class PlayerJoin: Listener {
                 if (vec.x == 0.0 && vec.y == 0.0 && vec.z == 0.0) return@forEach
                 it.velocity = vec.normalize().multiply(1.8)
             }
-        }
+        }.apply { initialize() }
         val melee = Sword(
             ZombieHero.plugin.meleeManager,
             ZombieHero.plugin.meleeCoolDownManager,
             100,
             Tick.sec(1.0),
-        )
+        ).apply {initialize()}
         val melee2 = Sword(
             ZombieHero.plugin.meleeManager,
             ZombieHero.plugin.meleeCoolDownManager,
             10,
             Tick.sec(0.3),
-        )
-        touchGrenade.initialize()
-        grenade.initialize()
-        melee2.initialize()
-        gun.initialize()
-        gun2.initialize()
-        gun3.initialize()
-        melee.initialize()
+        ).apply {initialize()}
+        val wtfGrenade = Grenade(ZombieHero.plugin.grenadeManager, "普通のグレネード", Tick.sec(1.5)) {loc ->
+            val entities = loc.world!!.getNearbyEntities(Util.makeBoundingBox(loc, 5.0)) {
+                it is LivingEntity
+            }
+            loc.world!!.playSound(loc, Sound.ENTITY_GENERIC_EXPLODE, 0.5f,0.5f)
+            loc.world!!.spawnParticle(Particle.EXPLOSION_HUGE, loc, 1)
+            entities.forEach {entity ->
+                entity as LivingEntity
+                val dis = entity.location.distance(loc)
+                player.sendMessage(dis.toString())
+                val baseDamage = 500.0
+                val damage = when {
+                    dis <= 1 -> baseDamage
+                    dis >= 5 -> baseDamage / 5
+                    else -> {baseDamage/ dis}
+                }
+                entity.damage(damage)
+            }
+        }.apply {initialize()}
+        val hitGrenade = HitGrenade(ZombieHero.plugin.hitGrenadeManager, "hitGrenade").apply {initialize()}
         val task = Util.createTask {
             player.inventory.addItem(melee2.createItemStack())
-            gun.playerGiveItem(player)
-            gun2.playerGiveItem(player)
-            gun3.playerGiveItem(player)
-            player.inventory.addItem(grenade.createItemStack())
-            player.inventory.addItem(touchGrenade.createItemStack())
-            player.inventory.addItem(melee.createItemStack())
+            player.inventory.addItem(wtfGrenade.createItemStack())
+            player.inventory.addItem(hitGrenade.createItemStack())
+//            gun.playerGiveItem(player)
+//            gun2.playerGiveItem(player)
+//            gun3.playerGiveItem(player)
+//            player.inventory.addItem(grenade.createItemStack())
+//            player.inventory.addItem(touchGrenade.createItemStack())
+//            player.inventory.addItem(melee.createItemStack())
         }
         Bukkit.getScheduler().runTaskLater(ZombieHero.plugin, task, 1)
     }
