@@ -1,6 +1,5 @@
 package click.recraft.zombiehero
 
-import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.LivingEntity
@@ -34,7 +33,7 @@ class MonsterSpawn: Listener {
         }
         val currentHp = hp - damage.toInt()
         monsterHealth[livingEntity.entityId] = currentHp
-        if (currentHp < 0) {
+        if (currentHp <= 0) {
             monsterHealth.remove(livingEntity.entityId)
             livingEntity.health = 0.0
             return
