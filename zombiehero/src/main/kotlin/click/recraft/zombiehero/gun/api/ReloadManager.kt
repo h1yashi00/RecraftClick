@@ -37,10 +37,11 @@ class ReloadManager {
                 if (data.tick > 0) {
                     return@forEach
                 }
-                player.sendExperienceChange(1f / data.gun.reload.reloadTime.tick , gunStats.totalArmo)
+                player.sendExperienceChange(1f , gunStats.totalArmo)
                 gunStats.reloading = false
                 gunStats.totalArmo += -1
                 gunStats.currentArmo += 1
+                save.remove(uuid)
                 val reloadItem = player.inventory.itemInMainHand.clone()
                     .apply {
                         amount = gunStats.currentArmo
