@@ -153,12 +153,12 @@ class PlayerJoin: Listener {
         }.apply {initialize()}
         val hitGrenade = HitGrenade(ZombieHero.plugin.hitGrenadeManager, "hitGrenade").apply {initialize()}
         val task = Util.createTask {
-            player.inventory.addItem(melee2.createItemStack())
-            player.inventory.addItem(wtfGrenade.createItemStack())
-            player.inventory.addItem(hitGrenade.createItemStack())
-//            gun.playerGiveItem(player)
-//            gun2.playerGiveItem(player)
-//            gun3.playerGiveItem(player)
+//            player.inventory.addItem(melee2.createItemStack())
+//            player.inventory.addItem(wtfGrenade.createItemStack())
+//            player.inventory.addItem(hitGrenade.createItemStack())
+            gun.playerGiveItem(player)
+            gun2.playerGiveItem(player)
+            gun3.playerGiveItem(player)
 //            player.inventory.addItem(grenade.createItemStack())
 //            player.inventory.addItem(touchGrenade.createItemStack())
 //            player.inventory.addItem(melee.createItemStack())

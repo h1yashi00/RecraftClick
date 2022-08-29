@@ -15,6 +15,6 @@ class ReloadOneBullet (
         }
         gun.stats.reloading = true
         player.playSound(player.location, Sound.BLOCK_WOODEN_DOOR_OPEN, 1f,2f)
-        reloadManager.register(gun, player, System.currentTimeMillis() + reloadTime.getMilliseconds())
+        reloadManager.register(gun, player)
     }
 }

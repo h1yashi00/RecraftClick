@@ -22,6 +22,7 @@ class ReloadFullBullet(
         gunStats.reloading = true
         player.playSound(player.location, Sound.BLOCK_WOODEN_DOOR_OPEN, 1f,2f)
         val task = Util.createTask {
+            player.sendExperienceChange(checkTick.toFloat() / reloadTime.tick, gunStats.totalArmo)
             if (checkTick <= 0) {
                 val shootArmo = armo - gunStats.currentArmo
                 val restoreArmo = if (shootArmo <= gunStats.totalArmo) {
@@ -33,12 +34,12 @@ class ReloadFullBullet(
                 gunStats.totalArmo   +=  -restoreArmo
                 gunStats.currentArmo +=   restoreArmo
                 gunStats.reloading = false
+                player.sendExperienceChange(1f, gunStats.totalArmo)
                 val reloadItem = player.inventory.itemInMainHand.clone()
                     .apply {
                         amount = gunStats.currentArmo
                     }
                 player.inventory.setItemInMainHand(reloadItem)
-                player.sendExperienceChange(1.0F, gunStats.totalArmo)
                 player.playSound(player.location, Sound.BLOCK_WOODEN_DOOR_CLOSE, 1f, 2f)
                 cancel()
                 return@createTask

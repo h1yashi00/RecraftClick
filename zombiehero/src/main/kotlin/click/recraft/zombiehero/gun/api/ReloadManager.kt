@@ -14,7 +14,7 @@ class ReloadManager {
     private data class Data(
         val gun: PlayerGun,
         val player: Player,
-        val time: Long,
+        var tick: Int,
         val pastItem: ItemStack,
     )
     init {
@@ -22,7 +22,6 @@ class ReloadManager {
             save.iterator().forEach {(uuid, data) ->
                 val gun = data.gun
                 val gunStats = gun.stats
-                val reloadTime = data.time
                 val player = data.player
                 if (!gunStats.reloading) {
                     save.remove(uuid)
@@ -33,14 +32,15 @@ class ReloadManager {
                     save.remove(uuid)
                     return@forEach
                 }
-                val passed = System.currentTimeMillis() - reloadTime
-                if (passed < 0) {
+                data.tick -= 1
+                player.sendExperienceChange(data.tick.toFloat() / data.gun.reload.reloadTime.tick , gunStats.totalArmo)
+                if (data.tick > 0) {
                     return@forEach
                 }
+                player.sendExperienceChange(1f / data.gun.reload.reloadTime.tick , gunStats.totalArmo)
                 gunStats.reloading = false
                 gunStats.totalArmo += -1
                 gunStats.currentArmo += 1
-                player.sendExperienceChange(1F, gunStats.totalArmo)
                 val reloadItem = player.inventory.itemInMainHand.clone()
                     .apply {
                         amount = gunStats.currentArmo
@@ -55,7 +55,7 @@ class ReloadManager {
         Bukkit.getScheduler().runTaskTimer(ZombieHero.plugin, task, 10,1)
     }
 
-    fun register(gun: PlayerGun, player: Player, expireTime: Long) {
-        save[gun.uuid] = Data(gun, player, expireTime, player.inventory.itemInMainHand)
+    fun register(gun: PlayerGun, player: Player) {
+        save[gun.uuid] = Data(gun, player, gun.reload.reloadTime.tick, player.inventory.itemInMainHand)
     }
 }
