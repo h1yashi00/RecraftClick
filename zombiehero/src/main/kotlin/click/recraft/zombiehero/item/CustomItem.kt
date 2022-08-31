@@ -11,13 +11,12 @@ import java.util.*
 
 // dont stack custom item
 abstract class CustomItem(
-    private val manager: CustomItemManager,
     private val item: ItemStack
 ) {
-    val uuid: UUID
+    val unique: UUID
     init {
         val strUUID= item.itemMeta!!.localizedName
-        uuid = UUID.fromString(strUUID)!!
+        unique = UUID.fromString(strUUID)!!
     }
     open fun createItemStack(): ItemStack {
         val meta = item.itemMeta!!
@@ -26,11 +25,8 @@ abstract class CustomItem(
             customModelData = meta.customModelData,
             displayName = meta.displayName,
             lore = meta.lore ?: listOf(),
-            localizedName = uuid.toString()
+            localizedName = unique.toString()
         )
-    }
-    fun initialize() {
-        manager.register(uuid, this)
     }
 
     abstract fun inInvItemClick(clickType: ClickType, player: Player)

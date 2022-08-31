@@ -2,7 +2,7 @@ package click.recraft.zombiehero.gun.api
 
 import click.recraft.zombiehero.Util
 import click.recraft.zombiehero.ZombieHero
-import click.recraft.zombiehero.item.gun.PlayerGun
+import click.recraft.zombiehero.item.gun.Gun
 import org.bukkit.*
 import org.bukkit.block.Block
 import org.bukkit.entity.ArmorStand
@@ -46,7 +46,7 @@ interface Shot {
 
     private fun shootArmo(bullet: Location, player: Player) {
         bullet.apply { direction = Vector(direction.x + rand(spread), direction.y + rand(spread), direction.z + rand(spread)) }
-        (0..(bulletRange() * 2)).forEach{ count ->
+        (0..(bulletRange() * 2)).forEach{ _ ->
             showBallistic(bullet)
             bullet.apply { x += (direction.x / 2) ; y += (direction.y / 2); z += (direction.z /2)}
             if (bullet.block.type.isSolid) {
@@ -94,7 +94,7 @@ interface Shot {
         }
     }
 
-    fun shootAction(player: Player, playerGun: PlayerGun): Boolean {
+    fun shootAction(player: Player, playerGun: Gun): Boolean {
         val stats = playerGun.stats
         if (stats.reloading) {
             return false

@@ -3,13 +3,14 @@ package click.recraft.zombiehero.item.gun
 import click.recraft.zombiehero.Util
 import click.recraft.zombiehero.ZombieHero
 import click.recraft.zombiehero.item.CustomItemListener
+import click.recraft.zombiehero.item.CustomItemManager
 import org.bukkit.Bukkit
 import org.bukkit.event.EventHandler
 import org.bukkit.event.player.PlayerDropItemEvent
 import org.bukkit.event.player.PlayerItemHeldEvent
 
 class PlayerGunListener(
-    override val manager: PlayerGunManager
+    override val manager: CustomItemManager
 ) : CustomItemListener {
     @EventHandler
     fun swap(event: PlayerItemHeldEvent) {
@@ -20,7 +21,7 @@ class PlayerGunListener(
             return
         }
         val customItem = getItem(item) ?: return
-        (customItem as PlayerGun).playerGiveItem(player)
+        (customItem as Gun).playerGiveItem(player)
     }
     @EventHandler
     override fun itemDrop(e: PlayerDropItemEvent) {
@@ -30,7 +31,7 @@ class PlayerGunListener(
             e.isCancelled = true
         }
         val task = Util.createTask {
-            (item as PlayerGun).reload(player)
+            (item as Gun).reload(player)
         }
         Bukkit.getScheduler().runTaskLater(ZombieHero.plugin, task, 1)
     }

@@ -17,17 +17,18 @@ import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.scheduler.BukkitTask
 import java.util.UUID
 
-class TouchGrenade(
-    touchGrenadeManager: TouchGrenadeManager,
+open class TouchGrenade(
     name: String,
     private val explosionDelay: Tick,
     private val explodeFunction: (Location) -> Unit
-): CustomItem(touchGrenadeManager, item(
-    Material.GRAY_DYE,
-    displayName = "${ChatColor.GOLD}$name",
-    localizedName = UUID.randomUUID().toString(),
-    customModelData = 13432,
-)) {
+): CustomItem(
+    item (
+        Material.GRAY_DYE,
+        displayName = "${ChatColor.GOLD}$name",
+        localizedName = UUID.randomUUID().toString(),
+        customModelData = 13432
+    )
+) {
 
     private var useDelay = System.currentTimeMillis()
 

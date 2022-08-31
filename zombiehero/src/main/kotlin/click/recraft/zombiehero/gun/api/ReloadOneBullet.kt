@@ -1,6 +1,6 @@
 package click.recraft.zombiehero.gun.api
 
-import click.recraft.zombiehero.item.gun.PlayerGun
+import click.recraft.zombiehero.item.gun.Gun
 import org.bukkit.Sound
 import org.bukkit.entity.Player
 
@@ -9,7 +9,7 @@ class ReloadOneBullet (
     override val reloadTime: Tick,
     override val reloadManager: ReloadManager
 ) : Reload {
-    override fun reload(player: Player, gun: PlayerGun) {
+    override fun reload(player: Player, gun: Gun) {
         if (!check(gun.stats)) {
             return
         }

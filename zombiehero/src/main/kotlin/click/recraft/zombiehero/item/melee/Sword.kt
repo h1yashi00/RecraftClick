@@ -18,12 +18,10 @@ import org.bukkit.inventory.EquipmentSlot
 import java.util.*
 
 class Sword (
-    manager: MeleeManager,
     private val meleeCoolDownManager: MeleeCoolDownManager,
-    val damage: Int,
+    private val damage: Int,
     val coolDown: Tick
 ): CustomItem(
-    manager,
     item(
         Material.BLACK_DYE,
         customModelData = 3892,
@@ -71,7 +69,7 @@ class Sword (
         val player = event.player
         val item = player.inventory.itemInMainHand
         event.isCancelled = true
-        if (meleeCoolDownManager.contains(this.uuid)) {
+        if (meleeCoolDownManager.contains(this.unique)) {
             return
         }
         meleeCoolDownManager.register(this, player, item)

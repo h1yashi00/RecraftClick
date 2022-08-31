@@ -4,7 +4,6 @@ import click.recraft.share.item
 import click.recraft.zombiehero.gun.api.Reload
 import click.recraft.zombiehero.gun.api.Shot
 import click.recraft.zombiehero.item.CustomItem
-import click.recraft.zombiehero.item.CustomItemManager
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -15,17 +14,15 @@ import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
 import java.util.*
 
-class PlayerGun (
+open class Gun (
     material: Material,
     name: String,
     customModeValue: Int,
-    manager: CustomItemManager,
     private val shootManager: ShootManager,
     val reload: Reload,
     private val shot: Shot,
     private val walkSpeed: Float,
 ) : CustomItem(
-    manager,
     item (
         material = material,
         localizedName = UUID.randomUUID().toString(),

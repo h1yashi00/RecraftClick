@@ -1,7 +1,6 @@
 package click.recraft.zombiehero.item.grenade
 
 import click.recraft.share.item
-import click.recraft.zombiehero.HitGrenadeManager
 import click.recraft.zombiehero.item.CustomItem
 import org.bukkit.Color
 import org.bukkit.Material
@@ -18,10 +17,8 @@ import java.util.*
 
 
 class HitGrenade (
-    hitGrenadeManager: HitGrenadeManager,
     name: String
 ): CustomItem (
-    manager = hitGrenadeManager,
     item(
         Material.MAGENTA_DYE,
         localizedName = UUID.randomUUID().toString(),

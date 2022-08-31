@@ -2,7 +2,7 @@ package click.recraft.zombiehero.gun.api
 
 import click.recraft.zombiehero.Util
 import click.recraft.zombiehero.ZombieHero
-import click.recraft.zombiehero.item.gun.PlayerGun
+import click.recraft.zombiehero.item.gun.Gun
 import org.bukkit.Bukkit
 import org.bukkit.Sound
 import org.bukkit.entity.Player
@@ -12,7 +12,7 @@ import java.util.*
 class ReloadManager {
     private val save = hashMapOf<UUID, Data>()
     private data class Data(
-        val gun: PlayerGun,
+        val gun: Gun,
         val player: Player,
         var tick: Int,
         val pastItem: ItemStack,
@@ -56,7 +56,7 @@ class ReloadManager {
         Bukkit.getScheduler().runTaskTimer(ZombieHero.plugin, task, 10,1)
     }
 
-    fun register(gun: PlayerGun, player: Player) {
-        save[gun.uuid] = Data(gun, player, gun.reload.reloadTime.tick, player.inventory.itemInMainHand)
+    fun register(gun: Gun, player: Player) {
+        save[gun.unique] = Data(gun, player, gun.reload.reloadTime.tick, player.inventory.itemInMainHand)
     }
 }

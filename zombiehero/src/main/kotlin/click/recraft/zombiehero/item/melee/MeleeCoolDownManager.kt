@@ -45,6 +45,6 @@ class MeleeCoolDownManager {
         return save.contains(uuid)
     }
     fun register(sword: Sword, player: Player, pastItem: ItemStack) {
-        save[sword.uuid] = Data(sword, pastItem, player.uniqueId, sword.coolDown.tick)
+        save[sword.unique] = Data(sword, pastItem, player.uniqueId, sword.coolDown.tick)
     }
 }

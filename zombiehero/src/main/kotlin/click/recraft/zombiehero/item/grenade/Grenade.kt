@@ -4,7 +4,6 @@ import click.recraft.share.item
 import click.recraft.zombiehero.ZombieHero
 import click.recraft.zombiehero.gun.api.Tick
 import click.recraft.zombiehero.item.CustomItem
-import click.recraft.zombiehero.item.CustomItemManager
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Location
@@ -18,14 +17,12 @@ import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.scheduler.BukkitTask
 import java.util.*
 
-class Grenade(
-    customItemManager: CustomItemManager,
+open class Grenade(
     name: String,
     private val explosionDelay: Tick,
     private val explosionFunction: (Location) -> Unit,
 )
 : CustomItem(
-    customItemManager,
     item(
         Material.BLUE_DYE,
         displayName = "${ChatColor.GOLD}$name",

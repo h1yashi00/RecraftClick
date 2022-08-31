@@ -2,7 +2,7 @@ package click.recraft.zombiehero.gun.api
 
 import click.recraft.zombiehero.Util
 import click.recraft.zombiehero.ZombieHero
-import click.recraft.zombiehero.item.gun.PlayerGun
+import click.recraft.zombiehero.item.gun.Gun
 import org.bukkit.Bukkit
 import org.bukkit.Sound
 import org.bukkit.entity.Player
@@ -12,7 +12,7 @@ class ReloadFullBullet(
     override var reloadTime: Tick = Tick.sec(0.0),
     override val reloadManager: ReloadManager,
 ) : Reload {
-    override fun reload(player: Player, gun: PlayerGun) {
+    override fun reload(player: Player, gun: Gun) {
         val gunStats = gun.stats
         val item = player.inventory.itemInMainHand
         var checkTick = reloadTime.tick

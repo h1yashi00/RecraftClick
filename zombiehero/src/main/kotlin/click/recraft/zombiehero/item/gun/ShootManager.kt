@@ -9,7 +9,7 @@ import kotlin.collections.HashMap
 
 class ShootManager {
     private val manager: HashMap<UUID, Data> = hashMapOf()
-    private data class Data(val uuid: UUID, val gun: PlayerGun, val tick: Long = System.currentTimeMillis())
+    private data class Data(val uuid: UUID, val gun: Gun, val tick: Long = System.currentTimeMillis())
     init {
         val task = Util.createTask {
                 // 処理をすることろ
@@ -45,7 +45,7 @@ class ShootManager {
         }
         Bukkit.getScheduler().runTaskTimer(ZombieHero.plugin, task, 10,1)
     }
-    fun register(player: Player, playerGun: PlayerGun) {
-        manager[playerGun.uuid] =  Data(player.uniqueId, playerGun)
+    fun register(player: Player, playerGun: Gun) {
+        manager[playerGun.unique] =  Data(player.uniqueId, playerGun)
     }
 }

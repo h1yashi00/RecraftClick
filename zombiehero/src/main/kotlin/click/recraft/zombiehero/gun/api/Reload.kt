@@ -1,6 +1,6 @@
 package click.recraft.zombiehero.gun.api
 
-import click.recraft.zombiehero.item.gun.PlayerGun
+import click.recraft.zombiehero.item.gun.Gun
 import org.bukkit.entity.Player
 
 interface Reload {
@@ -8,7 +8,7 @@ interface Reload {
     // プレイヤーチェックするのが1sec/20tick の 1tick毎なので､ 50msでチェック
     val reloadTime: Tick
     val reloadManager: ReloadManager
-    fun check(gunStats: PlayerGun.GunStats): Boolean {
+    fun check(gunStats: Gun.GunStats): Boolean {
         if (gunStats.reloading) {
             return false
         }
@@ -21,5 +21,5 @@ interface Reload {
         return true
     }
 
-    fun reload(player: Player, gun: PlayerGun)
+    fun reload(player: Player, gun: Gun)
 }
