@@ -18,12 +18,13 @@ class PlayerJoin: Listener {
     fun joinPlayer(event: PlayerJoinEvent) {
         val player = event.player
         player.foodLevel = 20
-        player.walkSpeed = 0.20F
         player.inventory.clear()
-        val factory = CustomItemFactory()
+        val factory = ZombieHero.plugin.customItemFactory
         val gun = factory.createGun(CustomItemFactory.GunType.AK47)
+        val shotGun = factory.createGun(CustomItemFactory.GunType.SHOTGUN)
         val task = Util.createTask {
             player.inventory.addItem(gun.createItemStack())
+            player.inventory.addItem(shotGun.createItemStack())
         }
         Bukkit.getScheduler().runTaskLater(ZombieHero.plugin, task, 1)
     }

@@ -27,17 +27,10 @@ interface Shot {
         loc.world!!.spawnParticle(particle, loc, 1)
     }
 
-    private fun rand(spread: Double): Double {
-        val rangeMin = -spread
-        val rangeMax =  spread
+    private fun rand(): Double {
+        val rangeMin = -accuracy.value.toDouble()
+        val rangeMax =  accuracy.value.toDouble()
         return rangeMin + (rangeMax - rangeMin) * Random().nextDouble()
-    }
-
-    private fun forceRecoil(player: Player) {
-        val pitch = player.location.pitch
-        val yaw = player.location.yaw
-        if (recoilY == 0F && recoilZ == 0F) return
-        player.setRotation(yaw - recoilZ,pitch - recoilY)
     }
 
     fun bulletRange(): Int {
@@ -45,7 +38,7 @@ interface Shot {
     }
 
     private fun shootArmo(bullet: Location, player: Player) {
-        bullet.apply { direction = Vector(direction.x + rand(spread), direction.y + rand(spread), direction.z + rand(spread)) }
+        bullet.apply { direction = Vector(direction.x + rand(), direction.y + rand(), direction.z + rand()) }
         (0..(bulletRange() * 2)).forEach{ _ ->
             showBallistic(bullet)
             bullet.apply { x += (direction.x / 2) ; y += (direction.y / 2); z += (direction.z /2)}
@@ -115,7 +108,6 @@ interface Shot {
     }
 
     fun shoot(player: Player) {
-        forceRecoil(player)
         player.world.playSound(player.location, Sound.ENTITY_IRON_GOLEM_HURT, 1f, 3F)
         val dir = player.location.direction
         player.location.direction = dir.multiply(1)
@@ -131,8 +123,6 @@ interface Shot {
     val damage: Int
     val knockBack: Double
     val shootAmmo: Int
-    val spread: Double
-    val recoilY: Float
-    val recoilZ: Float
+    val accuracy: Accuracy
     val particle: Particle
 }

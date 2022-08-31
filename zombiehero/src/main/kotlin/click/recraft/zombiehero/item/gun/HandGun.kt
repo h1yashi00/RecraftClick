@@ -1,6 +1,7 @@
 package click.recraft.zombiehero.item.gun
 
 import click.recraft.zombiehero.ZombieHero
+import click.recraft.zombiehero.gun.api.Accuracy
 import click.recraft.zombiehero.gun.api.OneShot
 import click.recraft.zombiehero.gun.api.ReloadFullBullet
 import click.recraft.zombiehero.gun.api.Tick
@@ -20,9 +21,7 @@ class HandGun: Gun(
         Tick.sec(0.7),
         70,
         1.0,
-        0.01,
-        0.0F,
-        0.0F,
+        Accuracy(0),
         Tick.sec(0.5)
     ),
     walkSpeed = 0.25F

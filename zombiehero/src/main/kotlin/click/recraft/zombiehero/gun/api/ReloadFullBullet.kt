@@ -13,45 +13,11 @@ class ReloadFullBullet(
     override val reloadManager: ReloadManager,
 ) : Reload {
     override fun reload(player: Player, gun: Gun) {
-        val gunStats = gun.stats
-        val item = player.inventory.itemInMainHand
-        var checkTick = reloadTime.tick
-        if (!check(gunStats)) {
+        if (!check(gun.stats)) {
             return
         }
-        gunStats.reloading = true
+        gun.stats.reloading = true
         player.playSound(player.location, Sound.BLOCK_WOODEN_DOOR_OPEN, 1f,2f)
-        val task = Util.createTask {
-            player.sendExperienceChange(checkTick.toFloat() / reloadTime.tick, gunStats.totalArmo)
-            if (checkTick <= 0) {
-                val shootArmo = armo - gunStats.currentArmo
-                val restoreArmo = if (shootArmo <= gunStats.totalArmo) {
-                    shootArmo
-                }
-                else {
-                    gunStats.totalArmo
-                }
-                gunStats.totalArmo   +=  -restoreArmo
-                gunStats.currentArmo +=   restoreArmo
-                gunStats.reloading = false
-                player.sendExperienceChange(1f, gunStats.totalArmo)
-                val reloadItem = player.inventory.itemInMainHand.clone()
-                    .apply {
-                        amount = gunStats.currentArmo
-                    }
-                player.inventory.setItemInMainHand(reloadItem)
-                player.playSound(player.location, Sound.BLOCK_WOODEN_DOOR_CLOSE, 1f, 2f)
-                cancel()
-                return@createTask
-            }
-
-            if (item != player.inventory.itemInMainHand) {
-                gunStats.reloading = false
-                cancel()
-                return@createTask
-            }
-            checkTick += -1
-        }
-        Bukkit.getScheduler().runTaskTimer(ZombieHero.plugin, task, 0,1)
+        reloadManager.register(gun, player, this)
     }
 }

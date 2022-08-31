@@ -13,50 +13,64 @@ class ReloadManager {
     private val save = hashMapOf<UUID, Data>()
     private data class Data(
         val gun: Gun,
-        val player: Player,
         var tick: Int,
         val pastItem: ItemStack,
+        val reload: Reload,
+        val uuid: UUID
     )
     init {
         val task = Util.createTask {
             save.iterator().forEach {(uuid, data) ->
-                val gun = data.gun
-                val gunStats = gun.stats
-                val player = data.player
-                if (!gunStats.reloading) {
+                val player = Bukkit.getPlayer(data.uuid)
+                val reload = data.reload
+                val reloadTime = data.reload.reloadTime
+
+                if (player == null) {
                     save.remove(uuid)
                     return@forEach
                 }
-                if (player.inventory.itemInMainHand != data.pastItem) {
+
+                val gun = data.gun
+                val gunStats = gun.stats
+                val item = player.inventory.itemInMainHand
+                val checkTick = data.tick
+
+                player.sendExperienceChange(checkTick.toFloat() / reloadTime.tick, gunStats.totalArmo)
+
+                if (checkTick <= 0) {
+                    val shootArmo = reload.armo - gunStats.currentArmo
+                    val restoreArmo = if (shootArmo <= gunStats.totalArmo) {
+                        shootArmo
+                    }
+                    else {
+                        gunStats.totalArmo
+                    }
+                    gunStats.totalArmo   +=  -restoreArmo
+                    gunStats.currentArmo +=   restoreArmo
+                    gunStats.reloading = false
+                    player.sendExperienceChange(1f, gunStats.totalArmo)
+                    val reloadItem = player.inventory.itemInMainHand.clone()
+                        .apply {
+                            amount = gunStats.currentArmo
+                        }
+                    player.inventory.setItemInMainHand(reloadItem)
+                    player.playSound(player.location, Sound.BLOCK_WOODEN_DOOR_CLOSE, 1f, 2f)
+                    save.remove(uuid)
+                    return@forEach
+                }
+
+                if (item != player.inventory.itemInMainHand) {
                     gunStats.reloading = false
                     save.remove(uuid)
                     return@forEach
                 }
-                data.tick -= 1
-                player.sendExperienceChange(data.tick.toFloat() / data.gun.reload.reloadTime.tick , gunStats.totalArmo)
-                if (data.tick > 0) {
-                    return@forEach
-                }
-                player.sendExperienceChange(1f , gunStats.totalArmo)
-                gunStats.reloading = false
-                gunStats.totalArmo += -1
-                gunStats.currentArmo += 1
-                save.remove(uuid)
-                val reloadItem = player.inventory.itemInMainHand.clone()
-                    .apply {
-                        amount = gunStats.currentArmo
-                    }
-                player.inventory.setItemInMainHand(reloadItem)
-                if (gunStats.currentArmo == gun.reload.armo) {
-                    player.playSound(player.location, Sound.BLOCK_WOODEN_DOOR_CLOSE,1f, 2f)
-                }
-                gun.reload(player)
+                data.tick += -1
             }
         }
         Bukkit.getScheduler().runTaskTimer(ZombieHero.plugin, task, 10,1)
     }
 
-    fun register(gun: Gun, player: Player) {
-        save[gun.unique] = Data(gun, player, gun.reload.reloadTime.tick, player.inventory.itemInMainHand)
+    fun register(gun: Gun, player: Player, reload: Reload) {
+        save[gun.unique] = Data(gun,  gun.getReloadTime(), player.inventory.itemInMainHand, reload, player.uniqueId)
     }
 }

@@ -11,9 +11,7 @@ class MultiShot (
     override val damage: Int,
     override val shootAmmo: Int,
     override val knockBack: Double,
-    override val spread: Double,
-    override val recoilY: Float,
-    override val recoilZ: Float,
+    override val accuracy: Accuracy,
     override val knockBackAccumulateTime: Tick,
     override val particle: Particle = Particle.ASH,
 ) : Shot {

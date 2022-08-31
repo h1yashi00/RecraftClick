@@ -1,8 +1,9 @@
 package click.recraft.zombiehero.item.gun
 
 import click.recraft.zombiehero.ZombieHero
+import click.recraft.zombiehero.gun.api.Accuracy
 import click.recraft.zombiehero.gun.api.MultiShot
-import click.recraft.zombiehero.gun.api.ReloadOneBullet
+import click.recraft.zombiehero.gun.api.ReloadFullBullet
 import click.recraft.zombiehero.gun.api.Tick
 import org.bukkit.Material
 
@@ -11,20 +12,22 @@ class ShotGun: Gun(
     name = "ShotGun",
     customModeValue = 30,
     shootManager = ZombieHero.plugin.shootManager,
-    reload = ReloadOneBullet (
+    reload = ReloadFullBullet (
         8,
-        Tick.sec(1.3),
+        Tick.sec(0.5),
         ZombieHero.plugin.reloadManager
     ),
     shot = MultiShot (
-        Tick.sec(0.1),
+        rate = Tick.sec(0.5),
         10,
         5,
         0.3,
-        0.01,
-        0.0F,
-        0.0F,
+        Accuracy(200),
         Tick.sec(0.05)
     ),
-    walkSpeed = 0.25F
-)
+    walkSpeed = -0.05F
+) {
+    override fun getReloadTime(): Int {
+        return super.getReloadTime()
+    }
+}

@@ -4,6 +4,7 @@ import click.recraft.share.item
 import click.recraft.zombiehero.gun.api.Reload
 import click.recraft.zombiehero.gun.api.Shot
 import click.recraft.zombiehero.item.CustomItem
+import click.recraft.zombiehero.player.WalkSpeed
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -19,17 +20,23 @@ open class Gun (
     name: String,
     customModeValue: Int,
     private val shootManager: ShootManager,
-    val reload: Reload,
+    private val reload: Reload,
     private val shot: Shot,
-    private val walkSpeed: Float,
-) : CustomItem(
+    override val walkSpeed: Float,
+) : WalkSpeed, CustomItem(
     item (
         material = material,
         localizedName = UUID.randomUUID().toString(),
         displayName = "${ChatColor.GOLD}$name",
         customModelData = customModeValue,
         lore = listOf(
-            "reloadTime: ${reload.reloadTime}"
+            "${ChatColor.AQUA}弾数: ${reload.armo}",
+            "${ChatColor.AQUA}リロード時間: ${reload.reloadTime.getMilliseconds() / 1000}秒",
+            "${ChatColor.AQUA}正確さ: ${shot.accuracy.value}",
+            "${ChatColor.AQUA}レート: ${shot.rate.getMilliseconds() / 1000}秒",
+            "${ChatColor.AQUA}ダメージ: ${shot.damage}",
+            "${ChatColor.AQUA}発射される弾数: ${shot.shootAmmo}",
+            "${ChatColor.AQUA}ダメージ/秒: ${shot.damage * shot.shootAmmo / (shot.rate.getMilliseconds().toDouble() / 1000.0)}",
         )
     )
 ) {
@@ -54,6 +61,13 @@ open class Gun (
             player.inventory.addItem(createItemStack())
         }
         player.sendExperienceChange(1.0F, stats.totalArmo)
+    }
+
+    open fun getReloadTime(): Int {
+        return reload.reloadTime.tick
+    }
+    fun getArmo(): Int {
+        return reload.armo
     }
 
     fun shootAction(player: Player): Boolean {
@@ -87,7 +101,6 @@ open class Gun (
             shoot(player)
         }
         if (action == Action.LEFT_CLICK_BLOCK || action == Action.LEFT_CLICK_AIR) {
-            player.sendMessage("leftclick")
         }
     }
 }
