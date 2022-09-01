@@ -1,9 +1,6 @@
 package click.recraft.zombiehero.gun.api
 
-import click.recraft.zombiehero.Util
-import click.recraft.zombiehero.ZombieHero
 import click.recraft.zombiehero.item.gun.Gun
-import org.bukkit.Bukkit
 import org.bukkit.Sound
 import org.bukkit.entity.Player
 
@@ -18,6 +15,6 @@ class ReloadFullBullet(
         }
         gun.stats.reloading = true
         player.playSound(player.location, Sound.BLOCK_WOODEN_DOOR_OPEN, 1f,2f)
-        reloadManager.register(gun, player, this)
+        reloadManager.register(gun, player)
     }
 }

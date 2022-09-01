@@ -1,6 +1,5 @@
 package click.recraft.zombiehero.player
 
-import click.recraft.zombiehero.ZombieHero
 import click.recraft.zombiehero.task.OneTickTimerTask
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
@@ -36,7 +35,14 @@ object HealthManager: OneTickTimerTask {
         sendPlayerHealth(this)
     }
 
-    fun Player.getPluginHealth(): Int {
+    fun Player.healPluginHealth(heal: Int) {
+        val hp = getPluginHealth()
+        val currentHp = hp + heal
+        healths[uniqueId] = currentHp
+        sendPlayerHealth(this)
+    }
+
+    private fun Player.getPluginHealth(): Int {
         if (!healths.contains(uniqueId)) {
             healths[uniqueId] = 1000
         }

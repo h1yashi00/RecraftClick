@@ -14,16 +14,14 @@ class ReloadManager {
     private data class Data(
         val gun: Gun,
         var tick: Int,
+        val reloadTime: Int,
         val pastItem: ItemStack,
-        val reload: Reload,
         val uuid: UUID
     )
     init {
         val task = Util.createTask {
             save.iterator().forEach {(uuid, data) ->
                 val player = Bukkit.getPlayer(data.uuid)
-                val reload = data.reload
-                val reloadTime = data.reload.reloadTime
 
                 if (player == null) {
                     save.remove(uuid)
@@ -35,10 +33,10 @@ class ReloadManager {
                 val item = player.inventory.itemInMainHand
                 val checkTick = data.tick
 
-                player.sendExperienceChange(checkTick.toFloat() / reloadTime.tick, gunStats.totalArmo)
+                player.sendExperienceChange(checkTick.toFloat() / data.reloadTime.toFloat(), gunStats.totalArmo)
 
                 if (checkTick <= 0) {
-                    val shootArmo = reload.armo - gunStats.currentArmo
+                    val shootArmo = gunStats.maxArmo - gunStats.currentArmo
                     val restoreArmo = if (shootArmo <= gunStats.totalArmo) {
                         shootArmo
                     }
@@ -70,7 +68,7 @@ class ReloadManager {
         Bukkit.getScheduler().runTaskTimer(ZombieHero.plugin, task, 10,1)
     }
 
-    fun register(gun: Gun, player: Player, reload: Reload) {
-        save[gun.unique] = Data(gun,  gun.getReloadTime(), player.inventory.itemInMainHand, reload, player.uniqueId)
+    fun register(gun: Gun, player: Player) {
+        save[gun.unique] = Data(gun,  gun.getReloadTime(), gun.getReloadTime(), player.inventory.itemInMainHand,  player.uniqueId)
     }
 }
