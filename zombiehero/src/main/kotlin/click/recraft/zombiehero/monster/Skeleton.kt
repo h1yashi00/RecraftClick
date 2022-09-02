@@ -56,9 +56,18 @@ class Skeleton(override val playerUUID: UUID) : Monster {
             val player = Bukkit.getPlayer(monster.playerUUID) ?: return
             val potionEffect = (item.itemMeta as PotionMeta).customEffects
             potionEffect.forEach {
-                player.sendMessage(it.toString())
                 player.addPotionEffect(it)
             }
+            player.inventory.helmet = ItemStack(Material.AIR)
+            player.inventory.chestplate = ItemStack(Material.AIR)
+            active = true
+            val task = Util.createTask {
+                player.inventory.helmet     = monster.head
+                player.inventory.chestplate = monster.chestPlate
+                active = false
+            }
+            Bukkit.getScheduler().runTaskLater(ZombieHero.plugin, task, 20 * 15)
+            coolDown = coolDownTime
         }
     }
     override val skill1: Skill = Skill1(this)

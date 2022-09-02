@@ -24,7 +24,7 @@ interface Shot {
 
     private fun showBallistic(location: Location) {
         val loc = location.clone()
-        loc.world!!.spawnParticle(particle, loc, 1)
+        loc.world!!.spawnParticle(particle, loc, 1,0.0,0.0,0.0,1.0)
     }
 
     private fun rand(): Double {
