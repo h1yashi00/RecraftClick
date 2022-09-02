@@ -2,7 +2,8 @@ package click.recraft.zombiehero
 
 import click.recraft.share.*
 import click.recraft.zombiehero.gun.GrenadeListener
-import click.recraft.zombiehero.gun.api.ReloadManager
+import click.recraft.zombiehero.gun.api.ReloadManagerFullBullet
+import click.recraft.zombiehero.gun.api.ReloadManagerOneBullet
 import click.recraft.zombiehero.item.CustomItemFactory
 import click.recraft.zombiehero.item.grenade.*
 import click.recraft.zombiehero.item.gun.PlayerGunListener
@@ -23,7 +24,8 @@ class ZombieHero: KotlinPlugin(), Listener {
         lateinit var plugin: ZombieHero
     }
     val shootManager     : ShootManager     by lazy { ShootManager()     }
-    val reloadManager    : ReloadManager    by lazy { ReloadManager()    }
+    val reloadManagerFullBullet    : ReloadManagerFullBullet    by lazy { ReloadManagerFullBullet()    }
+    val oneBulletReloadManager: ReloadManagerOneBullet by lazy { ReloadManagerOneBullet() }
     val meleeCoolDownManager: MeleeCoolDownManager by lazy { MeleeCoolDownManager() }
     val customItemFactory: CustomItemFactory by lazy {CustomItemFactory()}
     val monsterManager: MonsterManager      by lazy { MonsterManager() }

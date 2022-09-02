@@ -9,10 +9,10 @@ class Awp : GunScope (
     "Awp",
     42394,
     shootManager = ZombieHero.plugin.shootManager,
-    reload = ReloadFullBullet(
+    reload = Reload (
         7,
         Tick.sec(1.5),
-        ZombieHero.plugin.reloadManager,
+        ZombieHero.plugin.reloadManagerFullBullet,
     ),
     shot = OneShot (
         Tick.sec(1.4),

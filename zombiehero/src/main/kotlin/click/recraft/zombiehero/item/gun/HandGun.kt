@@ -3,7 +3,7 @@ package click.recraft.zombiehero.item.gun
 import click.recraft.zombiehero.ZombieHero
 import click.recraft.zombiehero.gun.api.Accuracy
 import click.recraft.zombiehero.gun.api.OneShot
-import click.recraft.zombiehero.gun.api.ReloadFullBullet
+import click.recraft.zombiehero.gun.api.Reload
 import click.recraft.zombiehero.gun.api.Tick
 import org.bukkit.Material
 
@@ -12,10 +12,10 @@ class HandGun: Gun(
     name = "HandGun",
     customModeValue = 30,
     shootManager = ZombieHero.plugin.shootManager,
-    reload = ReloadFullBullet (
+    reload = Reload (
         7,
         Tick.sec(1.3),
-        ZombieHero.plugin.reloadManager
+        ZombieHero.plugin.reloadManagerFullBullet
     ),
     shot = OneShot(
         Tick.sec(0.7),
