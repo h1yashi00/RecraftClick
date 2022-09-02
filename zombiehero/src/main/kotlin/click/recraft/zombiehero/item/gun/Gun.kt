@@ -44,7 +44,6 @@ open class Gun (
         var totalArmo:   Int,
         var currentArmo: Int,
         var maxArmo:     Int,
-        var reloading:   Boolean,
         var gunName: String,
     ) {
     }
@@ -52,9 +51,15 @@ open class Gun (
         reload.armo * 5,
         reload.armo,
         reload.armo,
-        false,
         name
     )
+    fun isRelaoding(): Boolean {
+        return reload.reloadManager.contains(this)
+    }
+    fun cancelReload() {
+        reload.reloadManager.remove(this)
+    }
+
     fun playerGiveItem(player: Player) {
         val item = createItemStack()
         if (!player.inventory.contains(item)) {

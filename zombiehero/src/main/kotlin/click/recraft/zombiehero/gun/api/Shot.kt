@@ -28,8 +28,8 @@ interface Shot {
     }
 
     private fun rand(): Double {
-        val rangeMin = -accuracy.value.toDouble()
-        val rangeMax =  accuracy.value.toDouble()
+        val rangeMin = -accuracy.value
+        val rangeMax =  accuracy.value
         return rangeMin + (rangeMax - rangeMin) * Random().nextDouble()
     }
 
@@ -88,10 +88,11 @@ interface Shot {
     }
 
     fun shootAction(player: Player, playerGun: Gun): Boolean {
-        val stats = playerGun.stats
-        if (stats.reloading) {
+        if (playerGun.isRelaoding()) {
+            playerGun.cancelReload()
             return false
         }
+        val stats = playerGun.stats
         val passedTick = System.currentTimeMillis() - lastShot
         if (passedTick < rate.getMilliseconds()) {
             return false

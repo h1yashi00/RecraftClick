@@ -8,8 +8,9 @@ interface Reload {
     // プレイヤーチェックするのが1sec/20tick の 1tick毎なので､ 50msでチェック
     val reloadTime: Tick
     val reloadManager: ReloadManager
-    fun check(gunStats: Gun.GunStats): Boolean {
-        if (gunStats.reloading) {
+    fun check(gun: Gun): Boolean {
+        val gunStats = gun.stats
+        if (gun.isRelaoding()) {
             return false
         }
         if (gunStats.totalArmo <= 0) {

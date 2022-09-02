@@ -19,7 +19,7 @@ class MultiShot (
     override val saveKnockBack: HashMap<UUID, Double> = hashMapOf()
 
     override fun shootAction(player: Player, playerGun: Gun): Boolean {
-        playerGun.stats.reloading = false
+        playerGun.cancelReload()
         return super.shootAction(player, playerGun)
     }
 }

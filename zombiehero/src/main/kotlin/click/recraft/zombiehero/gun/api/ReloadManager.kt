@@ -45,7 +45,6 @@ class ReloadManager {
                     }
                     gunStats.totalArmo   +=  -restoreArmo
                     gunStats.currentArmo +=   restoreArmo
-                    gunStats.reloading = false
                     player.sendExperienceChange(1f, gunStats.totalArmo)
                     val reloadItem = player.inventory.itemInMainHand.clone()
                         .apply {
@@ -58,7 +57,6 @@ class ReloadManager {
                 }
 
                 if (item != player.inventory.itemInMainHand) {
-                    gunStats.reloading = false
                     save.remove(uuid)
                     return@forEach
                 }
@@ -70,5 +68,11 @@ class ReloadManager {
 
     fun register(gun: Gun, player: Player) {
         save[gun.unique] = Data(gun,  gun.getReloadTime(), gun.getReloadTime(), player.inventory.itemInMainHand,  player.uniqueId)
+    }
+    fun contains(gun: Gun): Boolean {
+        return save.contains(gun.unique)
+    }
+    fun remove(gun: Gun) {
+        save.remove(gun.unique)
     }
 }

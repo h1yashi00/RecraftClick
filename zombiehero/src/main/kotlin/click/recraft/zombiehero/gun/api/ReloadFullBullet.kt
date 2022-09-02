@@ -10,11 +10,10 @@ class ReloadFullBullet(
     override val reloadManager: ReloadManager,
 ) : Reload {
     override fun reload(player: Player, gun: Gun) {
-        if (!check(gun.stats)) {
+        if (!check(gun)) {
             return
         }
-        gun.stats.reloading = true
-        player.playSound(player.location, Sound.BLOCK_WOODEN_DOOR_OPEN, 1f,2f)
         reloadManager.register(gun, player)
+        player.playSound(player.location, Sound.BLOCK_WOODEN_DOOR_OPEN, 1f,2f)
     }
 }
