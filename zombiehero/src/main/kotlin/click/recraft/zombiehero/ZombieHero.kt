@@ -6,6 +6,7 @@ import click.recraft.zombiehero.gun.api.ReloadManager
 import click.recraft.zombiehero.item.CustomItemFactory
 import click.recraft.zombiehero.item.grenade.*
 import click.recraft.zombiehero.item.gun.PlayerGunListener
+import click.recraft.zombiehero.item.gun.PlayerGunScopeListener
 import click.recraft.zombiehero.item.gun.ShootManager
 import click.recraft.zombiehero.item.melee.MeleeCoolDownManager
 import click.recraft.zombiehero.item.melee.MeleeListener
@@ -51,6 +52,7 @@ class ZombieHero: KotlinPlugin(), Listener {
         server.pluginManager.registerEvents(ZombieListener(monsterManager), this)
         server.pluginManager.registerEvents(ProtectWorldListener(), this)
         server.pluginManager.registerEvents(SkeletonListener(monsterManager), this)
+        server.pluginManager.registerEvents(PlayerGunScopeListener(customItemFactory), this)
         super.onEnable()
     }
 

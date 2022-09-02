@@ -1,15 +1,13 @@
 package click.recraft.zombiehero.item
 
 import click.recraft.zombiehero.ZombieHero
+import click.recraft.zombiehero.gun.api.Scope
 import click.recraft.zombiehero.gun.api.Tick
 import click.recraft.zombiehero.item.grenade.GrenadeImpl
 import click.recraft.zombiehero.item.grenade.HitGrenade
 import click.recraft.zombiehero.item.grenade.TouchGrenadeImpl
 import click.recraft.zombiehero.item.grenade.WtfGrenade
-import click.recraft.zombiehero.item.gun.AK47
-import click.recraft.zombiehero.item.gun.Gun
-import click.recraft.zombiehero.item.gun.HandGun
-import click.recraft.zombiehero.item.gun.ShotGun
+import click.recraft.zombiehero.item.gun.*
 import click.recraft.zombiehero.item.melee.Sword
 import java.util.*
 import kotlin.collections.HashMap
@@ -20,7 +18,8 @@ class CustomItemFactory : CustomItemManager {
     enum class GunType {
         AK47,
         SHOTGUN,
-        HANDGUN
+        HANDGUN,
+        AWP,
     }
     enum class GrenadeType {
         TouchGrenade,
@@ -40,6 +39,7 @@ class CustomItemFactory : CustomItemManager {
             GunType.AK47 -> AK47()
             GunType.SHOTGUN -> ShotGun()
             GunType.HANDGUN -> HandGun()
+            GunType.AWP  -> Awp()
         }
         register(gun.unique, gun)
         return gun

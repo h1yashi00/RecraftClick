@@ -9,7 +9,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.player.PlayerDropItemEvent
 import org.bukkit.event.player.PlayerItemHeldEvent
 
-class PlayerGunListener(
+open class PlayerGunListener(
     override val manager: CustomItemManager
 ) : CustomItemListener {
     @EventHandler
