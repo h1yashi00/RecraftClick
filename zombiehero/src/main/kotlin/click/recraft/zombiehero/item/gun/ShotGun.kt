@@ -25,7 +25,7 @@ class ShotGun: Gun(
         Accuracy(200),
         Tick.sec(0.05)
     ),
-    walkSpeed = -0.05F
+    walkSpeed = 5
 ) {
     override fun getReloadTime(): Int {
         return super.getReloadTime()

@@ -1,5 +1,6 @@
 package click.recraft.zombiehero
 
+import click.recraft.zombiehero.monster.Skeleton
 import click.recraft.zombiehero.monster.Zombie
 import org.bukkit.entity.EntityType
 import org.bukkit.event.EventHandler
@@ -18,7 +19,7 @@ class PlayerJoin: Listener {
         val player = event.player
         player.foodLevel = 20
         player.inventory.clear()
-        val monster = Zombie(player.uniqueId)
+        val monster = Skeleton(player.uniqueId)
         monster.initialize(player)
         ZombieHero.plugin.monsterManager.register(player, monster)
 //        val factory = ZombieHero.plugin.customItemFactory

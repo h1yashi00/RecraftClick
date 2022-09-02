@@ -10,6 +10,7 @@ import click.recraft.zombiehero.item.gun.ShootManager
 import click.recraft.zombiehero.item.melee.MeleeCoolDownManager
 import click.recraft.zombiehero.item.melee.MeleeListener
 import click.recraft.zombiehero.monster.MonsterManager
+import click.recraft.zombiehero.monster.SkeletonListener
 import click.recraft.zombiehero.monster.ZombieListener
 import click.recraft.zombiehero.player.HealthManager
 import click.recraft.zombiehero.player.WalkSpeedManager
@@ -49,6 +50,7 @@ class ZombieHero: KotlinPlugin(), Listener {
         server.pluginManager.registerEvents(MeleeListener(customItemFactory), this)
         server.pluginManager.registerEvents(ZombieListener(monsterManager), this)
         server.pluginManager.registerEvents(ProtectWorldListener(), this)
+        server.pluginManager.registerEvents(SkeletonListener(monsterManager), this)
         super.onEnable()
     }
 

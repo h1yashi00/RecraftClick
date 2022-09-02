@@ -24,5 +24,5 @@ class HandGun: Gun(
         Accuracy(0),
         Tick.sec(0.5)
     ),
-    walkSpeed = 0.25F
+    walkSpeed = 5
 )

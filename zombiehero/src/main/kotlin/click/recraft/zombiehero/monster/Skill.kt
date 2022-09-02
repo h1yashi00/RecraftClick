@@ -25,6 +25,9 @@ interface Skill {
     }
     fun passOneSec() {
         val player = Bukkit.getPlayer(monster.playerUUID) ?: return
+        if (coolDown <= 0) {
+            return
+        }
         val itemAmount = if (coolDown <= 0) {
             1
         }

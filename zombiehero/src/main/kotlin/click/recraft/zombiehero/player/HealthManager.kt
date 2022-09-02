@@ -20,7 +20,7 @@ object HealthManager: OneTickTimerTask {
         // 挿入されたデータが直前の場合と,healthが挿入されてから4秒立ったあとにデータを送るようにする
         // データを送ってから､またすぐにデータを送るとactionBarが正しい数値を表示しない
         val textComponent = TextComponent()
-        textComponent.text = "${ChatColor.RED}♥${damage}"
+        textComponent.text = "${ChatColor.RED}❤${damage}     ${ChatColor.BLUE}⚡${player.walkSpeed}"
         player.spigot().sendMessage(ChatMessageType.ACTION_BAR, textComponent)
     }
 

@@ -10,11 +10,15 @@ object WalkSpeedManager: OneTickTimerTask {
             // どのアイテム化識別して､正しいwalkingSpeedを割り当てる
             val item = player.inventory.itemInMainHand
             val customItem = ZombieHero.plugin.customItemFactory.getItem(item)
-            var walkSpeed = 0.20F
+            var walkSpeed = 200
             if (customItem is WalkSpeed) {
                 walkSpeed += customItem.walkSpeed
             }
-            player.walkSpeed = walkSpeed
+            val monster = ZombieHero.plugin.monsterManager.get(player)
+            if (monster != null) {
+                walkSpeed += monster.walkSpeed
+            }
+            player.walkSpeed = walkSpeed.toFloat() / 1000
         }
     }
 }

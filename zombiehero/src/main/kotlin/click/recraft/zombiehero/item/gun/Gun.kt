@@ -22,7 +22,7 @@ open class Gun (
     private val shootManager: ShootManager,
     private val reload: Reload,
     private val shot: Shot,
-    override val walkSpeed: Float,
+    override val walkSpeed: Int,
 ) : WalkSpeed, CustomItem(
     item (
         material = material,

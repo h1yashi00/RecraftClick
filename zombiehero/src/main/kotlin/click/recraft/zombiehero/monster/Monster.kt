@@ -14,7 +14,7 @@ interface Monster {
     }
     val uniqueId: UUID
     val playerUUID: UUID
-    var walkSpeed: Float
+    var walkSpeed: Int
 
     val skill1: Skill
     val skill2: Skill

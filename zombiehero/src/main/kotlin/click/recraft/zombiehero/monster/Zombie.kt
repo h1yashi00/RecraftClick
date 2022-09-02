@@ -51,7 +51,7 @@ class Zombie(override val playerUUID: UUID) : Monster {
     }
 
     override val uniqueId: UUID = UUID.randomUUID()
-    override var walkSpeed: Float = 0F
+    override var walkSpeed: Int = 0
     override val skill1: Skill = Skill1(this)
     override val skill2: Skill = Skill2(this)
 
