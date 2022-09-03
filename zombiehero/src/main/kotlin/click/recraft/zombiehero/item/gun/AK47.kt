@@ -5,7 +5,7 @@ import click.recraft.zombiehero.gun.api.*
 import org.bukkit.Material
 
 class AK47: Gun(
-    material = Material.STICK,
+    material = Material.BLACK_DYE,
     name = "AK-47",
     customModeValue = 30,
     shootManager = ZombieHero.plugin.shootManager,
@@ -15,7 +15,7 @@ class AK47: Gun(
         ZombieHero.plugin.reloadManagerFullBullet
     ),
     shot = OneShot (
-        rate = Tick.sec(0.1),
+        rate = Tick.sec(0.05),
         10,
         0.2,
         Accuracy(10),

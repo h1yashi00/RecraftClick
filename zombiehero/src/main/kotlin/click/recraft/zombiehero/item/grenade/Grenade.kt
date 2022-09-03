@@ -10,10 +10,8 @@ import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.entity.Player
-import org.bukkit.event.block.Action
 import org.bukkit.event.inventory.ClickType
 import org.bukkit.event.player.PlayerInteractEvent
-import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.scheduler.BukkitTask
 import java.util.*
 
@@ -61,14 +59,15 @@ open class Grenade(
     override fun inInvItemClick(clickType: ClickType, player: Player) {
     }
 
-    override fun itemInteract(event: PlayerInteractEvent, equipmentSlot: EquipmentSlot) {
-        val action = event.action
-        if (action == Action.RIGHT_CLICK_AIR || event.action == Action.RIGHT_CLICK_BLOCK) {
-            val passedTime = System.currentTimeMillis() - useDelay
-            if (passedTime > 0) {
-                action(event.player.eyeLocation)
-                useDelay = System.currentTimeMillis() + 1000
-            }
+    override fun rightClick(event: PlayerInteractEvent) {
+        event.isCancelled = true
+        val passedTime = System.currentTimeMillis() - useDelay
+        if (passedTime > 0) {
+            action(event.player.eyeLocation)
+            useDelay = System.currentTimeMillis() + 1000
         }
+    }
+
+    override fun leftClick(event: PlayerInteractEvent) {
     }
 }

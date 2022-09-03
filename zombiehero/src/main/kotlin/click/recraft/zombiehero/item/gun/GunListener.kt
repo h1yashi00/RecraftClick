@@ -1,17 +1,29 @@
 package click.recraft.zombiehero.item.gun
 
-import click.recraft.zombiehero.Util
-import click.recraft.zombiehero.ZombieHero
 import click.recraft.zombiehero.item.CustomItemListener
 import click.recraft.zombiehero.item.CustomItemManager
-import org.bukkit.Bukkit
 import org.bukkit.event.EventHandler
 import org.bukkit.event.player.PlayerDropItemEvent
 import org.bukkit.event.player.PlayerItemHeldEvent
 
-open class PlayerGunListener(
-    override val manager: CustomItemManager
-) : CustomItemListener {
+open class GunListener(
+    manager: CustomItemManager
+) : CustomItemListener(
+    manager
+) {
+    @EventHandler
+    fun switchItem(event: PlayerItemHeldEvent) {
+        val player = event.player
+        val item = player.inventory.getItem(event.previousSlot)
+        val customItem = getItem(item) ?: return
+        if (customItem !is Gun) { return }
+        if (customItem.isScoping()) {
+            customItem.cancelScope(player)
+        }
+        if (customItem.isRelaoding()) {
+            customItem.cancelReload()
+        }
+    }
     @EventHandler
     fun swap(event: PlayerItemHeldEvent) {
         val player = event.player
@@ -30,9 +42,7 @@ open class PlayerGunListener(
         if (!item.isDroppable()) {
             e.isCancelled = true
         }
-        val task = Util.createTask {
-            (item as Gun).reload(player)
-        }
-        Bukkit.getScheduler().runTaskLater(ZombieHero.plugin, task, 1)
+        (item as Gun).reload(player)
+        item.isQDrop()
     }
 }

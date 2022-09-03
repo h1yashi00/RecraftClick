@@ -8,11 +8,11 @@ import click.recraft.zombiehero.player.WalkSpeed
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
-import org.bukkit.event.block.Action
 import org.bukkit.event.inventory.ClickType
 import org.bukkit.event.player.PlayerInteractEvent
-import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
+import org.bukkit.potion.PotionEffect
+import org.bukkit.potion.PotionEffectType
 import java.util.*
 
 open class Gun (
@@ -71,9 +71,6 @@ open class Gun (
     open fun getReloadTime(): Int {
         return reload.reloadTime.tick
     }
-    fun getArmo(): Int {
-        return reload.armo
-    }
 
     fun shootAction(player: Player): Boolean {
         if (stats.currentArmo <= 0) {
@@ -99,13 +96,51 @@ open class Gun (
     override fun inInvItemClick(clickType: ClickType, player: Player) {
     }
 
-    override fun itemInteract(event: PlayerInteractEvent, equipmentSlot: EquipmentSlot) {
-        val action = event.action
+    private var scope = false
+    fun isScoping(): Boolean {
+        return scope
+    }
+
+    private var qDropCheck = System.currentTimeMillis()
+    // qドロップする際に､InteractEventが発生するようになってしまったので､
+    // それを回避するためのもの｡ interact と dropイベントが全く同じタイミングで発生した場合は､回避する
+    fun isQDrop(): Boolean {
+        val now = System.currentTimeMillis()
+        // dropItemから1,2millionSecか遅れて､動作する場合があるのでそれをチェックする
+        if (qDropCheck == now || qDropCheck +1 == now || qDropCheck +2 == now) {
+            return true
+        }
+        qDropCheck = System.currentTimeMillis()
+        return false
+    }
+    private val effect = PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, 5)
+
+    fun cancelScope(player: Player) {
+        scope = false
+        player.removePotionEffect(effect.type)
+    }
+    private fun scope(player: Player) {
+        if (isQDrop()) {
+            return
+        }
+        if (scope) {
+            cancelScope(player)
+        } else {
+            player.addPotionEffect(effect)
+            scope = true
+        }
+    }
+
+    override fun rightClick(event: PlayerInteractEvent) {
         val player = event.player
-        if (action == Action.RIGHT_CLICK_BLOCK || action == Action.RIGHT_CLICK_AIR) {
-            shoot(player)
-        }
-        if (action == Action.LEFT_CLICK_BLOCK || action == Action.LEFT_CLICK_AIR) {
-        }
+        event.isCancelled = true
+        shoot(player)
+    }
+
+    override fun leftClick(event: PlayerInteractEvent) {
+        val player = event.player
+        event.isCancelled = true
+        player.sendMessage("${event.action} ${System.currentTimeMillis()}")
+        scope(player)
     }
 }

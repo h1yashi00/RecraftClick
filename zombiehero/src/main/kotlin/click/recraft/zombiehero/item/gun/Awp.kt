@@ -4,7 +4,7 @@ import click.recraft.zombiehero.ZombieHero
 import click.recraft.zombiehero.gun.api.*
 import org.bukkit.Material
 
-class Awp : GunScope (
+class Awp : Gun (
     Material.BLACK_DYE,
     "Awp",
     42394,
@@ -22,5 +22,4 @@ class Awp : GunScope (
         Tick.sec(0.0),
     ),
     -30
-) {
-}
+)

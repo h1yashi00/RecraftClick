@@ -16,10 +16,6 @@ class ReloadManagerOneBullet: ReloadManager() {
                     save.remove(uuid)
                     return@forEach
                 }
-                if (player.inventory.itemInMainHand != data.pastItem) {
-                    save.remove(uuid)
-                    return@forEach
-                }
                 data.tick -= 1
                 player.sendExperienceChange(data.tick.toFloat() / data.reloadTime , gunStats.totalArmo)
                 if (data.tick > 0) {

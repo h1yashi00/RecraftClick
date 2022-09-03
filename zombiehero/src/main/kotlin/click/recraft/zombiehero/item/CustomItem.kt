@@ -4,7 +4,6 @@ import click.recraft.share.item
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.ClickType
 import org.bukkit.event.player.PlayerInteractEvent
-import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
 import java.util.*
 
@@ -30,7 +29,8 @@ abstract class CustomItem(
     }
 
     abstract fun inInvItemClick(clickType: ClickType, player: Player)
-    abstract fun itemInteract(event: PlayerInteractEvent, equipmentSlot: EquipmentSlot)
+    abstract fun rightClick(event: PlayerInteractEvent)
+    abstract fun leftClick(event: PlayerInteractEvent)
     fun isDroppable(): Boolean {
         return false
     }

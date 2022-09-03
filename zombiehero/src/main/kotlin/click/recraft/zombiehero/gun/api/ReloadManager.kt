@@ -2,7 +2,6 @@ package click.recraft.zombiehero.gun.api
 
 import click.recraft.zombiehero.item.gun.Gun
 import org.bukkit.entity.Player
-import org.bukkit.inventory.ItemStack
 import java.util.*
 
 abstract class ReloadManager {
@@ -11,7 +10,6 @@ abstract class ReloadManager {
         val gun: Gun,
         var tick: Int,
         val reloadTime: Int,
-        val pastItem: ItemStack,
         val uuid: UUID
     )
     fun register(gun: Gun, player: Player) {
@@ -19,7 +17,6 @@ abstract class ReloadManager {
             gun,
             gun.getReloadTime(),
             gun.getReloadTime(),
-            player.inventory.itemInMainHand,
             player.uniqueId
         )
     }

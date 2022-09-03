@@ -12,8 +12,10 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.PotionSplashEvent
 
 class HitGrenadeListener(
-    override val manager: CustomItemManager
-): CustomItemListener {
+    manager: CustomItemManager
+): CustomItemListener(
+    manager
+) {
     @EventHandler
     fun hitEntity(event: PotionSplashEvent) {
         val entity = event.entity

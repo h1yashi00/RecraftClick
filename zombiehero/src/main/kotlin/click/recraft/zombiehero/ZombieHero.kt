@@ -1,16 +1,13 @@
 package click.recraft.zombiehero
 
 import click.recraft.share.*
-import click.recraft.zombiehero.gun.GrenadeListener
 import click.recraft.zombiehero.gun.api.ReloadManagerFullBullet
 import click.recraft.zombiehero.gun.api.ReloadManagerOneBullet
 import click.recraft.zombiehero.item.CustomItemFactory
 import click.recraft.zombiehero.item.grenade.*
-import click.recraft.zombiehero.item.gun.PlayerGunListener
-import click.recraft.zombiehero.item.gun.PlayerGunScopeListener
+import click.recraft.zombiehero.item.gun.GunListener
 import click.recraft.zombiehero.item.gun.ShootManager
 import click.recraft.zombiehero.item.melee.MeleeCoolDownManager
-import click.recraft.zombiehero.item.melee.MeleeListener
 import click.recraft.zombiehero.monster.MonsterManager
 import click.recraft.zombiehero.monster.SkeletonListener
 import click.recraft.zombiehero.monster.ZombieListener
@@ -46,15 +43,12 @@ class ZombieHero: KotlinPlugin(), Listener {
         server.pluginManager.registerEvents(this, this)
         server.pluginManager.registerEvents(PlayerHealthListener(), this)
         server.pluginManager.registerEvents(MonsterSpawn(), this)
-        server.pluginManager.registerEvents(GrenadeListener(customItemFactory), this)
-        server.pluginManager.registerEvents(PlayerGunListener(customItemFactory), this)
+        server.pluginManager.registerEvents(GunListener(customItemFactory), this)
         server.pluginManager.registerEvents(TouchGrenadeListener(customItemFactory), this)
         server.pluginManager.registerEvents(HitGrenadeListener(customItemFactory), this)
-        server.pluginManager.registerEvents(MeleeListener(customItemFactory), this)
         server.pluginManager.registerEvents(ZombieListener(monsterManager), this)
         server.pluginManager.registerEvents(ProtectWorldListener(), this)
         server.pluginManager.registerEvents(SkeletonListener(monsterManager), this)
-        server.pluginManager.registerEvents(PlayerGunScopeListener(customItemFactory), this)
         super.onEnable()
     }
 

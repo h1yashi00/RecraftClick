@@ -7,8 +7,10 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityPickupItemEvent
 
 class TouchGrenadeListener(
-    override val manager: CustomItemManager
-) : CustomItemListener{
+    manager: CustomItemManager
+) : CustomItemListener(
+    manager
+) {
     @EventHandler
     fun pickup(event: EntityPickupItemEvent) {
         val item = event.item
