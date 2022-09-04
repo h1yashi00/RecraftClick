@@ -5,6 +5,7 @@ import click.recraft.zombiehero.gun.api.Reload
 import click.recraft.zombiehero.gun.api.Shot
 import click.recraft.zombiehero.item.CustomItem
 import click.recraft.zombiehero.player.WalkSpeed
+import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -19,6 +20,7 @@ open class Gun (
     material: Material,
     name: String,
     customModeValue: Int,
+    private val reloadingCustomModelValue: Int,
     private val shootManager: ShootManager,
     private val reload: Reload,
     private val shot: Shot,
@@ -45,7 +47,22 @@ open class Gun (
         var currentArmo: Int,
         var maxArmo:     Int,
         var gunName: String,
-    ) {
+    )
+    override fun isSimilar(itemStack: ItemStack?): Boolean {
+        itemStack ?: return false
+        val meta = itemStack.itemMeta ?: return false
+        if (!meta.hasLocalizedName()) return false
+        if (meta.localizedName != unique.toString()) { return false }
+        return true
+    }
+    override fun createItemStack(): ItemStack {
+        val item = super.createItemStack()
+        if (isScoping()) {
+            val meta = item.itemMeta!!
+            meta.setCustomModelData(reloadingCustomModelValue)
+            item.itemMeta = meta
+        }
+        return item
     }
     val stats = GunStats(
         reload.armo * 5,
@@ -80,16 +97,21 @@ open class Gun (
         return shot.shootAction(player, this)
     }
 
-    override fun createItemStack(): ItemStack {
-        return super.createItemStack().apply {amount = stats.currentArmo}
-    }
-
     private fun shoot(player: Player) {
         shootAction(player)
         shootManager.register(player, this)
     }
 
+    private fun updateGun(player: Player) {
+        val item = player.inventory.itemInMainHand
+        player.inventory.remove(item)
+        player.inventory.setItemInMainHand(createItemStack())
+    }
+
     fun reload(player: Player) {
+        if (scope) {
+            scope(player)
+        }
         reload.reload(player, this)
     }
 
@@ -129,6 +151,7 @@ open class Gun (
             player.addPotionEffect(effect)
             scope = true
         }
+        updateGun(player)
     }
 
     override fun rightClick(event: PlayerInteractEvent) {
@@ -140,7 +163,6 @@ open class Gun (
     override fun leftClick(event: PlayerInteractEvent) {
         val player = event.player
         event.isCancelled = true
-        player.sendMessage("${event.action} ${System.currentTimeMillis()}")
         scope(player)
     }
 }

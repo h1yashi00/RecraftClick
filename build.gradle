@@ -11,15 +11,12 @@ subprojects {
     group 'org.example'
     version '1.0-SNAPSHOT'
     repositories {
-        maven {
-            name = 'spigot-repo'
-            url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
-        }
         mavenCentral()
+        maven { url = "https://hub.spigotmc.org/nexus/content/repositories/snapshots/" }
     }
     dependencies {
         implementation "org.jetbrains.kotlin:kotlin-stdlib"
-        implementation "org.spigotmc:spigot-api:1.19-R0.1-SNAPSHOT" // mavenLocalを使うので.m2.org.spigotがあることを確認する
+        compileOnly "org.spigotmc:spigot-api:1.19.2-R0.1-SNAPSHOT" // mavenLocalを使うので.m2.org.spigotがあることを確認する
     }
     jar {
         from { configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) } }

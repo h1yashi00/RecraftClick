@@ -7,7 +7,8 @@ import org.bukkit.Material
 class ShotGun: Gun(
     material = Material.PINK_DYE,
     name = "ShotGun",
-    customModeValue = 30,
+    customModeValue = 1000007,
+    1000008,
     shootManager = ZombieHero.plugin.shootManager,
     reload = Reload (
         8,

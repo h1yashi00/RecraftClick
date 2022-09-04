@@ -7,7 +7,8 @@ import org.bukkit.Material
 class AK47: Gun(
     material = Material.BLACK_DYE,
     name = "AK-47",
-    customModeValue = 30,
+    customModeValue = 1000000,
+    reloadingCustomModelValue = 1000001,
     shootManager = ZombieHero.plugin.shootManager,
     reload = Reload (
         30,
@@ -22,5 +23,4 @@ class AK47: Gun(
         Tick.sec(0.3)
     ),
     walkSpeed = 5
-) {
-}
+)

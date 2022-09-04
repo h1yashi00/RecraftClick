@@ -16,7 +16,7 @@ import click.recraft.zombiehero.player.WalkSpeedManager
 import org.bukkit.Bukkit
 import org.bukkit.event.Listener
 
-class ZombieHero: KotlinPlugin(), Listener {
+class ZombieHero: KotlinPlugin() {
     companion object {
         lateinit var plugin: ZombieHero
     }
@@ -40,7 +40,6 @@ class ZombieHero: KotlinPlugin(), Listener {
         Bukkit.getScheduler().runTaskTimer(this, oneTickTask, 10, 1)
         server.pluginManager.registerEvents(PlayerJoin(), this)
         server.pluginManager.registerEvents(PlayerQuit(), this)
-        server.pluginManager.registerEvents(this, this)
         server.pluginManager.registerEvents(PlayerHealthListener(), this)
         server.pluginManager.registerEvents(MonsterSpawn(), this)
         server.pluginManager.registerEvents(GunListener(customItemFactory), this)

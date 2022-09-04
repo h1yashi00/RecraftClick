@@ -99,11 +99,6 @@ interface Shot {
         }
         lastShot = System.currentTimeMillis()
         stats.currentArmo += -1
-        if (stats.currentArmo != 0) {
-            if (playerGun.isSimilar(player.inventory.itemInMainHand)) {
-                player.inventory.setItemInMainHand(playerGun.createItemStack())
-            }
-        }
         shoot(player)
         return true
     }

@@ -34,11 +34,6 @@ class ReloadManagerFullBullet: ReloadManager() {
                     gunStats.totalArmo   +=  -restoreArmo
                     gunStats.currentArmo +=   restoreArmo
                     player.sendExperienceChange(1f, gunStats.totalArmo)
-                    val reloadItem = player.inventory.itemInMainHand.clone()
-                        .apply {
-                            amount = gunStats.currentArmo
-                        }
-                    player.inventory.setItemInMainHand(reloadItem)
                     player.playSound(player.location, Sound.BLOCK_WOODEN_DOOR_CLOSE, 1f, 2f)
                     save.remove(uuid)
                     return@forEach

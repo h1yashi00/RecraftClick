@@ -41,7 +41,7 @@ abstract class CustomItem(
         return false
     }
 
-    fun isSimilar(itemStack: ItemStack?): Boolean {
+    open fun isSimilar(itemStack: ItemStack?): Boolean {
         val meta = itemStack?.itemMeta ?: return false
         val itemMeta = itemStack.itemMeta!!
         if (!(meta.hasCustomModelData() && meta.hasLocalizedName())) {

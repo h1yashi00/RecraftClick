@@ -25,12 +25,7 @@ class ReloadManagerOneBullet: ReloadManager() {
                 gunStats.totalArmo += -1
                 gunStats.currentArmo += 1
                 save.remove(uuid)
-                val reloadItem = player.inventory.itemInMainHand.clone()
-                    .apply {
-                        amount = gunStats.currentArmo
-                    }
-                player.inventory.setItemInMainHand(reloadItem)
-                if (gunStats.currentArmo == gun.stats.currentArmo) {
+                if (gunStats.currentArmo == gun.stats.maxArmo) {
                     player.playSound(player.location, Sound.BLOCK_WOODEN_DOOR_CLOSE,1f, 2f)
                 }
                 gun.reload(player)

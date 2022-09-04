@@ -1,5 +1,7 @@
 package click.recraft.zombiehero.player
 
+import click.recraft.zombiehero.ZombieHero
+import click.recraft.zombiehero.item.gun.Gun
 import click.recraft.zombiehero.task.OneTickTimerTask
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
@@ -7,6 +9,7 @@ import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.entity.Player
 import java.util.*
+
 
 object HealthManager: OneTickTimerTask {
     private val healths = hashMapOf<UUID, Int>()
@@ -19,10 +22,16 @@ object HealthManager: OneTickTimerTask {
         val damage = player.getPluginHealth()
         // 挿入されたデータが直前の場合と,healthが挿入されてから4秒立ったあとにデータを送るようにする
         // データを送ってから､またすぐにデータを送るとactionBarが正しい数値を表示しない
+        val item = player.inventory.itemInMainHand
+        val customItem = ZombieHero.plugin.customItemFactory.getItem(item)
+        if (customItem !is Gun) return
+        val gunStats = customItem.stats
         val textComponent = TextComponent()
-        textComponent.text = "${ChatColor.RED}❤${damage}     ${ChatColor.BLUE}⚡${player.walkSpeed}"
+        textComponent.text = "${ChatColor.RED}❤${damage} ${ChatColor.WHITE}${ChatColor.BOLD}${gunStats.gunName}: ${gunStats.currentArmo} ${ChatColor.BLUE}⚡${player.walkSpeed}"
         player.spigot().sendMessage(ChatMessageType.ACTION_BAR, textComponent)
     }
+
+
 
     fun Player.damagePluginHealth(damage: Int) {
         val hp = getPluginHealth()
