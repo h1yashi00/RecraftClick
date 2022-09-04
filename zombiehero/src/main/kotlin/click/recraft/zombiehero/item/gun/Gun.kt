@@ -5,7 +5,6 @@ import click.recraft.zombiehero.gun.api.Reload
 import click.recraft.zombiehero.gun.api.Shot
 import click.recraft.zombiehero.item.CustomItem
 import click.recraft.zombiehero.player.WalkSpeed
-import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -129,24 +128,21 @@ open class Gun (
     fun isQDrop(): Boolean {
         val now = System.currentTimeMillis()
         // dropItemから1,2millionSecか遅れて､動作する場合があるのでそれをチェックする
-        if (qDropCheck == now || qDropCheck +1 == now || qDropCheck +2 == now) {
+        if (qDropCheck <= now && qDropCheck +10 >= now) {
             return true
         }
         qDropCheck = System.currentTimeMillis()
         return false
     }
-    private val effect = PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, 5)
+    private val effect = PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 5)
 
-    fun cancelScope(player: Player) {
-        scope = false
-        player.removePotionEffect(effect.type)
-    }
-    private fun scope(player: Player) {
+    fun scope(player: Player) {
         if (isQDrop()) {
             return
         }
         if (scope) {
-            cancelScope(player)
+            scope = false
+            player.removePotionEffect(effect.type)
         } else {
             player.addPotionEffect(effect)
             scope = true
