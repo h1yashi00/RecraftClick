@@ -11,7 +11,7 @@ class AK47: Gun(
     reloadingCustomModelValue = 1000001,
     shootManager = ZombieHero.plugin.shootManager,
     reload = Reload (
-        30,
+        3000,
         Tick.sec(1.3),
         ZombieHero.plugin.reloadManagerFullBullet
     ),

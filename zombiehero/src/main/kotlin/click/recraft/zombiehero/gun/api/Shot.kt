@@ -1,5 +1,6 @@
 package click.recraft.zombiehero.gun.api
 
+import click.recraft.zombiehero.PlayerForceRecoil
 import click.recraft.zombiehero.Util
 import click.recraft.zombiehero.ZombieHero
 import click.recraft.zombiehero.item.gun.Gun
@@ -104,6 +105,7 @@ interface Shot {
     }
 
     fun shoot(player: Player) {
+        PlayerForceRecoil.sendRecoilPacket(player, 0F,-1F)
         player.world.playSound(player.location, Sound.ENTITY_IRON_GOLEM_HURT, 1f, 3F)
         val dir = player.location.direction
         player.location.direction = dir.multiply(1)
