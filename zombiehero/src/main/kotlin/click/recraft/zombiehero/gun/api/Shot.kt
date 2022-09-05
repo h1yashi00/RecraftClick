@@ -88,20 +88,20 @@ interface Shot {
         }
     }
 
-    fun shootAction(player: Player, playerGun: Gun): Boolean {
+    fun shootAction(player: Player, playerGun: Gun) {
         if (playerGun.isRelaoding()) {
             playerGun.cancelReload()
-            return false
+            return
         }
         val stats = playerGun.stats
-        val passedTick = System.currentTimeMillis() - lastShot
-        if (passedTick < rate.getMilliseconds()) {
-            return false
+        val currentTime = ZombieHero.plugin.getTime()
+        val passedTick = currentTime - lastShot
+        if (passedTick < rate.tick) {
+            return
         }
-        lastShot = System.currentTimeMillis()
+        lastShot = currentTime
         stats.currentArmo += -1
         shoot(player)
-        return true
     }
 
     fun shoot(player: Player) {
@@ -115,7 +115,7 @@ interface Shot {
         }
     }
 
-    var lastShot: Long
+    var lastShot: Int
 
     val rate: Tick
     val damage: Int

@@ -1,6 +1,7 @@
 package click.recraft.zombiehero.item.gun
 
 import click.recraft.share.item
+import click.recraft.zombiehero.ZombieHero
 import click.recraft.zombiehero.gun.api.Reload
 import click.recraft.zombiehero.gun.api.Shot
 import click.recraft.zombiehero.item.CustomItem
@@ -88,10 +89,10 @@ open class Gun (
         return reload.reloadTime.tick
     }
 
-    fun shootAction(player: Player): Boolean {
+    fun shootAction(player: Player) {
         if (stats.currentArmo <= 0) {
             reload(player)
-            return false
+            return
         }
         return shot.shootAction(player, this)
     }
@@ -122,16 +123,16 @@ open class Gun (
         return scope
     }
 
-    private var qDropCheck = System.currentTimeMillis()
+    private var qDropCheck = 0
     // qドロップする際に､InteractEventが発生するようになってしまったので､
     // それを回避するためのもの｡ interact と dropイベントが全く同じタイミングで発生した場合は､回避する
     fun isQDrop(): Boolean {
-        val now = System.currentTimeMillis()
+        val now = ZombieHero.plugin.getTime()
         // dropItemから1,2millionSecか遅れて､動作する場合があるのでそれをチェックする
-        if (qDropCheck <= now && qDropCheck +10 >= now) {
+        if (qDropCheck == now) {
             return true
         }
-        qDropCheck = System.currentTimeMillis()
+        qDropCheck = now
         return false
     }
     private val effect = PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 5)

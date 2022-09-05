@@ -15,11 +15,11 @@ class MultiShot (
     override val knockBackAccumulateTime: Tick,
     override val particle: Particle = Particle.ASH,
 ) : Shot {
-    override var lastShot: Long = System.currentTimeMillis()
     override val saveKnockBack: HashMap<UUID, Double> = hashMapOf()
 
-    override fun shootAction(player: Player, playerGun: Gun): Boolean {
+    override fun shootAction(player: Player, playerGun: Gun) {
         playerGun.cancelReload()
         return super.shootAction(player, playerGun)
     }
+    override var lastShot: Int = 0
 }

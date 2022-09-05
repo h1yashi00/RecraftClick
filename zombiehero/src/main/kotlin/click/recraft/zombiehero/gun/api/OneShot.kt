@@ -13,6 +13,6 @@ class OneShot(
     override val particle: Particle = Particle.ASH,
 ) : Shot {
     override val saveKnockBack: HashMap<UUID, Double> = hashMapOf()
-    override var lastShot: Long = System.currentTimeMillis()
+    override var lastShot: Int = 0
     override val shootAmmo: Int = 1
 }

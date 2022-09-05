@@ -14,7 +14,6 @@ import click.recraft.zombiehero.monster.ZombieListener
 import click.recraft.zombiehero.player.HealthManager
 import click.recraft.zombiehero.player.WalkSpeedManager
 import org.bukkit.Bukkit
-import org.bukkit.event.Listener
 
 class ZombieHero: KotlinPlugin() {
     companion object {
@@ -26,6 +25,10 @@ class ZombieHero: KotlinPlugin() {
     val meleeCoolDownManager: MeleeCoolDownManager by lazy { MeleeCoolDownManager() }
     val customItemFactory: CustomItemFactory by lazy {CustomItemFactory()}
     val monsterManager: MonsterManager      by lazy { MonsterManager() }
+    private var time: Int = 0
+    fun getTime(): Int {
+        return time
+    }
     override fun onEnable() {
         plugin = this
         ShopMenu.load()
@@ -34,6 +37,7 @@ class ZombieHero: KotlinPlugin() {
             HealthManager.loopEveryOneTick()
         }
         val oneTickTask = Util.createTask {
+            time += 1
             WalkSpeedManager.loopEveryOneTick()
         }
         Bukkit.getScheduler().runTaskTimer(this, fiveTickTask, 10, 5)

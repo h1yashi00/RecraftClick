@@ -11,8 +11,6 @@ import org.bukkit.event.player.PlayerDropItemEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerSwapHandItemsEvent
 import org.bukkit.inventory.ItemStack
-import java.util.*
-import kotlin.collections.HashMap
 
 abstract class CustomItemListener (
     private val manager: CustomItemManager
@@ -59,20 +57,12 @@ abstract class CustomItemListener (
         e.isCancelled =  !mainHandCustomItem.isSwapable()
     }
 
-    private val isCalled: HashMap<UUID, Long> = hashMapOf()
     @EventHandler
     fun click(e: PlayerInteractEvent) {
         val player = e.player
         val itemStack = player.inventory.itemInMainHand
         val item = getItem(itemStack) ?: return
         val action = e.action
-        val time = isCalled[player.uniqueId]
-        if (time != null) {
-            if (time == System.currentTimeMillis()) {
-                return
-            }
-        }
-        isCalled[player.uniqueId] = System.currentTimeMillis()
         if (action == Action.LEFT_CLICK_AIR   || action == Action.LEFT_CLICK_BLOCK) {
             item.leftClick(e)
         }

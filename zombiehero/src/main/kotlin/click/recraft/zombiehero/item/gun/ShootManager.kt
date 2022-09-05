@@ -9,43 +9,42 @@ import kotlin.collections.HashMap
 
 class ShootManager {
     private val manager: HashMap<UUID, Data> = hashMapOf()
-    private data class Data(val uuid: UUID, val gun: Gun, val tick: Long = System.currentTimeMillis())
+    private data class Data(val playerUUID: UUID, val gun: Gun, var passedTick: Int = 5, val time: Int = ZombieHero.plugin.getTime())
     init {
         val task = Util.createTask {
                 // 処理をすることろ
                 // GunSatsの影響で球が打てなかった場合に､タスクをなくすうようにする
             manager.iterator().forEach {
-                val itemUUID = it.key
                 val data = it.value
-                val uuid = data.uuid
-                val gun  = data.gun
-                val tick = data.tick
-                val player = Bukkit.getPlayer(uuid) ?: return@forEach
+                val player = Bukkit.getPlayer(data.playerUUID) ?: return@forEach
                 val item = player.inventory.itemInMainHand
-                if (!gun.isSimilar(item)) {
-                    manager.remove(itemUUID)
-                    return@forEach
-                }
-                val passed = System.currentTimeMillis() - tick
-                if (passed <= 10) {
-                    manager.remove(itemUUID)
-                    return@forEach
-                }
-                if (passed >= 200) {
-                    manager.remove(itemUUID)
+                if (!data.gun.isSimilar(item)) {
+                    manager.remove(data.gun.unique)
                     return@forEach
                 }
                 // 処理をすることろ
                 // GunStatsの影響で球が打てなかった場合に､タスクをなくすうようにする
-                if (!gun.shootAction(player)) {
-                    manager.remove(itemUUID)
+                data.gun.shootAction(player)
+                if (data.passedTick <= 0) {
+                    manager.remove(data.gun.unique)
                     return@forEach
                 }
+                data.passedTick += -1
             }
         }
-        Bukkit.getScheduler().runTaskTimer(ZombieHero.plugin, task, 10,1)
+        Bukkit.getScheduler().runTaskTimer(ZombieHero.plugin, task, 0,1)
     }
-    fun register(player: Player, playerGun: Gun) {
-        manager[playerGun.unique] =  Data(player.uniqueId, playerGun)
+    fun register(player: Player, gun: Gun) {
+        val data = manager[gun.unique]
+        if (data == null) {
+            manager[gun.unique] =  Data(player.uniqueId, gun)
+            return
+        }
+        if (data.time == ZombieHero.plugin.getTime()) {
+            return
+        }
+        else {
+            manager[gun.unique] =  Data(player.uniqueId, gun)
+        }
     }
 }
