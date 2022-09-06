@@ -8,7 +8,6 @@ class AK47: Gun(
     material = Material.BLACK_DYE,
     name = "AK-47",
     customModeValue = 1000000,
-    reloadingCustomModelValue = 1000001,
     shootManager = ZombieHero.plugin.shootManager,
     reload = Reload (
         3000,

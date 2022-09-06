@@ -7,8 +7,7 @@ import org.bukkit.Material
 class ShotGun: Gun(
     material = Material.PINK_DYE,
     name = "ShotGun",
-    customModeValue = 1000007,
-    1000008,
+    customModeValue = 10,
     shootManager = ZombieHero.plugin.shootManager,
     reload = Reload (
         8,
@@ -25,7 +24,4 @@ class ShotGun: Gun(
     ),
     walkSpeed = 5
 ) {
-    override fun getReloadTime(): Int {
-        return super.getReloadTime()
-    }
 }

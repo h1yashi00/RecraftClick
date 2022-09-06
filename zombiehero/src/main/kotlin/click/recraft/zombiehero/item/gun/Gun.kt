@@ -20,7 +20,6 @@ open class Gun (
     material: Material,
     name: String,
     customModeValue: Int,
-    private val reloadingCustomModelValue: Int,
     private val shootManager: ShootManager,
     private val reload: Reload,
     private val shot: Shot,
@@ -55,15 +54,7 @@ open class Gun (
         if (meta.localizedName != unique.toString()) { return false }
         return true
     }
-    override fun createItemStack(): ItemStack {
-        val item = super.createItemStack()
-        if (isScoping()) {
-            val meta = item.itemMeta!!
-            meta.setCustomModelData(reloadingCustomModelValue)
-            item.itemMeta = meta
-        }
-        return item
-    }
+
     val stats = GunStats(
         reload.armo * 5,
         reload.armo,
@@ -135,7 +126,7 @@ open class Gun (
         qDropCheck = now
         return false
     }
-    private val effect = PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 5)
+    private val effect = PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, 5)
 
     fun scope(player: Player) {
         if (isQDrop()) {

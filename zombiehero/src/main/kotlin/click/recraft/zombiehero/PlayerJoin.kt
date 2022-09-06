@@ -1,7 +1,6 @@
 package click.recraft.zombiehero
 
 import click.recraft.zombiehero.item.CustomItemFactory
-import click.recraft.zombiehero.monster.Skeleton
 import org.bukkit.Bukkit
 import org.bukkit.entity.EntityType
 import org.bukkit.event.EventHandler
@@ -28,6 +27,8 @@ class PlayerJoin: Listener {
         val shotGun = factory.createGun(CustomItemFactory.GunType.SHOTGUN)
         val awp = factory.createGun(CustomItemFactory.GunType.AWP)
         val task = Util.createTask {
+            player.inventory.helmet = gun.createItemStack()
+            player.inventory.setItemInOffHand(gun.createItemStack())
             player.inventory.addItem(gun.createItemStack())
             player.inventory.addItem(shotGun.createItemStack())
             player.inventory.addItem(awp.createItemStack())

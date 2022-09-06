@@ -7,8 +7,7 @@ import org.bukkit.Material
 class Awp : Gun (
     Material.BLACK_DYE,
     "Awp",
-    1000003,
-    1000004,
+    customModeValue = 1000002,
     shootManager = ZombieHero.plugin.shootManager,
     reload = Reload (
         7,
