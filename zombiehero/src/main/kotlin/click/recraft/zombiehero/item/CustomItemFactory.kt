@@ -1,7 +1,6 @@
 package click.recraft.zombiehero.item
 
 import click.recraft.zombiehero.ZombieHero
-import click.recraft.zombiehero.gun.api.Scope
 import click.recraft.zombiehero.gun.api.Tick
 import click.recraft.zombiehero.item.grenade.GrenadeImpl
 import click.recraft.zombiehero.item.grenade.HitGrenade
@@ -20,6 +19,7 @@ class CustomItemFactory : CustomItemManager {
         SHOTGUN,
         HANDGUN,
         AWP,
+        MP5,
     }
     enum class GrenadeType {
         TouchGrenade,
@@ -40,6 +40,7 @@ class CustomItemFactory : CustomItemManager {
             GunType.SHOTGUN -> ShotGun()
             GunType.HANDGUN -> HandGun()
             GunType.AWP  -> Awp()
+            GunType.MP5 -> Mp5()
         }
         register(gun.unique, gun)
         return gun
@@ -49,12 +50,14 @@ class CustomItemFactory : CustomItemManager {
             SwordType.NORMAL_SWORD -> Sword(
                     ZombieHero.plugin.meleeCoolDownManager,
                     100,
-                    Tick.sec(1.0)
+                    Tick.sec(1.0),
+                    1
                 )
             SwordType.BIG_SWORD -> Sword(
                 ZombieHero.plugin.meleeCoolDownManager,
                 10,
                 Tick.sec(0.3),
+                2
             )
         }
         register(sword.unique, sword)

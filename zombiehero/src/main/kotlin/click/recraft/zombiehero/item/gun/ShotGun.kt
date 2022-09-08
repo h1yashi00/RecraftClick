@@ -5,9 +5,9 @@ import click.recraft.zombiehero.gun.api.*
 import org.bukkit.Material
 
 class ShotGun: Gun(
-    material = Material.PINK_DYE,
+    material = Material.BLACK_DYE,
     name = "ShotGun",
-    customModeValue = 10,
+    customModeValue = 1000004,
     shootManager = ZombieHero.plugin.shootManager,
     reload = Reload (
         8,

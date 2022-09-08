@@ -43,9 +43,9 @@ abstract class CustomItemListener (
         } else {
             e.currentItem
         }
-        println(currentItem)
         var item= getItem(currentItem)
         if (item == null) {
+            if (e.hotbarButton == -1) return
             item = getItem(player.inventory.getItem(e.hotbarButton)) ?: return
         }
         e.isCancelled = !item.isMovable()

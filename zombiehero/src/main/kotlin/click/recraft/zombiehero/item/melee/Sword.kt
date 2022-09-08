@@ -18,11 +18,12 @@ import java.util.*
 class Sword (
     private val meleeCoolDownManager: MeleeCoolDownManager,
     private val damage: Int,
-    val coolDown: Tick
+    val coolDown: Tick,
+    customModelData: Int
 ): CustomItem(
     item(
-        Material.BLACK_DYE,
-        customModelData = 3892,
+        Material.PINK_DYE,
+        customModelData = customModelData,
         localizedName = UUID.randomUUID().toString(),
     )
 ) {
