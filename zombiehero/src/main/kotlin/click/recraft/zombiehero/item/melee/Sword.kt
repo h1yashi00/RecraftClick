@@ -5,6 +5,7 @@ import click.recraft.zombiehero.Util
 import click.recraft.zombiehero.ZombieHero
 import click.recraft.zombiehero.gun.api.Tick
 import click.recraft.zombiehero.item.CustomItem
+import click.recraft.zombiehero.player.WalkSpeed
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.Particle
@@ -13,14 +14,17 @@ import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.ClickType
 import org.bukkit.event.player.PlayerInteractEvent
+import org.bukkit.event.player.PlayerItemHeldEvent
 import java.util.*
 
 class Sword (
+    val name: String,
     private val meleeCoolDownManager: MeleeCoolDownManager,
     private val damage: Int,
     val coolDown: Tick,
-    customModelData: Int
-): CustomItem(
+    customModelData: Int,
+    override val walkSpeed: Int
+): WalkSpeed, CustomItem (
     item(
         Material.PINK_DYE,
         customModelData = customModelData,
@@ -29,6 +33,7 @@ class Sword (
 ) {
 
     fun attack(player: Player) {
+        player.swingMainHand()
         player.playSound(player.location, Sound.BLOCK_NOTE_BLOCK_HARP, 1f,1f)
 
         val loc = player.eyeLocation.clone()
@@ -57,13 +62,16 @@ class Sword (
         Bukkit.getScheduler().runTaskTimer(ZombieHero.plugin, task,0,2)
     }
 
+    override fun currentItem(event: PlayerItemHeldEvent) {
+    }
+
+    override fun prevItem(event: PlayerItemHeldEvent) {
+    }
+
     override fun inInvItemClick(clickType: ClickType, player: Player) {
     }
 
     override fun rightClick(event: PlayerInteractEvent) {
-    }
-
-    override fun leftClick(event: PlayerInteractEvent) {
         val player = event.player
         val item = player.inventory.itemInMainHand
         event.isCancelled = true
@@ -71,5 +79,8 @@ class Sword (
             return
         }
         meleeCoolDownManager.register(this, player, item)
+    }
+
+    override fun leftClick(event: PlayerInteractEvent) {
     }
 }

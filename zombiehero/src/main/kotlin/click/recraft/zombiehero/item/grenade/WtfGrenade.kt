@@ -2,14 +2,25 @@ package click.recraft.zombiehero.item.grenade
 
 import click.recraft.zombiehero.Util
 import click.recraft.zombiehero.gun.api.Tick
+import org.bukkit.Location
 import org.bukkit.Particle
 import org.bukkit.Sound
+import org.bukkit.entity.Item
 import org.bukkit.entity.LivingEntity
+import org.bukkit.entity.Player
 
-class WtfGrenade: Grenade(
+class NormalGrenade : Grenade(
     "普通のグレネード",
     Tick.sec(1.5),
-    { loc ->
+    201,
+    useDelayTick = Tick.sec(30.0),
+    99999
+) {
+    override fun pickUp(player: Player, item: Item) {
+    }
+
+    override fun explosion(location: Location) {
+        val loc = location.clone()
         val entities = loc.world!!.getNearbyEntities(Util.makeBoundingBox(loc, 5.0)) {
             it is LivingEntity
         }
@@ -29,4 +40,4 @@ class WtfGrenade: Grenade(
             entity.damage(damage)
         }
     }
-)
+}

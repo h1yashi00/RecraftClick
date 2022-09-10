@@ -29,6 +29,8 @@ class PlayerJoin: Listener {
         val mp5 = factory.createGun(CustomItemFactory.GunType.MP5)
         val hummer = factory.createSword(CustomItemFactory.SwordType.BIG_SWORD)
         val nata    = factory.createSword(CustomItemFactory.SwordType.NORMAL_SWORD)
+        val zombieBomb = factory.createGrenade(CustomItemFactory.GrenadeType.ZombieBomb)
+        val zombieBombTouch = factory.createGrenade(CustomItemFactory.GrenadeType.ZombieGrenadeTouch)
         val task = Util.createTask {
             player.inventory.helmet = gun.createItemStack()
             player.inventory.setItemInOffHand(gun.createItemStack())
@@ -38,6 +40,8 @@ class PlayerJoin: Listener {
             player.inventory.addItem(mp5.createItemStack())
             player.inventory.addItem(hummer.createItemStack())
             player.inventory.addItem(nata.createItemStack())
+            player.inventory.addItem(zombieBomb.createItemStack())
+            player.inventory.addItem(zombieBombTouch.createItemStack())
         }
         Bukkit.getScheduler().runTaskLater(ZombieHero.plugin, task, 1)
     }

@@ -10,7 +10,7 @@ import java.util.*
 interface Monster {
     fun getDefaultItem(): ItemStack {
         val factory = ZombieHero.plugin.customItemFactory
-        return factory.createGrenade(CustomItemFactory.GrenadeType.TouchGrenade).createItemStack()
+        return factory.createGrenade(CustomItemFactory.GrenadeType.ZombieGrenadeTouch).createItemStack()
     }
     val uniqueId: UUID
     val playerUUID: UUID

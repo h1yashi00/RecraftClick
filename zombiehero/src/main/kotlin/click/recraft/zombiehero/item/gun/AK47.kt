@@ -10,15 +10,15 @@ class AK47: Gun(
     customModeValue = 1000000,
     shootManager = ZombieHero.plugin.shootManager,
     reload = Reload (
-        3000,
+        30,
         Tick.sec(1.3),
         ZombieHero.plugin.reloadManagerFullBullet
     ),
     shot = OneShot (
-        rate = Tick.sec(0.05),
+        rate = Tick.sec(0.25),
         10,
         0.2,
-        Accuracy(10),
+        Accuracy(30),
         Tick.sec(0.3)
     ),
     walkSpeed = 5

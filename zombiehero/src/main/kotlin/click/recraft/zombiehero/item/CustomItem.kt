@@ -4,6 +4,7 @@ import click.recraft.share.item
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.ClickType
 import org.bukkit.event.player.PlayerInteractEvent
+import org.bukkit.event.player.PlayerItemHeldEvent
 import org.bukkit.inventory.ItemStack
 import java.util.*
 
@@ -27,6 +28,8 @@ abstract class CustomItem(
             localizedName = unique.toString()
         )
     }
+    open fun currentItem(event: PlayerItemHeldEvent) {}
+    open fun prevItem(event: PlayerItemHeldEvent) {}
 
     abstract fun inInvItemClick(clickType: ClickType, player: Player)
     abstract fun rightClick(event: PlayerInteractEvent)

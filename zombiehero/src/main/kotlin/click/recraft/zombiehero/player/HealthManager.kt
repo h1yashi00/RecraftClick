@@ -1,7 +1,10 @@
 package click.recraft.zombiehero.player
 
 import click.recraft.zombiehero.ZombieHero
+import click.recraft.zombiehero.item.CustomItem
+import click.recraft.zombiehero.item.grenade.Grenade
 import click.recraft.zombiehero.item.gun.Gun
+import click.recraft.zombiehero.item.melee.Sword
 import click.recraft.zombiehero.task.OneTickTimerTask
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
@@ -18,16 +21,32 @@ object HealthManager: OneTickTimerTask {
             sendPlayerHealth(player)
         }
     }
+    private fun createMessage(customItem: CustomItem?): String {
+        customItem ?: return ""
+        return when (customItem) {
+            is Gun -> {
+                val gunStats = customItem.stats
+                "${gunStats.gunName}: ${gunStats.currentArmo}/${gunStats.maxArmo}"
+            }
+            is Sword -> {
+                customItem.name
+            }
+            is Grenade -> {
+                "${customItem.name}: ${customItem.getRemainingTime()}"
+            }
+            else -> {"not impl"}
+        }
+    }
+
     private fun sendPlayerHealth(player: Player) {
         val damage = player.getPluginHealth()
         // 挿入されたデータが直前の場合と,healthが挿入されてから4秒立ったあとにデータを送るようにする
         // データを送ってから､またすぐにデータを送るとactionBarが正しい数値を表示しない
         val item = player.inventory.itemInMainHand
         val customItem = ZombieHero.plugin.customItemFactory.getItem(item)
-        if (customItem !is Gun) return
-        val gunStats = customItem.stats
+        val msg = createMessage(customItem)
         val textComponent = TextComponent()
-        textComponent.text = "${ChatColor.RED}❤${damage} ${ChatColor.WHITE}${ChatColor.BOLD}${gunStats.gunName}: ${gunStats.currentArmo} ${ChatColor.BLUE}⚡${player.walkSpeed}"
+        textComponent.text = "${ChatColor.RED}❤${damage} ${ChatColor.WHITE}${ChatColor.BOLD}${msg} ${ChatColor.BLUE}⚡${player.walkSpeed}"
         player.spigot().sendMessage(ChatMessageType.ACTION_BAR, textComponent)
     }
 

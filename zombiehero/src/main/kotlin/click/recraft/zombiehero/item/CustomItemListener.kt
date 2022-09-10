@@ -9,6 +9,7 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryType
 import org.bukkit.event.player.PlayerDropItemEvent
 import org.bukkit.event.player.PlayerInteractEvent
+import org.bukkit.event.player.PlayerItemHeldEvent
 import org.bukkit.event.player.PlayerSwapHandItemsEvent
 import org.bukkit.inventory.ItemStack
 
@@ -50,6 +51,19 @@ abstract class CustomItemListener (
         }
         e.isCancelled = !item.isMovable()
         item.inInvItemClick(e.click, e.whoClicked as Player)
+    }
+
+    @EventHandler
+    fun changeItem(event: PlayerItemHeldEvent) {
+        val player = event.player
+        var item = getItem(player.inventory.getItem(event.newSlot))
+        if (item != null) {
+            item.currentItem(event)
+        }
+        else {
+            item = getItem(player.inventory.getItem(event.previousSlot)) ?: return
+            item.prevItem(event)
+        }
     }
 
     @EventHandler

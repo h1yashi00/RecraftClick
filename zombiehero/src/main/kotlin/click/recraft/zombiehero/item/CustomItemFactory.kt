@@ -2,10 +2,10 @@ package click.recraft.zombiehero.item
 
 import click.recraft.zombiehero.ZombieHero
 import click.recraft.zombiehero.gun.api.Tick
-import click.recraft.zombiehero.item.grenade.GrenadeImpl
+import click.recraft.zombiehero.item.grenade.ZombieBomb
 import click.recraft.zombiehero.item.grenade.HitGrenade
-import click.recraft.zombiehero.item.grenade.TouchGrenadeImpl
-import click.recraft.zombiehero.item.grenade.WtfGrenade
+import click.recraft.zombiehero.item.grenade.NormalGrenade
+import click.recraft.zombiehero.item.grenade.ZombieGrenadeTouch
 import click.recraft.zombiehero.item.gun.*
 import click.recraft.zombiehero.item.melee.Sword
 import java.util.*
@@ -22,10 +22,10 @@ class CustomItemFactory : CustomItemManager {
         MP5,
     }
     enum class GrenadeType {
-        TouchGrenade,
-        Grenade,
+        ZombieGrenadeTouch,
+        ZombieBomb,
         HITGrenade,
-        WtfGrenade
+        NormalGrenade
     }
     enum class SwordType {
         NORMAL_SWORD,
@@ -48,16 +48,20 @@ class CustomItemFactory : CustomItemManager {
     fun createSword(swordType: SwordType): Sword {
         val sword = when(swordType) {
             SwordType.NORMAL_SWORD -> Sword(
+                    "nata",
                     ZombieHero.plugin.meleeCoolDownManager,
                     100,
                     Tick.sec(1.0),
-                    1
+                    1,
+                -10
                 )
             SwordType.BIG_SWORD -> Sword(
+                "hummer",
                 ZombieHero.plugin.meleeCoolDownManager,
                 10,
                 Tick.sec(0.3),
-                2
+                2,
+                200
             )
         }
         register(sword.unique, sword)
@@ -65,10 +69,10 @@ class CustomItemFactory : CustomItemManager {
     }
     fun createGrenade(grenadeType: GrenadeType): CustomItem {
         val grenade = when(grenadeType) {
-            GrenadeType.TouchGrenade -> TouchGrenadeImpl()
-            GrenadeType.Grenade      -> GrenadeImpl()
+            GrenadeType.ZombieGrenadeTouch -> ZombieGrenadeTouch()
+            GrenadeType.ZombieBomb -> ZombieBomb()
             GrenadeType.HITGrenade   -> HitGrenade("hitGrenade")
-            GrenadeType.WtfGrenade   -> WtfGrenade()
+            GrenadeType.NormalGrenade -> NormalGrenade()
         }
         register(grenade.unique, grenade)
         return grenade
