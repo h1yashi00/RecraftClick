@@ -1,16 +1,11 @@
 package click.recraft.zombiehero.item.gun
 
 import click.recraft.zombiehero.ZombieHero
-import click.recraft.zombiehero.gun.api.Accuracy
-import click.recraft.zombiehero.gun.api.OneShot
-import click.recraft.zombiehero.gun.api.Reload
-import click.recraft.zombiehero.gun.api.Tick
-import org.bukkit.Material
+import click.recraft.zombiehero.gun.api.*
 
-class HandGun: Gun(
-    material = Material.PINK_DYE,
-    name = "HandGun",
-    customModeValue = 3,
+class DesertEagle: Gun(
+    name = "DesertEagle",
+    customModeValue = 1000007,
     shootManager = ZombieHero.plugin.shootManager,
     reload = Reload (
         7,
@@ -24,5 +19,8 @@ class HandGun: Gun(
         Accuracy(0),
         Tick.sec(0.5)
     ),
-    walkSpeed = 5
+    walkSpeed = 5,
+    shotSound = GameSound(GameSound.Type.AK47_SHOT),
+    reloadSound = GameSound(GameSound.Type.AK47_RELOAD),
+    reloadFinishSound = GameSound(GameSound.Type.AK47_RELOAD_FINISH)
 )

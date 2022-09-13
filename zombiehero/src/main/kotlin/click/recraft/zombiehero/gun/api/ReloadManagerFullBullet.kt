@@ -3,7 +3,6 @@ package click.recraft.zombiehero.gun.api
 import click.recraft.zombiehero.Util
 import click.recraft.zombiehero.ZombieHero
 import org.bukkit.Bukkit
-import org.bukkit.Sound
 
 class ReloadManagerFullBullet: ReloadManager() {
     init {
@@ -34,7 +33,8 @@ class ReloadManagerFullBullet: ReloadManager() {
                     gunStats.totalArmo   +=  -restoreArmo
                     gunStats.currentArmo +=   restoreArmo
                     player.sendExperienceChange(1f, gunStats.totalArmo)
-                    player.playSound(player.location, Sound.BLOCK_WOODEN_DOOR_CLOSE, 1f, 2f)
+                    val gunSound = gun.reloadFinishSound
+                    player.playSound(player.location, gunSound.type.sound, gunSound.volume,gunSound.pitch)
                     save.remove(uuid)
                     return@forEach
                 }

@@ -2,10 +2,8 @@ package click.recraft.zombiehero.item.gun
 
 import click.recraft.zombiehero.ZombieHero
 import click.recraft.zombiehero.gun.api.*
-import org.bukkit.Material
 
 class Mp5: Gun(
-    material = Material.BLACK_DYE,
     name = "Mp5",
     customModeValue = 1000005,
     shootManager = ZombieHero.plugin.shootManager,
@@ -21,6 +19,9 @@ class Mp5: Gun(
         Accuracy(30),
         Tick.sec(0.0)
     ),
-    walkSpeed = 0
+    walkSpeed = 0,
+    shotSound = GameSound(GameSound.Type.AK47_SHOT),
+    reloadSound = GameSound(GameSound.Type.AK47_RELOAD),
+    reloadFinishSound = GameSound(GameSound.Type.AK47_RELOAD_FINISH)
 ) {
 }

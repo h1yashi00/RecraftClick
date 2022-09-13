@@ -1,7 +1,6 @@
 package click.recraft.zombiehero.gun.api
 
 import click.recraft.zombiehero.item.gun.Gun
-import org.bukkit.Sound
 import org.bukkit.entity.Player
 
 class Reload(
@@ -29,6 +28,7 @@ class Reload(
             return
         }
         reloadManager.register(gun, player)
-        player.playSound(player.location, Sound.BLOCK_WOODEN_DOOR_OPEN, 1f,2f)
+        val gunSound= gun.reloadSound
+        player.playSound(player.location, gunSound.type.sound, gunSound.volume,gunSound.pitch)
     }
 }

@@ -2,6 +2,7 @@ package click.recraft.zombiehero.item.gun
 
 import click.recraft.share.item
 import click.recraft.zombiehero.ZombieHero
+import click.recraft.zombiehero.gun.api.GameSound
 import click.recraft.zombiehero.gun.api.Reload
 import click.recraft.zombiehero.gun.api.Shot
 import click.recraft.zombiehero.item.CustomItem
@@ -17,16 +18,18 @@ import org.bukkit.potion.PotionEffectType
 import java.util.*
 
 open class Gun (
-    material: Material,
     name: String,
     customModeValue: Int,
     private val shootManager: ShootManager,
     private val reload: Reload,
     private val shot: Shot,
     override val walkSpeed: Int,
+    val reloadSound: GameSound,
+    val reloadFinishSound: GameSound,
+    val shotSound: GameSound,
 ) : WalkSpeed, CustomItem(
     item (
-        material = material,
+        material = Material.BLACK_DYE,
         localizedName = UUID.randomUUID().toString(),
         displayName = "${ChatColor.GOLD}$name",
         customModelData = customModeValue,

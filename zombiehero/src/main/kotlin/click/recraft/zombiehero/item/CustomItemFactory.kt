@@ -1,6 +1,7 @@
 package click.recraft.zombiehero.item
 
 import click.recraft.zombiehero.ZombieHero
+import click.recraft.zombiehero.gun.api.GameSound
 import click.recraft.zombiehero.gun.api.Tick
 import click.recraft.zombiehero.item.grenade.ZombieBomb
 import click.recraft.zombiehero.item.grenade.HitGrenade
@@ -17,9 +18,11 @@ class CustomItemFactory : CustomItemManager {
     enum class GunType {
         AK47,
         SHOTGUN,
-        HANDGUN,
+        DesertEagle,
         AWP,
         MP5,
+        MOSIN,
+        Glock,
     }
     enum class GrenadeType {
         ZombieGrenadeTouch,
@@ -38,9 +41,11 @@ class CustomItemFactory : CustomItemManager {
         val gun = when(type) {
             GunType.AK47 -> AK47()
             GunType.SHOTGUN -> ShotGun()
-            GunType.HANDGUN -> HandGun()
+            GunType.DesertEagle -> DesertEagle()
             GunType.AWP  -> Awp()
             GunType.MP5 -> Mp5()
+            GunType.MOSIN -> Mosin()
+            GunType.Glock -> Glock()
         }
         register(gun.unique, gun)
         return gun
@@ -53,7 +58,8 @@ class CustomItemFactory : CustomItemManager {
                     100,
                     Tick.sec(1.0),
                     1,
-                -10
+                -10,
+                GameSound(GameSound.Type.SWING_SMALL)
                 )
             SwordType.BIG_SWORD -> Sword(
                 "hummer",
@@ -61,7 +67,8 @@ class CustomItemFactory : CustomItemManager {
                 10,
                 Tick.sec(0.3),
                 2,
-                200
+                200,
+                GameSound(GameSound.Type.SWING_BIG)
             )
         }
         register(sword.unique, sword)

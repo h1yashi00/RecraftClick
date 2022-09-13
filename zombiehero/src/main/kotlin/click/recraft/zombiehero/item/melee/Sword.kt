@@ -3,18 +3,20 @@ package click.recraft.zombiehero.item.melee
 import click.recraft.share.item
 import click.recraft.zombiehero.Util
 import click.recraft.zombiehero.ZombieHero
+import click.recraft.zombiehero.gun.api.GameSound
 import click.recraft.zombiehero.gun.api.Tick
 import click.recraft.zombiehero.item.CustomItem
 import click.recraft.zombiehero.player.WalkSpeed
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.Particle
-import org.bukkit.Sound
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.ClickType
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerItemHeldEvent
+import org.bukkit.potion.PotionEffect
+import org.bukkit.potion.PotionEffectType
 import java.util.*
 
 class Sword (
@@ -23,7 +25,8 @@ class Sword (
     private val damage: Int,
     val coolDown: Tick,
     customModelData: Int,
-    override val walkSpeed: Int
+    override val walkSpeed: Int,
+    val swingSound: GameSound
 ): WalkSpeed, CustomItem (
     item(
         Material.PINK_DYE,
@@ -33,8 +36,9 @@ class Sword (
 ) {
 
     fun attack(player: Player) {
+        player.addPotionEffect(PotionEffect(PotionEffectType.SLOW_DIGGING, 20,10))
         player.swingMainHand()
-        player.playSound(player.location, Sound.BLOCK_NOTE_BLOCK_HARP, 1f,1f)
+        player.playSound(player.location, swingSound.type.sound, swingSound.volume, swingSound.pitch)
 
         val loc = player.eyeLocation.clone()
         var count = 3

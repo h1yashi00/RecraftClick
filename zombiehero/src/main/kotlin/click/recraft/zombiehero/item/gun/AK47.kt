@@ -2,10 +2,8 @@ package click.recraft.zombiehero.item.gun
 
 import click.recraft.zombiehero.ZombieHero
 import click.recraft.zombiehero.gun.api.*
-import org.bukkit.Material
 
 class AK47: Gun(
-    material = Material.BLACK_DYE,
     name = "AK-47",
     customModeValue = 1000000,
     shootManager = ZombieHero.plugin.shootManager,
@@ -21,5 +19,8 @@ class AK47: Gun(
         Accuracy(30),
         Tick.sec(0.3)
     ),
-    walkSpeed = 5
+    walkSpeed = 5,
+    shotSound = GameSound(GameSound.Type.AK47_SHOT),
+    reloadSound = GameSound(GameSound.Type.AK47_RELOAD),
+    reloadFinishSound = GameSound(GameSound.Type.AK47_RELOAD_FINISH)
 )

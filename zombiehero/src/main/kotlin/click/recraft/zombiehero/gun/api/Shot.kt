@@ -88,12 +88,12 @@ interface Shot {
         }
     }
 
-    fun shootAction(player: Player, playerGun: Gun) {
-        if (playerGun.isRelaoding()) {
-            playerGun.cancelReload()
+    fun shootAction(player: Player, gun: Gun) {
+        if (gun.isRelaoding()) {
+            gun.cancelReload()
             return
         }
-        val stats = playerGun.stats
+        val stats = gun.stats
         val currentTime = ZombieHero.plugin.getTime()
         val passedTick = currentTime - lastShot
         if (passedTick < rate.tick) {
@@ -101,12 +101,13 @@ interface Shot {
         }
         lastShot = currentTime
         stats.currentArmo += -1
-        shoot(player)
+        shoot(player, gun)
     }
 
-    fun shoot(player: Player) {
+    fun shoot(player: Player, gun: Gun) {
         PlayerForceRecoil.sendRecoilPacket(player, 0F,-1F)
-        player.world.playSound(player.location, Sound.ENTITY_IRON_GOLEM_HURT, 1f, 3F)
+        val gunSound= gun.shotSound
+        player.world.playSound(player.location, gunSound.type.sound, gunSound.volume, gunSound.pitch)
         val dir = player.location.direction
         player.location.direction = dir.multiply(1)
         val bullet = player.location.clone().apply {y+=player.eyeHeight }
