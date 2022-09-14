@@ -34,6 +34,7 @@ class PlayerJoin: Listener {
         val desertEagle = factory.createGun(CustomItemFactory.GunType.DesertEagle)
         val mosin = factory.createGun(CustomItemFactory.GunType.MOSIN)
         val glock = factory.createGun(CustomItemFactory.GunType.Glock)
+
         val task = Util.createTask {
             player.inventory.addItem(desertEagle.createItemStack())
             player.inventory.addItem(mosin.createItemStack())
@@ -42,6 +43,7 @@ class PlayerJoin: Listener {
             player.inventory.addItem(awp.createItemStack())
             player.inventory.addItem(hummer.createItemStack())
             player.inventory.addItem(nata.createItemStack())
+            player.inventory.addItem(gun.createItemStack())
             player.inventory.addItem(zombieBomb.createItemStack())
         }
         Bukkit.getScheduler().runTaskLater(ZombieHero.plugin, task, 1)

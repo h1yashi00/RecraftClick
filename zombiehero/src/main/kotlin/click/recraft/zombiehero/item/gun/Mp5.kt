@@ -5,7 +5,7 @@ import click.recraft.zombiehero.gun.api.*
 
 class Mp5: Gun(
     name = "Mp5",
-    customModeValue = 1000005,
+    customModeValue = 5,
     shootManager = ZombieHero.plugin.shootManager,
     reload = Reload (
         30,
@@ -22,6 +22,8 @@ class Mp5: Gun(
     walkSpeed = 0,
     shotSound = GameSound(GameSound.Type.AK47_SHOT),
     reloadSound = GameSound(GameSound.Type.AK47_RELOAD),
-    reloadFinishSound = GameSound(GameSound.Type.AK47_RELOAD_FINISH)
+    reloadFinishSound = GameSound(GameSound.Type.AK47_RELOAD_FINISH),
+    recoilX = 1f,
+    recoilY = 1f,
 ) {
 }

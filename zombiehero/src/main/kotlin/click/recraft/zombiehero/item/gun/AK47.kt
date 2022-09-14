@@ -5,7 +5,7 @@ import click.recraft.zombiehero.gun.api.*
 
 class AK47: Gun(
     name = "AK-47",
-    customModeValue = 1000000,
+    customModeValue = 1,
     shootManager = ZombieHero.plugin.shootManager,
     reload = Reload (
         30,
@@ -13,7 +13,7 @@ class AK47: Gun(
         ZombieHero.plugin.reloadManagerFullBullet
     ),
     shot = OneShot (
-        rate = Tick.sec(0.25),
+        rate = Tick.sec(0.15),
         10,
         0.2,
         Accuracy(30),
@@ -22,5 +22,7 @@ class AK47: Gun(
     walkSpeed = 5,
     shotSound = GameSound(GameSound.Type.AK47_SHOT),
     reloadSound = GameSound(GameSound.Type.AK47_RELOAD),
-    reloadFinishSound = GameSound(GameSound.Type.AK47_RELOAD_FINISH)
+    reloadFinishSound = GameSound(GameSound.Type.AK47_RELOAD_FINISH),
+    recoilY = 1f,
+    recoilX = 0f,
 )

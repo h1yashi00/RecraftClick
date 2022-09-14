@@ -4,7 +4,7 @@ import click.recraft.zombiehero.ZombieHero
 import click.recraft.zombiehero.gun.api.*
 
 class Glock : Gun(
-    customModeValue = 1000008,
+    customModeValue = 8,
     shootManager = ZombieHero.plugin.shootManager,
     reload = Reload (
         15,
@@ -13,7 +13,7 @@ class Glock : Gun(
     ),
     shot = OneShot (
         Tick.sec(0.05),
-        damage = 300,
+        damage = 30,
         knockBack = 1.3,
         Accuracy(0),
         Tick.sec(0.0),
@@ -22,6 +22,8 @@ class Glock : Gun(
     walkSpeed = 30,
     shotSound = GameSound(GameSound.Type.AK47_SHOT),
     reloadSound = GameSound(GameSound.Type.AK47_RELOAD),
-    reloadFinishSound = GameSound(GameSound.Type.AK47_RELOAD_FINISH)
+    reloadFinishSound = GameSound(GameSound.Type.AK47_RELOAD_FINISH),
+    recoilX = 1f,
+    recoilY = 2f,
 ){
 }

@@ -5,7 +5,7 @@ import click.recraft.zombiehero.gun.api.*
 
 class ShotGun: Gun(
     name = "ShotGun",
-    customModeValue = 1000004,
+    customModeValue = 4,
     shootManager = ZombieHero.plugin.shootManager,
     reload = Reload (
         8,
@@ -23,6 +23,8 @@ class ShotGun: Gun(
     walkSpeed = 5,
     shotSound = GameSound(GameSound.Type.SHOTGUN_SHOT),
     reloadSound = GameSound(GameSound.Type.SHOTGUN_RELOAD),
-    reloadFinishSound = GameSound(GameSound.Type.SHOTGUN_RELOAD_FINISH)
+    reloadFinishSound = GameSound(GameSound.Type.SHOTGUN_RELOAD_FINISH),
+    recoilY = 5f,
+    recoilX = 5f,
 ) {
 }

@@ -27,6 +27,8 @@ open class Gun (
     val reloadSound: GameSound,
     val reloadFinishSound: GameSound,
     val shotSound: GameSound,
+    val recoilX: Float,
+    val recoilY: Float,
 ) : WalkSpeed, CustomItem(
     item (
         material = Material.BLACK_DYE,

@@ -12,6 +12,14 @@ abstract class ReloadManager {
         val reloadTime: Int,
         val uuid: UUID
     )
+    fun delayRegister(gun: Gun, player: Player) {
+        save[gun.unique] = Data(
+            gun,
+            gun.getReloadTime() + 20,
+            gun.getReloadTime() + 20,
+            player.uniqueId
+        )
+    }
     fun register(gun: Gun, player: Player) {
         save[gun.unique] = Data(
             gun,

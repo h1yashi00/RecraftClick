@@ -26,7 +26,7 @@ object HealthManager: OneTickTimerTask {
         return when (customItem) {
             is Gun -> {
                 val gunStats = customItem.stats
-                "${gunStats.gunName}: ${gunStats.currentArmo}/${gunStats.maxArmo}"
+                "${gunStats.currentArmo}/${gunStats.maxArmo}"
             }
             is Sword -> {
                 customItem.name

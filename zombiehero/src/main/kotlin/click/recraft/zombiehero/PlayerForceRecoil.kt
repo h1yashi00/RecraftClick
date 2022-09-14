@@ -15,7 +15,7 @@ object PlayerForceRecoil {
     )
 
     fun sendRecoilPacket(player: Player, yaw: Float, pitch: Float) {
-        val packet = PacketPlayOutPosition(0.0, 0.0, 0.0, yaw, pitch, FLAGS, 0, false)
+        val packet = PacketPlayOutPosition(0.0, 0.0, 0.0, yaw, pitch, FLAGS, 0, true)
         val entityPlayer = (player as CraftPlayer).handle
         entityPlayer.b.a(packet)
     }

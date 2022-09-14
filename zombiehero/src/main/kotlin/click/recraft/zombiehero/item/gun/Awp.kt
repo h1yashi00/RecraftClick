@@ -5,7 +5,7 @@ import click.recraft.zombiehero.gun.api.*
 
 class Awp : Gun (
     "Awp",
-    customModeValue = 1000002,
+    customModeValue = 2,
     shootManager = ZombieHero.plugin.shootManager,
     reload = Reload (
         7,
@@ -22,5 +22,7 @@ class Awp : Gun (
     -30,
     shotSound = GameSound(GameSound.Type.MOSIN_SHOT, 1F, 0.7F),
     reloadSound = GameSound(GameSound.Type.MOSIN_RELOAD,1F,0.7F),
-    reloadFinishSound = GameSound(GameSound.Type.MOSIN_RELOAD_FINISH,1F,0.7F)
+    reloadFinishSound = GameSound(GameSound.Type.MOSIN_RELOAD_FINISH,1F,0.7F),
+    recoilX = 10f,
+    recoilY = 10f,
 )

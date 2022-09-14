@@ -5,7 +5,7 @@ import click.recraft.zombiehero.gun.api.*
 
 class DesertEagle: Gun(
     name = "DesertEagle",
-    customModeValue = 1000007,
+    customModeValue = 7,
     shootManager = ZombieHero.plugin.shootManager,
     reload = Reload (
         7,
@@ -14,7 +14,7 @@ class DesertEagle: Gun(
     ),
     shot = OneShot(
         Tick.sec(0.7),
-        70,
+        100,
         1.0,
         Accuracy(0),
         Tick.sec(0.5)
@@ -22,5 +22,7 @@ class DesertEagle: Gun(
     walkSpeed = 5,
     shotSound = GameSound(GameSound.Type.AK47_SHOT),
     reloadSound = GameSound(GameSound.Type.AK47_RELOAD),
-    reloadFinishSound = GameSound(GameSound.Type.AK47_RELOAD_FINISH)
+    reloadFinishSound = GameSound(GameSound.Type.AK47_RELOAD_FINISH),
+    recoilX = 15f,
+    recoilY = 5f,
 )

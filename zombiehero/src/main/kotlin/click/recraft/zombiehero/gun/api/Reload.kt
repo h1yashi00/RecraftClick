@@ -27,7 +27,17 @@ class Reload(
         if (!check(gun)) {
             return
         }
-        reloadManager.register(gun, player)
+        if (gun.stats.currentArmo == 0) {
+            if (reloadManager is ReloadManagerOneBullet) {
+                reloadManager.delayRegister(gun, player)
+            }
+            else {
+                reloadManager.register(gun, player)
+            }
+        }
+        else {
+            reloadManager.register(gun, player)
+        }
         val gunSound= gun.reloadSound
         player.playSound(player.location, gunSound.type.sound, gunSound.volume,gunSound.pitch)
     }

@@ -105,7 +105,7 @@ interface Shot {
     }
 
     fun shoot(player: Player, gun: Gun) {
-        PlayerForceRecoil.sendRecoilPacket(player, 0F,-1F)
+        PlayerForceRecoil.sendRecoilPacket(player, -gun.recoilX,-gun.recoilY)
         val gunSound= gun.shotSound
         player.world.playSound(player.location, gunSound.type.sound, gunSound.volume, gunSound.pitch)
         val dir = player.location.direction
