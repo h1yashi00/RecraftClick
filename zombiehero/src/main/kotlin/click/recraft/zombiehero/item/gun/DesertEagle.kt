@@ -5,7 +5,7 @@ import click.recraft.zombiehero.gun.api.*
 
 class DesertEagle: Gun(
     name = "DesertEagle",
-    customModeValue = 7,
+    customModeValue = 13,
     shootManager = ZombieHero.plugin.shootManager,
     reload = Reload (
         7,

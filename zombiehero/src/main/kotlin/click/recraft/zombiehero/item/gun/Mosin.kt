@@ -4,7 +4,7 @@ import click.recraft.zombiehero.ZombieHero
 import click.recraft.zombiehero.gun.api.*
 
 class Mosin : Gun(
-    customModeValue = 6,
+    customModeValue = 11,
     shootManager = ZombieHero.plugin.shootManager,
     reload = Reload (
         7,

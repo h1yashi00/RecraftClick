@@ -46,6 +46,18 @@ open class Gun (
         )
     )
 ) {
+    override fun createItemStack(): ItemStack {
+        return if (scope) {
+            val itemStack = super.createItemStack()
+            val meta = itemStack.itemMeta!!
+            val reloadCustomItemMeta = meta.customModelData + 1
+            meta.setCustomModelData(reloadCustomItemMeta)
+            itemStack.itemMeta = meta
+            itemStack
+        } else {
+            super.createItemStack()
+        }
+    }
     data class GunStats (
         var totalArmo:   Int,
         var currentArmo: Int,
@@ -140,6 +152,8 @@ open class Gun (
         if (scope) {
             scope = false
             player.removePotionEffect(effect.type)
+            val item = player.inventory.itemInMainHand
+            player.inventory.removeItem(item)
         } else {
             player.addPotionEffect(effect)
             scope = true

@@ -40,7 +40,7 @@ class CustomItemFactory : CustomItemManager {
     ): Gun {
         val gun = when(type) {
             GunType.AK47 -> AK47()
-            GunType.SHOTGUN -> ShotGun()
+            GunType.SHOTGUN -> M870()
             GunType.DesertEagle -> DesertEagle()
             GunType.AWP  -> Awp()
             GunType.MP5 -> Mp5()

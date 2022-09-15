@@ -5,7 +5,7 @@ import click.recraft.zombiehero.gun.api.*
 
 class Mp5: Gun(
     name = "Mp5",
-    customModeValue = 5,
+    customModeValue = 9,
     shootManager = ZombieHero.plugin.shootManager,
     reload = Reload (
         30,

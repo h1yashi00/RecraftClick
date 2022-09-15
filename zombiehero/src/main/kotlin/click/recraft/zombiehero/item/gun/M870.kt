@@ -3,9 +3,9 @@ package click.recraft.zombiehero.item.gun
 import click.recraft.zombiehero.ZombieHero
 import click.recraft.zombiehero.gun.api.*
 
-class ShotGun: Gun(
+class M870: Gun(
     name = "ShotGun",
-    customModeValue = 4,
+    customModeValue = 7,
     shootManager = ZombieHero.plugin.shootManager,
     reload = Reload (
         8,

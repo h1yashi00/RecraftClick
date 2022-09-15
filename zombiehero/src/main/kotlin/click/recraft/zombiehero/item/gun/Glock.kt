@@ -4,7 +4,7 @@ import click.recraft.zombiehero.ZombieHero
 import click.recraft.zombiehero.gun.api.*
 
 class Glock : Gun(
-    customModeValue = 8,
+    customModeValue = 15,
     shootManager = ZombieHero.plugin.shootManager,
     reload = Reload (
         15,

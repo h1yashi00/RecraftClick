@@ -5,7 +5,7 @@ import click.recraft.zombiehero.gun.api.*
 
 class Awp : Gun (
     "Awp",
-    customModeValue = 2,
+    customModeValue = 3,
     shootManager = ZombieHero.plugin.shootManager,
     reload = Reload (
         7,
