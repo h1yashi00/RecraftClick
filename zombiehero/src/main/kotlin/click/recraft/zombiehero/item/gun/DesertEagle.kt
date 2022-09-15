@@ -16,7 +16,7 @@ class DesertEagle: Gun(
         Tick.sec(0.7),
         100,
         1.0,
-        Accuracy(0),
+        Accuracy(30,0),
         Tick.sec(0.5)
     ),
     walkSpeed = 5,

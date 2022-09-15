@@ -39,7 +39,8 @@ class PlayerJoin: Listener {
         val task = Util.createTask {
             player.inventory.addItem(
                 desertEagle.createItemStack(),
-                saiga.createItemStack()
+                saiga.createItemStack(),
+                mp5.createItemStack()
             )
 //            player.inventory.addItem(mosin.createItemStack())
 //            player.inventory.addItem(glock.createItemStack())

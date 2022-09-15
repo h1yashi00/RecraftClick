@@ -17,7 +17,7 @@ class M870: Gun(
         10,
         5,
         0.3,
-        Accuracy(200),
+        Accuracy(200,30),
         Tick.sec(0.05)
     ),
     walkSpeed = 5,

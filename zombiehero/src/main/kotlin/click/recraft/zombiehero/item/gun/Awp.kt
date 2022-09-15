@@ -16,7 +16,7 @@ class Awp : Gun (
         Tick.sec(1.4),
         damage = 500,
         knockBack = 1.3,
-        Accuracy(0),
+        Accuracy(30,0),
         Tick.sec(0.0),
     ),
     -30,

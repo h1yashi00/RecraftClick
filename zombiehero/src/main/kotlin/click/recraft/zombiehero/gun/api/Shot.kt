@@ -28,9 +28,19 @@ interface Shot {
         loc.world!!.spawnParticle(particle, loc, 1,0.0,0.0,0.0,1.0)
     }
 
-    private fun rand(): Double {
-        val rangeMin = -accuracy.value
-        val rangeMax =  accuracy.value
+    private fun rand(scope: Boolean): Double {
+        val rangeMin = if (scope) {
+            -accuracy.scopedValue
+        }
+        else {
+            -accuracy.value
+        }
+        val rangeMax = if (scope) {
+            accuracy.scopedValue
+        }
+        else {
+            accuracy.value
+        }
         return rangeMin + (rangeMax - rangeMin) * Random().nextDouble()
     }
 
@@ -38,8 +48,8 @@ interface Shot {
         return 100
     }
 
-    private fun shootArmo(bullet: Location, player: Player) {
-        bullet.apply { direction = Vector(direction.x + rand(), direction.y + rand(), direction.z + rand()) }
+    private fun shootArmo(bullet: Location, player: Player, gun: Gun) {
+        bullet.apply { direction = Vector(direction.x + rand(gun.isScoping()), direction.y + rand(gun.isScoping()), direction.z + rand(gun.isScoping())) }
         (0..(bulletRange() * 2)).forEach{ _ ->
             showBallistic(bullet)
             bullet.apply { x += (direction.x / 2) ; y += (direction.y / 2); z += (direction.z /2)}
@@ -112,7 +122,7 @@ interface Shot {
         player.location.direction = dir.multiply(1)
         val bullet = player.location.clone().apply {y+=player.eyeHeight }
         (1..shootAmmo).forEach { _ ->
-            shootArmo(bullet.clone(), player)
+            shootArmo(bullet.clone(), player, gun)
         }
     }
 

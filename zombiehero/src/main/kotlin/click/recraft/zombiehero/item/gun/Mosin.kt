@@ -15,7 +15,7 @@ class Mosin : Gun(
         Tick.sec(1.0),
         damage = 300,
         knockBack = 1.3,
-        Accuracy(0),
+        Accuracy(30,0),
         Tick.sec(0.0),
     ),
     name = "MosinNagant",

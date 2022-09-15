@@ -9,7 +9,7 @@ class Saiga: Gun(
     shootManager = ZombieHero.plugin.shootManager,
     reload = Reload (
         30,
-        Tick.sec(0.5),
+        Tick.sec(1.2),
         ZombieHero.plugin.reloadManagerFullBullet,
     ),
     shot = MultiShot (
@@ -17,7 +17,7 @@ class Saiga: Gun(
         10,
         4,
         0.3,
-        Accuracy(200),
+        Accuracy(200,30),
         Tick.sec(0.05)
     ),
     walkSpeed = 5,
