@@ -23,6 +23,7 @@ class CustomItemFactory : CustomItemManager {
         MP5,
         MOSIN,
         Glock,
+        Saiga,
     }
     enum class GrenadeType {
         ZombieGrenadeTouch,
@@ -46,6 +47,7 @@ class CustomItemFactory : CustomItemManager {
             GunType.MP5 -> Mp5()
             GunType.MOSIN -> Mosin()
             GunType.Glock -> Glock()
+            GunType.Saiga -> Saiga()
         }
         register(gun.unique, gun)
         return gun

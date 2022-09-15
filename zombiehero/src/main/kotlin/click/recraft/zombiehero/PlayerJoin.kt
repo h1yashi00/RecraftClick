@@ -34,17 +34,21 @@ class PlayerJoin: Listener {
         val desertEagle = factory.createGun(CustomItemFactory.GunType.DesertEagle)
         val mosin = factory.createGun(CustomItemFactory.GunType.MOSIN)
         val glock = factory.createGun(CustomItemFactory.GunType.Glock)
+        val saiga = factory.createGun(CustomItemFactory.GunType.Saiga)
 
         val task = Util.createTask {
-            player.inventory.addItem(desertEagle.createItemStack())
-            player.inventory.addItem(mosin.createItemStack())
-            player.inventory.addItem(glock.createItemStack())
-            player.inventory.addItem(shotGun.createItemStack())
-            player.inventory.addItem(awp.createItemStack())
-            player.inventory.addItem(hummer.createItemStack())
-            player.inventory.addItem(nata.createItemStack())
-            player.inventory.addItem(gun.createItemStack())
-            player.inventory.addItem(zombieBomb.createItemStack())
+            player.inventory.addItem(
+                desertEagle.createItemStack(),
+                saiga.createItemStack()
+            )
+//            player.inventory.addItem(mosin.createItemStack())
+//            player.inventory.addItem(glock.createItemStack())
+//            player.inventory.addItem(shotGun.createItemStack())
+//            player.inventory.addItem(awp.createItemStack())
+//            player.inventory.addItem(hummer.createItemStack())
+//            player.inventory.addItem(nata.createItemStack())
+//            player.inventory.addItem(gun.createItemStack())
+//            player.inventory.addItem(zombieBomb.createItemStack())
         }
         Bukkit.getScheduler().runTaskLater(ZombieHero.plugin, task, 1)
     }
