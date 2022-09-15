@@ -5,6 +5,7 @@ import click.recraft.zombiehero.ZombieHero
 import org.bukkit.Bukkit
 import org.bukkit.Color
 import org.bukkit.Material
+import org.bukkit.Sound
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.ItemStack
@@ -15,6 +16,7 @@ import org.bukkit.potion.PotionEffectType
 import java.util.*
 
 class Skeleton(override val playerUUID: UUID) : Monster {
+    override val damageSound: Sound = Sound.ENTITY_SKELETON_HURT
     override val uniqueId: UUID = UUID.randomUUID()
     override var walkSpeed: Int = 0
     private class Skill1(

@@ -2,6 +2,7 @@ package click.recraft.zombiehero.monster
 
 import click.recraft.zombiehero.ZombieHero
 import click.recraft.zombiehero.item.CustomItemFactory
+import org.bukkit.Sound
 import org.bukkit.entity.Player
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.ItemStack
@@ -12,6 +13,7 @@ interface Monster {
         val factory = ZombieHero.plugin.customItemFactory
         return factory.createGrenade(CustomItemFactory.GrenadeType.ZombieGrenadeTouch).createItemStack()
     }
+    val damageSound: Sound
     val uniqueId: UUID
     val playerUUID: UUID
     var walkSpeed: Int
