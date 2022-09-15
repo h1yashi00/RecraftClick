@@ -5,8 +5,8 @@ import click.recraft.zombiehero.gun.api.ReloadManagerFullBullet
 import click.recraft.zombiehero.gun.api.ReloadManagerOneBullet
 import click.recraft.zombiehero.item.CustomItemFactory
 import click.recraft.zombiehero.item.grenade.*
-import click.recraft.zombiehero.item.gun.GunListener
-import click.recraft.zombiehero.item.gun.ShootManager
+import click.recraft.zombiehero.gun.api.GunListener
+import click.recraft.zombiehero.gun.api.ShootManager
 import click.recraft.zombiehero.item.melee.MeleeCoolDownManager
 import click.recraft.zombiehero.monster.MonsterManager
 import click.recraft.zombiehero.monster.SkeletonListener
@@ -19,7 +19,7 @@ class ZombieHero: KotlinPlugin() {
     companion object {
         lateinit var plugin: ZombieHero
     }
-    val shootManager     : ShootManager     by lazy { ShootManager()     }
+    val shootManager     : ShootManager by lazy { ShootManager()     }
     val reloadManagerFullBullet    : ReloadManagerFullBullet    by lazy { ReloadManagerFullBullet()    }
     val oneBulletReloadManager: ReloadManagerOneBullet by lazy { ReloadManagerOneBullet() }
     val meleeCoolDownManager: MeleeCoolDownManager by lazy { MeleeCoolDownManager() }

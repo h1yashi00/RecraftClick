@@ -4,6 +4,7 @@ import click.recraft.share.item
 import click.recraft.zombiehero.ZombieHero
 import click.recraft.zombiehero.gun.api.GameSound
 import click.recraft.zombiehero.gun.api.Reload
+import click.recraft.zombiehero.gun.api.ShootManager
 import click.recraft.zombiehero.gun.api.Shot
 import click.recraft.zombiehero.item.CustomItem
 import click.recraft.zombiehero.player.WalkSpeed
