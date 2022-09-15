@@ -23,6 +23,6 @@ class DesertEagle: Gun(
     shotSound = GameSound(GameSound.Type.AK47_SHOT),
     reloadSound = GameSound(GameSound.Type.AK47_RELOAD),
     reloadFinishSound = GameSound(GameSound.Type.AK47_RELOAD_FINISH),
-    recoilX = 15f,
-    recoilY = 5f,
+    recoilX = 3f,
+    recoilY = 10f,
 )

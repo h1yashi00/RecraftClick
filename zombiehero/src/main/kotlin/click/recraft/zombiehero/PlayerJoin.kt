@@ -1,6 +1,7 @@
 package click.recraft.zombiehero
 
 import click.recraft.zombiehero.item.CustomItemFactory
+import click.recraft.zombiehero.monster.Skeleton
 import org.bukkit.Bukkit
 import org.bukkit.entity.EntityType
 import org.bukkit.event.EventHandler
@@ -19,11 +20,11 @@ class PlayerJoin: Listener {
         val player = event.player
         player.foodLevel = 20
         player.inventory.clear()
-//        val monster = Skeleton(player.uniqueId)
-//        monster.initialize(player)
-//        ZombieHero.plugin.monsterManager.register(player, monster)
+        val monster = Skeleton(player.uniqueId)
+        monster.initialize(player)
+        ZombieHero.plugin.monsterManager.register(player, monster)
         val factory = ZombieHero.plugin.customItemFactory
-        val gun = factory.createGun(CustomItemFactory.GunType.AK47)
+        val ak47 = factory.createGun(CustomItemFactory.GunType.AK47)
         val shotGun = factory.createGun(CustomItemFactory.GunType.SHOTGUN)
         val awp = factory.createGun(CustomItemFactory.GunType.AWP)
         val mp5 = factory.createGun(CustomItemFactory.GunType.MP5)
@@ -37,11 +38,12 @@ class PlayerJoin: Listener {
         val saiga = factory.createGun(CustomItemFactory.GunType.Saiga)
 
         val task = Util.createTask {
-            player.inventory.addItem(
-                desertEagle.createItemStack(),
-                saiga.createItemStack(),
-                mp5.createItemStack()
-            )
+//            player.inventory.addItem(
+//                desertEagle.createItemStack(),
+//                saiga.createItemStack(),
+//                mp5.createItemStack(),
+//                ak47.createItemStack()
+//            )
 //            player.inventory.addItem(mosin.createItemStack())
 //            player.inventory.addItem(glock.createItemStack())
 //            player.inventory.addItem(shotGun.createItemStack())
