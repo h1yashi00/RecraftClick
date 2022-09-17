@@ -13,6 +13,7 @@ import java.util.*
 
 abstract class Monster(
     val damageSound: Sound,
+    val deathSound: Sound,
     val playerUUID: UUID,
     var walkSpeed: Int,
 

@@ -4,6 +4,7 @@ import click.recraft.zombiehero.UseNms
 import click.recraft.zombiehero.Util
 import click.recraft.zombiehero.ZombieHero
 import click.recraft.zombiehero.item.gun.Gun
+import click.recraft.zombiehero.player.PlayerData.setShooter
 import org.bukkit.*
 import org.bukkit.block.Block
 import org.bukkit.entity.ArmorStand
@@ -73,6 +74,7 @@ interface Shot {
                     damage
                 }
                 entity.damage(dmg.toDouble())
+                if (entity is Player) {entity.setShooter(player)}
                 if (entity is Zombie) {
                     entity.target = player
                 }
@@ -88,7 +90,17 @@ interface Shot {
                     saveKnockBack[entity.uniqueId] = knockBack
                     val lateTask = Util.createTask {
                         val accumulateKnockBack = saveKnockBack[entity.uniqueId]!!
-                        entity.velocity = dir.multiply(accumulateKnockBack).apply { y = if (y < 0) {y * -1} else {y} }
+                        entity.velocity = if (entity is Player) {
+                            if (entity.gameMode == GameMode.SPECTATOR) {
+                                Vector()
+                            }
+                            else {
+                                dir.multiply(accumulateKnockBack).apply { y = if (y < 0) {y * -1} else {y} }
+                            }
+                        }
+                        else {
+                            dir.multiply(accumulateKnockBack).apply { y = if (y < 0) {y * -1} else {y} }
+                        }
                         saveKnockBack.remove(entity.uniqueId)
                     }
                     Bukkit.getScheduler().runTaskLater(ZombieHero.plugin, lateTask, 1)

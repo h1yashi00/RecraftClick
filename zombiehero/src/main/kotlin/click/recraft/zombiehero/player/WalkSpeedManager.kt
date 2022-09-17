@@ -1,6 +1,7 @@
 package click.recraft.zombiehero.player
 
 import click.recraft.zombiehero.ZombieHero
+import click.recraft.zombiehero.monster.api.MonsterManager
 import click.recraft.zombiehero.task.OneTickTimerTask
 import org.bukkit.Bukkit
 
@@ -14,7 +15,7 @@ object WalkSpeedManager: OneTickTimerTask {
             if (customItem is WalkSpeed) {
                 walkSpeed += customItem.walkSpeed
             }
-            val monster = ZombieHero.plugin.monsterManager.get(player)
+            val monster = MonsterManager.get(player)
             if (monster != null) {
                 walkSpeed += monster.walkSpeed
             }

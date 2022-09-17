@@ -1,6 +1,6 @@
 package click.recraft.zombiehero.command
 
-import click.recraft.zombiehero.ZombieHero
+import click.recraft.zombiehero.monster.api.MonsterManager
 import click.recraft.zombiehero.monster.api.MonsterType
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
@@ -8,7 +8,7 @@ import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
 class MonsterCommand: CommandExecutor {
-    private val manager = ZombieHero.plugin.monsterManager
+    private val manager = MonsterManager
     override fun onCommand(
         sender: CommandSender,
         command: Command,

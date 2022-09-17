@@ -9,7 +9,6 @@ object Util {
     fun createTask( task: BukkitTask.() -> Unit): BukkitTask.() -> Unit {
         return task
     }
-
    fun isHeadLocation(bulletBoundingBox: BoundingBox, headLoc: Location): Boolean {
         val headSize = 0.45
         val x1 = headLoc.x - headSize
@@ -36,9 +35,14 @@ object Util {
             player.sendTitle(msg, "", 0,20 * 1,0)
         }
     }
+    fun broadcastTitle(msg: String, fadeIn: Int, stay: Int, fadeOut: Int) {
+        Bukkit.getOnlinePlayers().forEach { player ->
+            player.sendTitle(msg, "", fadeIn,stay,fadeOut)
+        }
+    }
     fun broadcastSubTitle(msg: String) {
         Bukkit.getOnlinePlayers().forEach { player ->
-            player.sendTitle("", "$msg", 0,20 * 1,0)
+            player.sendTitle("", msg, 0,20 * 1,0)
         }
     }
 }

@@ -20,12 +20,14 @@ class PlayerJoin: Listener {
         player.foodLevel = 20
         player.inventory.clear()
         val playerNum = Bukkit.getOnlinePlayers().size
-        event.joinMessage = "${ChatColor.YELLOW}プレイヤーが参加しました｡ 2人以上で開始します｡ 現在の参加人数: ${playerNum}/32"
+        player.teleport(ZombieHero.plugin.gameManager.world.randomSpawn())
         val game=  ZombieHero.plugin.gameManager
         if (game.isStart()) {
+            event.joinMessage = "${ChatColor.YELLOW}${player.name}が参加しました｡ 2人以上で開始します｡ 現在の参加人数: ${playerNum}/32"
             return
         }
         if (playerNum >= game.requiredPlayerNum) {
+            event.joinMessage = "${ChatColor.YELLOW}${player.name}が参加しました"
             game.start()
         }
     }

@@ -1,13 +1,15 @@
 package click.recraft.zombiehero
 
+import click.recraft.zombiehero.monster.api.MonsterManager
+import click.recraft.zombiehero.player.HealthManager
 import click.recraft.zombiehero.player.PlayerData.gun
 import org.bukkit.Bukkit
 
 class GameManager {
     val requiredPlayerNum: Int = 2
     var startFlag = false
-    private val monsterManager = ZombieHero.plugin.monsterManager
     private val customItemFactory = ZombieHero.plugin.customItemFactory
+    val world = GameWorld(Bukkit.getWorld("world")!!)
 
     fun isStart(): Boolean {
         return startFlag
@@ -36,6 +38,23 @@ class GameManager {
         }
         Bukkit.getScheduler().runTaskTimer(ZombieHero.plugin, task, 0, 20)
     }
+    fun finish() {
+        Bukkit.getOnlinePlayers().forEach { player ->
+            Bukkit.getScheduler().pendingTasks.forEach {
+                if (!ZombieHero.plugin.importantTaskId.contains(it.taskId)) {
+                    it.cancel()
+                }
+            }
+            player.inventory.clear()
+            player.activePotionEffects.forEach {
+                player.removePotionEffect(it.type)
+            }
+            HealthManager.clear()
+            MonsterManager.clear()
+            player.teleport(world.randomSpawn())
+        }
+        start()
+    }
 
     // 敵を選出する
     private fun chooseEnemy() {
@@ -45,13 +64,13 @@ class GameManager {
             enemyNum = 1
         }
         repeat(enemyNum) {
-            monsterManager.chooseRandomEnemyMonster()
+            MonsterManager.chooseRandomEnemyMonster()
         }
     }
 
     private fun givePlayerGun() {
         Bukkit.getOnlinePlayers().forEach { player ->
-            if (monsterManager.contains(player)) return@forEach
+            if (MonsterManager.contains(player)) return@forEach
             val type = player.gun()
             val gun = customItemFactory.createGun(type)
             player.inventory.addItem(gun.createItemStack())

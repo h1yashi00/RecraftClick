@@ -15,6 +15,7 @@ import java.util.*
 
 class Zombie(playerUUID: UUID) : Monster(
     damageSound = Sound.ENTITY_ZOMBIE_HURT,
+    deathSound = Sound.ENTITY_ZOMBIE_DEATH,
     walkSpeed = 0,
     maxHealth = 3000,
     head = ItemStack(Material.ZOMBIE_HEAD),

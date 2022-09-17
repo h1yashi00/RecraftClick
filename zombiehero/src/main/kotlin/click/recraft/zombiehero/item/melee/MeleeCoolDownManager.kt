@@ -19,6 +19,7 @@ class MeleeCoolDownManager {
     private val save: HashMap<UUID, Data> = hashMapOf()
     init {
         val task = Util.createTask {
+            ZombieHero.plugin.importantTaskId.add(taskId)
             save.iterator().forEach {(itemUUID, data) ->
                 val player = Bukkit.getPlayer(data.playerUUID)
                 if (player == null) {

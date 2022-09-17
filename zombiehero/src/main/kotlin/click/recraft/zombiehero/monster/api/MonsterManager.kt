@@ -6,13 +6,15 @@ import click.recraft.zombiehero.monster.Skeleton
 import click.recraft.zombiehero.monster.Zombie
 import click.recraft.zombiehero.player.PlayerData.choosedMonster
 import org.bukkit.Bukkit
+import org.bukkit.ChatColor
 import org.bukkit.entity.Player
 import java.util.*
 
-class MonsterManager {
+object MonsterManager {
     private val save: HashMap<UUID, Monster> = hashMapOf()
     init {
         val task = Util.createTask {
+            ZombieHero.plugin.importantTaskId.add(taskId)
             save.values.iterator().forEach { monster ->
                 monster.passOneSec()
             }
@@ -54,20 +56,32 @@ class MonsterManager {
     }
 
 
-
-
     // 再帰的に候補者を選択
-    private fun getEnemyCandidate(): Player {
-        val candidate = Bukkit.getOnlinePlayers().random()
-        val monster = get(candidate)
-        if (monster != null) {
-            return getEnemyCandidate()
-        }
-        return candidate
-    }
 
     fun chooseRandomEnemyMonster() {
-        val player = getEnemyCandidate()
-        register(player)
+        if (humans().size == 0) {
+            println("${ChatColor.RED}NO HUMANS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ")
+            return
+        }
+        val human = humans().random()
+        register(human)
+    }
+
+    private fun humans(): MutableSet<Player> {
+        val humans: MutableSet<Player> = mutableSetOf()
+        Bukkit.getOnlinePlayers().forEach {
+            val monster = get(it)
+            if (monster == null) {
+                humans.add(it)
+            }
+        }
+        return humans
+    }
+    fun humansNum(): Int {
+        return humans().size
+    }
+
+    fun clear() {
+        save.clear()
     }
 }

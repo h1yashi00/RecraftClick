@@ -3,6 +3,7 @@ package click.recraft.zombiehero.monster
 import click.recraft.zombiehero.Util
 import click.recraft.zombiehero.ZombieHero
 import click.recraft.zombiehero.monster.api.Monster
+import click.recraft.zombiehero.monster.api.MonsterManager
 import click.recraft.zombiehero.monster.api.MonsterType
 import click.recraft.zombiehero.monster.api.Skill
 import org.bukkit.Bukkit
@@ -21,6 +22,7 @@ import java.util.*
 
 class Skeleton(playerUUID: UUID) : Monster(
     Sound.ENTITY_SKELETON_HURT,
+    Sound.ENTITY_SKELETON_DEATH,
     walkSpeed = 0,
     playerUUID = playerUUID,
     maxHealth = 3000,
@@ -103,7 +105,7 @@ class Skeleton(playerUUID: UUID) : Monster(
 
     override fun rightClick(event: PlayerInteractEvent) {
         val player = event.player
-        val monster = ZombieHero.plugin.monsterManager.get(player) ?: return
+        val monster = MonsterManager.get(player) ?: return
         if (monster !is Skeleton) return
         val item = player.inventory.itemInMainHand
         if (skill1.isSame(item)) {

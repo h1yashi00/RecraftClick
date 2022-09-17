@@ -10,7 +10,6 @@ import click.recraft.zombiehero.item.grenade.*
 import click.recraft.zombiehero.gun.api.GunListener
 import click.recraft.zombiehero.gun.api.ShootManager
 import click.recraft.zombiehero.item.melee.MeleeCoolDownManager
-import click.recraft.zombiehero.monster.api.MonsterManager
 import click.recraft.zombiehero.monster.SkeletonListener
 import click.recraft.zombiehero.monster.ZombieListener
 import click.recraft.zombiehero.player.HealthManager
@@ -26,8 +25,10 @@ class ZombieHero: KotlinPlugin() {
     val oneBulletReloadManager: ReloadManagerOneBullet by lazy { ReloadManagerOneBullet() }
     val meleeCoolDownManager: MeleeCoolDownManager by lazy { MeleeCoolDownManager() }
     val customItemFactory: CustomItemFactory by lazy {CustomItemFactory()}
-    val monsterManager: MonsterManager by lazy { MonsterManager() }
     val gameManager: GameManager by lazy { GameManager() }
+    // ゲーム終了時に､すべてのタスクを終了するようにしているが､このリストに入っているtaskIdは､
+    // 終了しないようにした｡
+    val importantTaskId = arrayListOf<Int>()
     private var time: Int = 0
     fun getTime(): Int {
         return time
@@ -36,10 +37,12 @@ class ZombieHero: KotlinPlugin() {
         plugin = this
         ShopMenu.load()
         val fiveTickTask = Util.createTask {
+            importantTaskId.add(taskId)
             // playerのaction barに対して､playerのHealthを送る
             HealthManager.loopEveryOneTick()
         }
         val oneTickTask = Util.createTask {
+            importantTaskId.add(taskId)
             time += 1
             WalkSpeedManager.loopEveryOneTick()
         }

@@ -7,6 +7,7 @@ import org.bukkit.Bukkit
 class ReloadManagerFullBullet: ReloadManager() {
     init {
         val task = Util.createTask {
+            ZombieHero.plugin.importantTaskId.add(taskId)
             save.iterator().forEach {(uuid, data) ->
                 val player = Bukkit.getPlayer(data.uuid)
 
