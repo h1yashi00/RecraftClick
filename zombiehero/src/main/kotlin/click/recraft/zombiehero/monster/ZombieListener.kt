@@ -1,5 +1,6 @@
 package click.recraft.zombiehero.monster
 
+import click.recraft.zombiehero.monster.api.MonsterListener
 import org.bukkit.Sound
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler

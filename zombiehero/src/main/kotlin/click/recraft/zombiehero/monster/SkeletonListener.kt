@@ -2,9 +2,12 @@ package click.recraft.zombiehero.monster
 
 import click.recraft.zombiehero.Util
 import click.recraft.zombiehero.ZombieHero
+import click.recraft.zombiehero.monster.api.MonsterListener
+import click.recraft.zombiehero.player.HealthManager.healPluginHealth
 import org.bukkit.Bukkit
 import org.bukkit.Particle
 import org.bukkit.Sound
+import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import org.bukkit.entity.Projectile
 import org.bukkit.event.EventHandler
@@ -62,10 +65,19 @@ class SkeletonListener(
         if (player !is Player) return
         val monster = get(player) ?: return
         if (monster !is Skeleton) return
-        val entity = event.hitEntity ?: return
-        monster.walkSpeed += 10
+        event.isCancelled = true
+
+        val loc = player.location
+
+        val entity = if (event.hitEntity is LivingEntity) {event.hitEntity as LivingEntity} else  return
+        val loc2 = entity.location
+        val dir = loc.subtract(loc2).toVector().normalize()
+        entity.velocity = dir.multiply(0.3)
+        entity.damage(10.0)
+        monster.walkSpeed += 20
+        player.healPluginHealth(50)
         val task = Util.createTask {
-            monster.walkSpeed -= 10
+            monster.walkSpeed -= 20
         }
         Bukkit.getScheduler().runTaskLater(ZombieHero.plugin, task, 20 * 5)
         save.remove(event.entity.uniqueId)

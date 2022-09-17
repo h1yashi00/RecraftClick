@@ -5,7 +5,7 @@ import net.minecraft.network.protocol.game.PacketPlayOutPosition
 import org.bukkit.craftbukkit.v1_19_R1.entity.CraftPlayer
 import org.bukkit.entity.Player
 
-object PlayerForceRecoil {
+object UseNms {
     private val FLAGS = setOf(
         PacketPlayOutPosition.EnumPlayerTeleportFlags.a,
         PacketPlayOutPosition.EnumPlayerTeleportFlags.b,

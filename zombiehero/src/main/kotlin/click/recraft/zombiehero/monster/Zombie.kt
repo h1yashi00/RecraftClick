@@ -2,6 +2,9 @@ package click.recraft.zombiehero.monster
 
 import click.recraft.zombiehero.Util
 import click.recraft.zombiehero.ZombieHero
+import click.recraft.zombiehero.monster.api.Monster
+import click.recraft.zombiehero.monster.api.MonsterType
+import click.recraft.zombiehero.monster.api.Skill
 import click.recraft.zombiehero.player.HealthManager.healPluginHealth
 import org.bukkit.*
 import org.bukkit.event.player.PlayerInteractEvent
@@ -10,10 +13,22 @@ import org.bukkit.inventory.meta.LeatherArmorMeta
 import java.util.*
 
 
-class Zombie(override val playerUUID: UUID) : Monster {
+class Zombie(playerUUID: UUID) : Monster(
+    damageSound = Sound.ENTITY_ZOMBIE_HURT,
+    walkSpeed = 0,
+    maxHealth = 3000,
+    head = ItemStack(Material.ZOMBIE_HEAD),
+    chestPlate = ItemStack(Material.LEATHER_CHESTPLATE).apply {
+        val meta = itemMeta!!
+        meta as LeatherArmorMeta
+        meta.setColor(Color.GREEN)
+        itemMeta = meta
+    },
+    playerUUID = playerUUID
+) {
     private class Skill1(override val monster: Zombie) : Skill {
         override val item: ItemStack = ItemStack(Material.GOLDEN_APPLE)
-        override val coolDownTime: Int = 100
+        override val coolDownTime: Int = 20
         override val index: Int = 6
         override var coolDown: Int = 0
         override var active: Boolean = false
@@ -22,7 +37,7 @@ class Zombie(override val playerUUID: UUID) : Monster {
                 return
             }
             val player = Bukkit.getPlayer(monster.playerUUID) ?: return
-            player.healPluginHealth(monster.health)
+            player.healPluginHealth(monster.maxHealth)
             player.world.playSound(player.location, Sound.ENTITY_PLAYER_BURP, 1f,2f)
             player.world.spawnParticle(Particle.HEART, player.location, 10, 1.5,1.5,1.5)
             coolDown = coolDownTime
@@ -30,7 +45,7 @@ class Zombie(override val playerUUID: UUID) : Monster {
     }
     private class Skill2(override val monster: Monster) : Skill {
         override val item: ItemStack = ItemStack(Material.NETHERITE_CHESTPLATE)
-        override val coolDownTime: Int = 100
+        override val coolDownTime: Int = 20
         override val index: Int = 5
         override var coolDown: Int = 0
         override var active: Boolean = false
@@ -45,26 +60,14 @@ class Zombie(override val playerUUID: UUID) : Monster {
                 player.inventory.chestplate = monster.chestPlate
                 active = false
             }
-            Bukkit.getScheduler().runTaskLater(ZombieHero.plugin, task, 20)
+            Bukkit.getScheduler().runTaskLater(ZombieHero.plugin, task, 20 * 20)
             coolDown = coolDownTime
         }
     }
 
-    override val damageSound: Sound = Sound.ENTITY_ZOMBIE_HURT
-    override val uniqueId: UUID = UUID.randomUUID()
-    override var walkSpeed: Int = 0
     override val skill1: Skill = Skill1(this)
     override val skill2: Skill = Skill2(this)
-
-    override val health: Int = 3000
-    override val head: ItemStack  = ItemStack(Material.ZOMBIE_HEAD)
-
-    override val chestPlate: ItemStack = ItemStack(Material.LEATHER_CHESTPLATE).apply {
-        val meta = itemMeta!!
-        meta as LeatherArmorMeta
-        meta.setColor(Color.GREEN)
-        itemMeta = meta
-    }
+    override val type: MonsterType = MonsterType.ZOMBIE
 
 
     override fun rightClick(event: PlayerInteractEvent) {

@@ -16,7 +16,7 @@ class Mp5: Gun(
         rate = Tick.sec(0.1),
         8,
         0.3,
-        Accuracy(30,0),
+        Accuracy(100,0),
         Tick.sec(0.0)
     ),
     walkSpeed = 0,

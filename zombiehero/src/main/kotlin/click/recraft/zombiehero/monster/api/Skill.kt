@@ -1,4 +1,4 @@
-package click.recraft.zombiehero.monster
+package click.recraft.zombiehero.monster.api
 
 import org.bukkit.Bukkit
 import org.bukkit.inventory.ItemStack

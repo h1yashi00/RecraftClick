@@ -16,7 +16,7 @@ class AK47: Gun(
         rate = Tick.sec(0.15),
         10,
         0.2,
-        Accuracy(30, 0),
+        Accuracy(100, 0),
         Tick.sec(0.3)
     ),
     walkSpeed = 5,

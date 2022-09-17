@@ -1,5 +1,6 @@
 package click.recraft.zombiehero
 
+import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.scheduler.BukkitTask
 import org.bukkit.util.BoundingBox
@@ -29,5 +30,15 @@ object Util {
         val y2 = loc.y + hitBox
         val z2 = loc.z + hitBox
         return BoundingBox(x1, y1, z1, x2, y2, z2)
+    }
+    fun broadcastTitle(msg: String) {
+        Bukkit.getOnlinePlayers().forEach { player ->
+            player.sendTitle(msg, "", 0,20 * 1,0)
+        }
+    }
+    fun broadcastSubTitle(msg: String) {
+        Bukkit.getOnlinePlayers().forEach { player ->
+            player.sendTitle("", "$msg", 0,20 * 1,0)
+        }
     }
 }

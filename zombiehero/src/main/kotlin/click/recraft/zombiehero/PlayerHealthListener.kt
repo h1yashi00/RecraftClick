@@ -18,12 +18,7 @@ class PlayerHealthListener: Listener {
         if (player !is Player) return
         player.healPluginHealth(event.amount.toInt())
     }
-    @EventHandler
-    fun player(event: EntityDamageEvent) {
-        val player = if (event.entity !is Player) return else event.entity as Player
-        player.damagePluginHealth(event.damage.toInt())
-        event.damage = 0.0
-    }
+
     @EventHandler
     fun playerDamage(event: EntityDamageEvent) {
         val player = if (event.entity !is Player) return else event.entity as Player

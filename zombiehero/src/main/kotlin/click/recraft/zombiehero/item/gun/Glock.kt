@@ -15,7 +15,7 @@ class Glock : Gun(
         Tick.sec(0.05),
         damage = 30,
         knockBack = 1.3,
-        Accuracy(30,0),
+        Accuracy(100,0),
         Tick.sec(0.0),
     ),
     name = "Glock",

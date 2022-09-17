@@ -57,7 +57,8 @@ object HealthManager: OneTickTimerTask {
         var currentHp = hp - damage
         if (currentHp < 0) {
             teleport(Bukkit.getWorld("world")!!.spawnLocation)
-            currentHp = 1000
+            val monster = ZombieHero.plugin.monsterManager.get(this)
+            currentHp = monster?.maxHealth ?: 1000
         }
         healths[uniqueId] = currentHp
         sendPlayerHealth(this)
@@ -70,7 +71,7 @@ object HealthManager: OneTickTimerTask {
         sendPlayerHealth(this)
     }
 
-    private fun Player.getPluginHealth(): Int {
+    fun Player.getPluginHealth(): Int {
         if (!healths.contains(uniqueId)) {
             healths[uniqueId] = 1000
         }

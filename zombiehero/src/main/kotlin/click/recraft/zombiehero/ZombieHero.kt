@@ -1,6 +1,8 @@
 package click.recraft.zombiehero
 
 import click.recraft.share.*
+import click.recraft.zombiehero.command.GunCommand
+import click.recraft.zombiehero.command.MonsterCommand
 import click.recraft.zombiehero.gun.api.ReloadManagerFullBullet
 import click.recraft.zombiehero.gun.api.ReloadManagerOneBullet
 import click.recraft.zombiehero.item.CustomItemFactory
@@ -8,7 +10,7 @@ import click.recraft.zombiehero.item.grenade.*
 import click.recraft.zombiehero.gun.api.GunListener
 import click.recraft.zombiehero.gun.api.ShootManager
 import click.recraft.zombiehero.item.melee.MeleeCoolDownManager
-import click.recraft.zombiehero.monster.MonsterManager
+import click.recraft.zombiehero.monster.api.MonsterManager
 import click.recraft.zombiehero.monster.SkeletonListener
 import click.recraft.zombiehero.monster.ZombieListener
 import click.recraft.zombiehero.player.HealthManager
@@ -24,7 +26,8 @@ class ZombieHero: KotlinPlugin() {
     val oneBulletReloadManager: ReloadManagerOneBullet by lazy { ReloadManagerOneBullet() }
     val meleeCoolDownManager: MeleeCoolDownManager by lazy { MeleeCoolDownManager() }
     val customItemFactory: CustomItemFactory by lazy {CustomItemFactory()}
-    val monsterManager: MonsterManager      by lazy { MonsterManager() }
+    val monsterManager: MonsterManager by lazy { MonsterManager() }
+    val gameManager: GameManager by lazy { GameManager() }
     private var time: Int = 0
     fun getTime(): Int {
         return time
@@ -52,6 +55,8 @@ class ZombieHero: KotlinPlugin() {
         server.pluginManager.registerEvents(ProtectWorldListener(), this)
         server.pluginManager.registerEvents(SkeletonListener(), this)
         server.pluginManager.registerEvents(GrenadeListener(), this)
+        getCommand("gun")!!.setExecutor(GunCommand())
+        getCommand("monster")!!.setExecutor(MonsterCommand())
         super.onEnable()
     }
 

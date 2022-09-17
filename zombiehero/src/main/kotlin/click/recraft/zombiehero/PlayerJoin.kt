@@ -1,8 +1,7 @@
 package click.recraft.zombiehero
 
-import click.recraft.zombiehero.item.CustomItemFactory
-import click.recraft.zombiehero.monster.Skeleton
 import org.bukkit.Bukkit
+import org.bukkit.ChatColor
 import org.bukkit.entity.EntityType
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -20,39 +19,14 @@ class PlayerJoin: Listener {
         val player = event.player
         player.foodLevel = 20
         player.inventory.clear()
-        val monster = Skeleton(player.uniqueId)
-        monster.initialize(player)
-        ZombieHero.plugin.monsterManager.register(player, monster)
-        val factory = ZombieHero.plugin.customItemFactory
-        val ak47 = factory.createGun(CustomItemFactory.GunType.AK47)
-        val shotGun = factory.createGun(CustomItemFactory.GunType.SHOTGUN)
-        val awp = factory.createGun(CustomItemFactory.GunType.AWP)
-        val mp5 = factory.createGun(CustomItemFactory.GunType.MP5)
-        val hummer = factory.createSword(CustomItemFactory.SwordType.BIG_SWORD)
-        val nata    = factory.createSword(CustomItemFactory.SwordType.NORMAL_SWORD)
-        val zombieBomb = factory.createGrenade(CustomItemFactory.GrenadeType.ZombieBomb)
-        val zombieBombTouch = factory.createGrenade(CustomItemFactory.GrenadeType.ZombieGrenadeTouch)
-        val desertEagle = factory.createGun(CustomItemFactory.GunType.DesertEagle)
-        val mosin = factory.createGun(CustomItemFactory.GunType.MOSIN)
-        val glock = factory.createGun(CustomItemFactory.GunType.Glock)
-        val saiga = factory.createGun(CustomItemFactory.GunType.Saiga)
-
-        val task = Util.createTask {
-//            player.inventory.addItem(
-//                desertEagle.createItemStack(),
-//                saiga.createItemStack(),
-//                mp5.createItemStack(),
-//                ak47.createItemStack()
-//            )
-//            player.inventory.addItem(mosin.createItemStack())
-//            player.inventory.addItem(glock.createItemStack())
-//            player.inventory.addItem(shotGun.createItemStack())
-//            player.inventory.addItem(awp.createItemStack())
-//            player.inventory.addItem(hummer.createItemStack())
-//            player.inventory.addItem(nata.createItemStack())
-//            player.inventory.addItem(gun.createItemStack())
-//            player.inventory.addItem(zombieBomb.createItemStack())
+        val playerNum = Bukkit.getOnlinePlayers().size
+        event.joinMessage = "${ChatColor.YELLOW}プレイヤーが参加しました｡ 2人以上で開始します｡ 現在の参加人数: ${playerNum}/32"
+        val game=  ZombieHero.plugin.gameManager
+        if (game.isStart()) {
+            return
         }
-        Bukkit.getScheduler().runTaskLater(ZombieHero.plugin, task, 1)
+        if (playerNum >= game.requiredPlayerNum) {
+            game.start()
+        }
     }
 }
