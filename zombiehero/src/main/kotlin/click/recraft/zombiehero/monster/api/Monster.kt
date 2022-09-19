@@ -24,6 +24,7 @@ abstract class Monster(
     abstract val skill1: Skill
     abstract val skill2: Skill
     abstract val type: MonsterType
+    var isDead = false
     private fun getDefaultItem(): ItemStack {
         val factory = ZombieHero.plugin.customItemFactory
         return factory.createGrenade(CustomItemFactory.GrenadeType.ZombieGrenadeTouch).createItemStack()

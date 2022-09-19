@@ -2,6 +2,7 @@ package click.recraft.zombiehero
 
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
+import org.bukkit.GameMode
 import org.bukkit.entity.EntityType
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -17,6 +18,7 @@ class PlayerJoin: Listener {
     @EventHandler
     fun joinPlayer(event: PlayerJoinEvent) {
         val player = event.player
+        player.gameMode = GameMode.SURVIVAL
         player.foodLevel = 20
         player.inventory.clear()
         val playerNum = Bukkit.getOnlinePlayers().size

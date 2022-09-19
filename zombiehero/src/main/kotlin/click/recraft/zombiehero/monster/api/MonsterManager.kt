@@ -39,12 +39,13 @@ object MonsterManager {
         }
     }
 
-    fun register(player: Player) {
+    fun register(player: Player): Monster {
         player.inventory.clear()
         val monster = getMonsterConstructor(player.choosedMonster(), player)
         remove(player)
         monster.initialize(player)
         save[monster.playerUUID] = monster
+        return monster
     }
 
     fun register(player: Player, type: MonsterType) {
@@ -77,8 +78,21 @@ object MonsterManager {
         }
         return humans
     }
+    private fun monsters(): MutableCollection<Monster> {
+        return save.values
+    }
     fun humansNum(): Int {
         return humans().size
+    }
+
+    fun aliveMonsters(): Int {
+        var alive = 0
+        monsters().forEach { monster ->
+            if (!monster.isDead) {
+                alive += 1
+            }
+        }
+        return alive
     }
 
     fun clear() {

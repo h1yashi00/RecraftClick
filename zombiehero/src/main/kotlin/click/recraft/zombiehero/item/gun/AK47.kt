@@ -14,7 +14,7 @@ class AK47: Gun(
     ),
     shot = OneShot (
         rate = Tick.sec(0.15),
-        10,
+        25,
         0.2,
         Accuracy(100, 0),
         Tick.sec(0.3)

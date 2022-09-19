@@ -4,6 +4,8 @@ import click.recraft.zombiehero.monster.api.MonsterManager
 import click.recraft.zombiehero.player.HealthManager
 import click.recraft.zombiehero.player.PlayerData.gun
 import org.bukkit.Bukkit
+import org.bukkit.ChatColor
+import org.bukkit.GameMode
 
 class GameManager {
     val requiredPlayerNum: Int = 2
@@ -38,13 +40,15 @@ class GameManager {
         }
         Bukkit.getScheduler().runTaskTimer(ZombieHero.plugin, task, 0, 20)
     }
-    fun finish() {
+    private fun finish() {
         Bukkit.getOnlinePlayers().forEach { player ->
             Bukkit.getScheduler().pendingTasks.forEach {
                 if (!ZombieHero.plugin.importantTaskId.contains(it.taskId)) {
                     it.cancel()
                 }
             }
+            player.sendExperienceChange(0f,0)
+            player.gameMode = GameMode.SURVIVAL
             player.inventory.clear()
             player.activePotionEffects.forEach {
                 player.removePotionEffect(it.type)
@@ -75,5 +79,28 @@ class GameManager {
             val gun = customItemFactory.createGun(type)
             player.inventory.addItem(gun.createItemStack())
         }
+    }
+
+    // ラウンドが終了の場合は､trueを返す
+    fun checkGameCondition(): Boolean {
+        if (MonsterManager.humansNum() == 0) {
+            Util.broadcastTitle("${ChatColor.GREEN}Zombie Win", 20 , 20 * 3,20)
+            Bukkit.getOnlinePlayers().forEach { it.playSound(it.location, "zombie_win_laugh", 0.5F ,1F) }
+            val task = Util.createTask {
+                finish()
+            }
+            Bukkit.getScheduler().runTaskLater(ZombieHero.plugin, task, 20 * 7)
+            return true
+        }
+        if (MonsterManager.aliveMonsters() == 0) {
+            Util.broadcastTitle("${ChatColor.WHITE}Human Win", 20 , 20 * 3,20)
+            Bukkit.getOnlinePlayers().forEach { it.playSound(it.location, "zombie_lose_dying", 0.5F ,1F) }
+            val task = Util.createTask {
+                finish()
+            }
+            Bukkit.getScheduler().runTaskLater(ZombieHero.plugin, task, 20 * 7)
+            return true
+        }
+        return false
     }
 }

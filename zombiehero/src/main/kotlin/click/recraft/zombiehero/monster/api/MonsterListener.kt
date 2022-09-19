@@ -1,9 +1,8 @@
 package click.recraft.zombiehero.monster.api
 
 import click.recraft.zombiehero.Util
-import click.recraft.zombiehero.ZombieHero
+import click.recraft.zombiehero.event.MonsterAttackPlayerEvent
 import org.bukkit.Bukkit
-import org.bukkit.ChatColor
 import org.bukkit.entity.Entity
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -39,7 +38,7 @@ abstract class MonsterListener(
     @EventHandler
     fun attack(event: EntityDamageByEntityEvent) {
         val player = if (event.damager is Player) {event.damager as Player} else return
-        monsterManager.get(player) ?: return
+        val monster = monsterManager.get(player) ?: return
         event.isCancelled = true
         val loc = player.eyeLocation.clone()
         val dir = loc.direction
@@ -52,18 +51,13 @@ abstract class MonsterListener(
             if (entity !is Player) return@forEach
             if (entity == player) return@forEach
             if (monsterManager.contains(entity)) return@forEach
+            val customEvent = MonsterAttackPlayerEvent(
+                player,
+                entity,
+                monster
+            )
             monsterManager.register(entity)
-            entity.world.playSound(entity.location, "minecraft:stab_knife_body", 1f,0.7f)
-            if (monsterManager.humansNum() == 0) {
-                Util.broadcastTitle("${ChatColor.GREEN}Zombie Win", 20 , 20 * 3,20)
-                Bukkit.getOnlinePlayers().forEach { it.playSound(it.location, "zombie_win_laugh", 0.5F ,1F) }
-                val task = Util.createTask {
-                    ZombieHero.plugin.gameManager.finish()
-                }
-                Bukkit.getScheduler().runTaskLater(ZombieHero.plugin, task, 20 * 7)
-                return
-            }
-            entity.world.playSound(entity.location, "minecraft:man_shout", 0.5f,1f)
+            Bukkit.getPluginManager().callEvent(customEvent)
         }
     }
 }

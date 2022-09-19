@@ -1,6 +1,7 @@
 package click.recraft.zombiehero
 
 import click.recraft.share.*
+import click.recraft.zombiehero.chat.PlayerChatListener
 import click.recraft.zombiehero.command.GunCommand
 import click.recraft.zombiehero.command.MonsterCommand
 import click.recraft.zombiehero.gun.api.ReloadManagerFullBullet
@@ -12,8 +13,7 @@ import click.recraft.zombiehero.gun.api.ShootManager
 import click.recraft.zombiehero.item.melee.MeleeCoolDownManager
 import click.recraft.zombiehero.monster.SkeletonListener
 import click.recraft.zombiehero.monster.ZombieListener
-import click.recraft.zombiehero.player.HealthManager
-import click.recraft.zombiehero.player.WalkSpeedManager
+import click.recraft.zombiehero.player.*
 import org.bukkit.Bukkit
 
 class ZombieHero: KotlinPlugin() {
@@ -58,6 +58,10 @@ class ZombieHero: KotlinPlugin() {
         server.pluginManager.registerEvents(ProtectWorldListener(), this)
         server.pluginManager.registerEvents(SkeletonListener(), this)
         server.pluginManager.registerEvents(GrenadeListener(), this)
+        server.pluginManager.registerEvents(BulletHitListener(), this)
+        server.pluginManager.registerEvents(PlayerDeathListener(), this)
+        server.pluginManager.registerEvents(MonsterAttackPlayerListener(), this)
+        server.pluginManager.registerEvents(PlayerChatListener(), this)
         getCommand("gun")!!.setExecutor(GunCommand())
         getCommand("monster")!!.setExecutor(MonsterCommand())
         super.onEnable()

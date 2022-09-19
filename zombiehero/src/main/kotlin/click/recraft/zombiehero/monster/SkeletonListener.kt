@@ -67,10 +67,10 @@ class SkeletonListener(
         if (monster !is Skeleton) return
         event.isCancelled = true
 
-        val loc = player.location
+        val loc = player.location.clone()
 
         val entity = if (event.hitEntity is LivingEntity) {event.hitEntity as LivingEntity} else  return
-        val loc2 = entity.location
+        val loc2 = entity.location.clone()
         val dir = loc.subtract(loc2).toVector().normalize()
         entity.velocity = dir.multiply(0.3)
         entity.damage(10.0)

@@ -1,19 +1,17 @@
 package click.recraft.zombiehero.player
 
-import click.recraft.zombiehero.Util
 import click.recraft.zombiehero.ZombieHero
+import click.recraft.zombiehero.event.PlayerDeadPluginHealthEvent
 import click.recraft.zombiehero.item.CustomItem
 import click.recraft.zombiehero.item.grenade.Grenade
 import click.recraft.zombiehero.item.gun.Gun
 import click.recraft.zombiehero.item.melee.Sword
-import click.recraft.zombiehero.monster.api.MonsterManager
+import click.recraft.zombiehero.player.PlayerData.shooter
 import click.recraft.zombiehero.task.OneTickTimerTask
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
-import org.bukkit.GameMode
-import org.bukkit.Sound
 import org.bukkit.entity.Player
 import java.util.*
 
@@ -60,16 +58,9 @@ object HealthManager: OneTickTimerTask {
         val hp = getPluginHealth()
         var currentHp = hp - damage
         if (currentHp < 0) {
-            val monster = MonsterManager.get(this)
-            currentHp = monster?.maxHealth ?: 1000
-            world.playSound(location, monster?.deathSound ?: Sound.ENTITY_PLAYER_ATTACK_WEAK, 2f,0.1f)
-            gameMode = GameMode.SPECTATOR
-            val task = Util.createTask {
-                gameMode = GameMode.SURVIVAL
-                Bukkit.getOnlinePlayers().forEach { it.playSound(it, Sound.ENTITY_WITHER_SPAWN, 1f,0.5f) }
-                teleport(ZombieHero.plugin.gameManager.world.randomSpawn())
-            }
-            Bukkit.getScheduler().runTaskLater(ZombieHero.plugin, task, 20 * 10)
+            val event = PlayerDeadPluginHealthEvent(this, shooter())
+            Bukkit.getPluginManager().callEvent(event)
+            currentHp = event.reviveHp
         }
         healths[uniqueId] = currentHp
         sendPlayerHealth(this)

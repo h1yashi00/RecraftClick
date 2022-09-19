@@ -3,14 +3,13 @@ package click.recraft.zombiehero.gun.api
 import click.recraft.zombiehero.UseNms
 import click.recraft.zombiehero.Util
 import click.recraft.zombiehero.ZombieHero
+import click.recraft.zombiehero.event.BulletHitLivingEntityEvent
 import click.recraft.zombiehero.item.gun.Gun
-import click.recraft.zombiehero.player.PlayerData.setShooter
 import org.bukkit.*
 import org.bukkit.block.Block
 import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
-import org.bukkit.entity.Zombie
 import org.bukkit.util.Vector
 import java.util.*
 import kotlin.collections.HashMap
@@ -67,31 +66,33 @@ interface Shot {
                 if (entity is ArmorStand) return@forEach
                 // コンパイルくんに知らせるためのやつ
                 if (entity !is LivingEntity) return@forEach
-                val dmg = if (Util.isHeadLocation(bulletBoundingBox, entity.eyeLocation)) {
-                    damage * 2
+                val event = BulletHitLivingEntityEvent (
+                    player,
+                    isHeadShot = Util.isHeadLocation(bulletBoundingBox, entity.eyeLocation.clone()),
+                    bulletLocation = bullet.clone(),
+                    hitLivingEntity = entity,
+                    knockBack = knockBack,
+                    damage = damage.toDouble(),
+                    bulletBoundingBox = bulletBoundingBox
+                )
+                Bukkit.getPluginManager().callEvent(event)
+                if (event.isCancelled) {
+                    return
                 }
-                else {
-                    damage
-                }
-                entity.damage(dmg.toDouble())
-                if (entity is Player) {entity.setShooter(player)}
-                if (entity is Zombie) {
-                    entity.target = player
-                }
-                val dir = player.location.direction.clone()
-                entity.noDamageTicks = 0
-                entity.world.spawnParticle(Particle.BLOCK_CRACK, bullet, 10, Material.REDSTONE_BLOCK.createBlockData())
-                if (saveKnockBack.containsKey(entity.uniqueId)) {
-                    val data = saveKnockBack[entity.uniqueId]!!
+                event.hitLivingEntity.damage(event.damage)
+                val dir = event.shooter.location.direction.clone()
+                event.hitLivingEntity.noDamageTicks = 0
+                if (saveKnockBack.containsKey(event.hitLivingEntity.uniqueId)) {
+                    val data = saveKnockBack[event.hitLivingEntity.uniqueId]!!
                     val newValue = data + knockBack
-                    saveKnockBack[entity.uniqueId] = newValue
+                    saveKnockBack[event.hitLivingEntity.uniqueId] = newValue
                 }
                 else {
-                    saveKnockBack[entity.uniqueId] = knockBack
+                    saveKnockBack[event.hitLivingEntity.uniqueId] = knockBack
                     val lateTask = Util.createTask {
-                        val accumulateKnockBack = saveKnockBack[entity.uniqueId]!!
-                        entity.velocity = if (entity is Player) {
-                            if (entity.gameMode == GameMode.SPECTATOR) {
+                        val accumulateKnockBack = saveKnockBack[event.hitLivingEntity.uniqueId]!!
+                        event.hitLivingEntity.velocity = if (event.hitLivingEntity is Player) {
+                            if ((event.hitLivingEntity as Player).gameMode == GameMode.SPECTATOR) {
                                 Vector()
                             }
                             else {
@@ -101,7 +102,7 @@ interface Shot {
                         else {
                             dir.multiply(accumulateKnockBack).apply { y = if (y < 0) {y * -1} else {y} }
                         }
-                        saveKnockBack.remove(entity.uniqueId)
+                        saveKnockBack.remove(event.hitLivingEntity.uniqueId)
                     }
                     Bukkit.getScheduler().runTaskLater(ZombieHero.plugin, lateTask, 1)
                 }
@@ -130,8 +131,6 @@ interface Shot {
         UseNms.sendRecoilPacket(player, -gun.recoilX,-gun.recoilY)
         val gunSound= gun.shotSound
         player.world.playSound(player.location, gunSound.type.sound, gunSound.volume, gunSound.pitch)
-        val dir = player.location.direction
-        player.location.direction = dir.multiply(1)
         val bullet = player.location.clone().apply {y+=player.eyeHeight }
         (1..shootAmmo).forEach { _ ->
             shootArmo(bullet.clone(), player, gun)
