@@ -25,6 +25,10 @@ class SpeedUp: SkillItem (
         val player = event.player
         player.inventory.removeItem(createItemStack())
         player.setSkillSpeed(speedUp)
+        // HeadShotのロゴがが優先される｡
+        if (containsPassenger(player)) {
+            return
+        }
         createPassenger(player)
         // 走ったとの息切れ
         val shotBreath = Util.createTask {

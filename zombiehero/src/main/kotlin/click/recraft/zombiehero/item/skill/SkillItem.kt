@@ -27,6 +27,9 @@ abstract class SkillItem(
         }
     }
     private val save: HashMap<UUID, Passenger>  = hashMapOf()
+    fun containsPassenger(player: Player): Boolean {
+        return save.contains(player.uniqueId)
+    }
     fun createPassenger(player: Player) {
         val world = player.world
         val loc = world.spawnLocation.clone()
