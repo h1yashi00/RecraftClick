@@ -13,6 +13,30 @@ object PlayerData {
     private val gunData: HashMap<UUID, CustomItemFactory.GunType> = hashMapOf()
     private val shooter: HashMap<UUID, Player> = hashMapOf()
     private val isHeadShot: HashMap<UUID, Int> = hashMapOf()
+    private val playerSkillSpeed = HashMap<UUID, Int>()
+    private val playerSKillHeadShot: MutableSet<UUID> = mutableSetOf()
+    fun Player.setSkillSpeed(speed: Int) {
+        playerSkillSpeed[uniqueId] = speed
+    }
+    fun Player.removeSkillSpeed(){
+        playerSkillSpeed.remove(uniqueId)
+    }
+    fun Player.getSkillSpeed(): Int? {
+        return playerSkillSpeed[uniqueId]
+    }
+    fun Player.isContainsSkillSpeed(): Boolean {
+        return playerSkillSpeed.contains(uniqueId)
+    }
+
+    fun Player.removePlayerSkillHeadShot() {
+        playerSKillHeadShot.remove(uniqueId)
+    }
+    fun Player.setPlayerSkillHeadShot() {
+        playerSKillHeadShot.add(uniqueId)
+    }
+    fun Player.isPlayerSkillHeadShot(): Boolean {
+        return playerSKillHeadShot.contains(uniqueId)
+    }
 
     fun Player.setShooter(player: Player) {
         shooter[uniqueId] = player

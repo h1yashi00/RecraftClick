@@ -9,6 +9,8 @@ import click.recraft.zombiehero.item.grenade.NormalGrenade
 import click.recraft.zombiehero.item.grenade.ZombieGrenadeTouch
 import click.recraft.zombiehero.item.gun.*
 import click.recraft.zombiehero.item.melee.Sword
+import click.recraft.zombiehero.item.skill.HeadShot
+import click.recraft.zombiehero.item.skill.SpeedUp
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -34,6 +36,11 @@ class CustomItemFactory : CustomItemManager {
     enum class SwordType {
         NORMAL_SWORD,
         BIG_SWORD,
+    }
+
+    enum class SkillType {
+        SPEED_UP,
+        HEADSHOT
     }
 
     fun createGun (
@@ -75,6 +82,14 @@ class CustomItemFactory : CustomItemManager {
         }
         register(sword.unique, sword)
         return sword
+    }
+    fun createSkillItem(skillType: SkillType): CustomItem {
+        val skill = when (skillType) {
+            SkillType.SPEED_UP -> SpeedUp()
+            SkillType.HEADSHOT -> HeadShot()
+        }
+        register(skill.unique, skill)
+        return skill
     }
     fun createGrenade(grenadeType: GrenadeType): CustomItem {
         val grenade = when(grenadeType) {

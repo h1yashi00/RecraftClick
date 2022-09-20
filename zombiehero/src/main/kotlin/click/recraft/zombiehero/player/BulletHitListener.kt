@@ -2,6 +2,7 @@ package click.recraft.zombiehero.player
 
 import click.recraft.zombiehero.event.BulletHitLivingEntityEvent
 import click.recraft.zombiehero.player.HealthManager.getPluginHealth
+import click.recraft.zombiehero.player.PlayerData.isPlayerSkillHeadShot
 import click.recraft.zombiehero.player.PlayerData.removeHeadShot
 import click.recraft.zombiehero.player.PlayerData.setHeadShot
 import click.recraft.zombiehero.player.PlayerData.setShooter
@@ -18,23 +19,20 @@ class BulletHitListener: Listener {
         val hit = event.hitLivingEntity
         val world = hit.world
         val bullet = event.bulletLocation
-        event.damage = if (event.isHeadShot) {
+        val shooter = event.shooter
+        if (shooter !is Player) return
+        val player = if (hit is Player) {hit} else return
+        val isHeadShot = (event.isHeadShot || shooter.isPlayerSkillHeadShot())
+        event.damage = if (isHeadShot) {
             event.damage * 2
         } else {
             event.damage
         }
         world.spawnParticle(Particle.BLOCK_CRACK, bullet, 10, Material.REDSTONE_BLOCK.createBlockData())
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR)
-    fun hit1(event: BulletHitLivingEntityEvent) {
-        val damage = event.damage
-        val hit = event.hitLivingEntity
-        val player = if (hit is Player) {hit} else return
         val health = player.getPluginHealth()
-        if (health - damage <= 0) {
+        if (health - event.damage <= 0) {
             player.setShooter(event.shooter as Player)
-            if (event.isHeadShot) {
+            if (isHeadShot) {
                 player.setHeadShot()
             }
             else {

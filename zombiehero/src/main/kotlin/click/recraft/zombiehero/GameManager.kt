@@ -1,5 +1,6 @@
 package click.recraft.zombiehero
 
+import click.recraft.zombiehero.item.CustomItemFactory
 import click.recraft.zombiehero.monster.api.MonsterManager
 import click.recraft.zombiehero.player.HealthManager
 import click.recraft.zombiehero.player.PlayerData.gun
@@ -55,6 +56,7 @@ class GameManager {
             }
             HealthManager.clear()
             MonsterManager.clear()
+            EntityManager.clear()
             player.teleport(world.randomSpawn())
         }
         start()
@@ -78,6 +80,8 @@ class GameManager {
             val type = player.gun()
             val gun = customItemFactory.createGun(type)
             player.inventory.addItem(gun.createItemStack())
+            player.inventory.addItem(customItemFactory.createSkillItem(CustomItemFactory.SkillType.SPEED_UP).createItemStack())
+            player.inventory.addItem(customItemFactory.createSkillItem(CustomItemFactory.SkillType.HEADSHOT).createItemStack())
         }
     }
 

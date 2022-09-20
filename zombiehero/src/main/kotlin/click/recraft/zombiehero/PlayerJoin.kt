@@ -1,5 +1,6 @@
 package click.recraft.zombiehero
 
+import click.recraft.zombiehero.item.CustomItemFactory
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.GameMode
@@ -18,6 +19,7 @@ class PlayerJoin: Listener {
     @EventHandler
     fun joinPlayer(event: PlayerJoinEvent) {
         val player = event.player
+        player.inventory.addItem(ZombieHero.plugin.customItemFactory.createSkillItem(CustomItemFactory.SkillType.SPEED_UP).createItemStack())
         player.gameMode = GameMode.SURVIVAL
         player.foodLevel = 20
         player.inventory.clear()

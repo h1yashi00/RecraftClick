@@ -22,7 +22,7 @@ abstract class CustomItem(
         val meta = item.itemMeta!!
         return item(
             material = item.type,
-            customModelData = meta.customModelData,
+            customModelData = if (meta.hasCustomModelData()) {meta.customModelData} else 0,
             displayName = meta.displayName,
             lore = meta.lore ?: listOf(),
             localizedName = unique.toString()
