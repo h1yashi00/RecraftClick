@@ -6,16 +6,19 @@ import click.recraft.zombiehero.player.PlayerData.removeSkillSpeed
 import click.recraft.zombiehero.player.PlayerData.setSkillSpeed
 import org.bukkit.Bukkit
 import org.bukkit.Material
+import org.bukkit.Sound
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.ClickType
 import org.bukkit.event.player.PlayerInteractEvent
+import org.bukkit.potion.PotionEffect
+import org.bukkit.potion.PotionEffectType
 
 class SpeedUp: SkillItem (
     Material.SUGAR,
 ) {
     override fun inInvItemClick(clickType: ClickType, player: Player) {
     }
-    private val speedUp = 200
+    private val speedUp = 100
     private val speedDown = -100
     // 10 秒間足が早くなる
     private val speedUpEffectiveTime = (20 * 10).toLong()
@@ -23,6 +26,7 @@ class SpeedUp: SkillItem (
     override fun rightClick(event: PlayerInteractEvent) {
         event.isCancelled = true
         val player = event.player
+        player.world.playSound(player.location, Sound.ENTITY_WITHER_SHOOT, 2f, 2f)
         player.inventory.removeItem(createItemStack())
         player.setSkillSpeed(speedUp)
         // HeadShotのロゴがが優先される｡
@@ -35,12 +39,15 @@ class SpeedUp: SkillItem (
             removePassenger(player)
             player.passengers.clear()
             player.setSkillSpeed(speedDown)
+            val effect = PotionEffect(PotionEffectType.JUMP, 20 * 8, 238, false, false, false)
+            player.addPotionEffect(effect)
         }
         Bukkit.getScheduler().runTaskLater(ZombieHero.plugin, shotBreath, speedUpEffectiveTime)
         val returnNormal = Util.createTask {
+            player.removePotionEffect(PotionEffectType.JUMP)
             player.removeSkillSpeed()
         }
-        Bukkit.getScheduler().runTaskLater(ZombieHero.plugin, returnNormal, speedUpEffectiveTime + 20 * 3)
+        Bukkit.getScheduler().runTaskLater(ZombieHero.plugin, returnNormal, speedUpEffectiveTime + speedUpEffectiveTime)
     }
 
     override fun leftClick(event: PlayerInteractEvent) {

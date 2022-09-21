@@ -43,6 +43,7 @@ class GameManager {
     }
     private fun finish() {
         Bukkit.getOnlinePlayers().forEach { player ->
+            player.foodLevel = 20
             Bukkit.getScheduler().pendingTasks.forEach {
                 if (!ZombieHero.plugin.importantTaskId.contains(it.taskId)) {
                     it.cancel()
@@ -56,7 +57,7 @@ class GameManager {
             }
             HealthManager.clear()
             MonsterManager.clear()
-            EntityManager.clear()
+            SpawnedEntityManager.clear()
             player.teleport(world.randomSpawn())
         }
         start()

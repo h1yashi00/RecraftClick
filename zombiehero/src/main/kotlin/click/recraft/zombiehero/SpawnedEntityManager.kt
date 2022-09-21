@@ -4,7 +4,7 @@ import org.bukkit.Bukkit
 import org.bukkit.entity.Entity
 import java.util.*
 
-object EntityManager {
+object SpawnedEntityManager {
     private val save: MutableSet<UUID> = mutableSetOf()
     fun register(entity: Entity) {
         entity.uniqueId
