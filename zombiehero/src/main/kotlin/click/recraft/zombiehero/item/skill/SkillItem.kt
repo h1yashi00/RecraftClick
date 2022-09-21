@@ -9,11 +9,15 @@ import java.util.*
 import kotlin.collections.HashMap
 
 abstract class SkillItem(
-    material: Material
+    material: Material,
+    description: ArrayList<String>,
+    displayName: String
 ): CustomItem(
     item(
         material,
         localizedName = UUID.randomUUID().toString(),
+        lore = description,
+        displayName = displayName
     )
 ) {
     private data class Passenger(val player: Player, val armorStand: Entity, val entity2: Entity) {

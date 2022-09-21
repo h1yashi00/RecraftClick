@@ -5,6 +5,7 @@ import click.recraft.zombiehero.ZombieHero
 import click.recraft.zombiehero.player.PlayerData.removeSkillSpeed
 import click.recraft.zombiehero.player.PlayerData.setSkillSpeed
 import org.bukkit.Bukkit
+import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.entity.Player
@@ -15,6 +16,10 @@ import org.bukkit.potion.PotionEffectType
 
 class SpeedUp: SkillItem (
     Material.SUGAR,
+    displayName = "${ChatColor.WHITE}SpeedUp",
+    description = arrayListOf(
+        "${ChatColor.WHITE}数秒間足が早くなる｡その反動で一定時間足が遅くなり､ジャンプができなくなる",
+    )
 ) {
     override fun inInvItemClick(clickType: ClickType, player: Player) {
     }

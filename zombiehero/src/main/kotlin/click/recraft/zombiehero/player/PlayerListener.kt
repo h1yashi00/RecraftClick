@@ -2,6 +2,7 @@ package click.recraft.zombiehero.player
 
 import click.recraft.zombiehero.Util
 import click.recraft.zombiehero.ZombieHero
+import click.recraft.zombiehero.event.MonsterAttackPlayerEvent
 import click.recraft.zombiehero.event.PlayerDeadPluginHealthEvent
 import click.recraft.zombiehero.monster.api.Monster
 import click.recraft.zombiehero.monster.api.MonsterManager
@@ -11,8 +12,9 @@ import org.bukkit.GameMode
 import org.bukkit.Sound
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
+import org.bukkit.event.block.BlockBreakEvent
 
-class PlayerDeathListener: Listener {
+class PlayerListener: Listener {
     private fun reviveMonster(monster: Monster) {
         val player = Bukkit.getPlayer(monster.playerUUID) ?: return
         player.gameMode = GameMode.SPECTATOR
@@ -51,5 +53,21 @@ class PlayerDeathListener: Listener {
         // human
         monster = MonsterManager.register(player)
         reviveMonster(monster)
+    }
+
+    @EventHandler
+    fun breakEvent(event: BlockBreakEvent) {
+        val player = event.player
+        if (player.isOp) {return}
+        event.isCancelled = true
+    }
+
+    @EventHandler
+    fun monster(event: MonsterAttackPlayerEvent) {
+        val victim = event.victim
+        val world = victim.world
+        world.playSound(victim.location, "minecraft:stab_knife_body", 1f,0.7f)
+        if (ZombieHero.plugin.gameManager.checkGameCondition()) return
+        world.playSound(victim.location, "minecraft:man_shout", 0.5f,1f)
     }
 }
