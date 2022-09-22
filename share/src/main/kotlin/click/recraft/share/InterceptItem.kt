@@ -4,6 +4,7 @@ import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.Action
+import org.bukkit.event.player.PlayerDropItemEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.ItemStack
 
@@ -36,6 +37,14 @@ class InteractItemDSL(
     fun load() {
         val listener = object: Listener {
             @EventHandler
+            fun drop(event: PlayerDropItemEvent) {
+                val item = event.itemDrop.itemStack
+                val meta = item.itemMeta ?: return
+                if (meta != item.itemMeta) return
+                event.isCancelled = true
+            }
+
+            @EventHandler
             fun interact(event: PlayerInteractEvent) {
                 val passAction = arrayListOf<Action>()
                 val player = event.player
@@ -44,8 +53,9 @@ class InteractItemDSL(
                 if (!passAction.contains(event.action)) return
                 val currentItem = event.item ?: return
                 val meta = currentItem.itemMeta ?: return
-                val customModelData = if (meta.hasCustomModelData()) { meta.customModelData } else return
-                if (item.itemMeta?.customModelData != customModelData) { return }
+                if (meta != item.itemMeta) return
+
+                event.isCancelled = true
                 val action = PlayerInterceptAction(player)
                 function.invoke(action)
             }
