@@ -25,7 +25,8 @@ class PlayerJoin: Listener {
         player.teleport(ZombieHero.plugin.gameManager.world.randomSpawn())
         val task = Util.createTask {
             player.inventory.addItem(
-                GameMenu.gunSelect.getItem(),
+                GameMenu.mainGunSelect.getItem(),
+                GameMenu.subGunSelect.getItem(),
                 GameMenu.zombieSelect.getItem(),
             )
         }

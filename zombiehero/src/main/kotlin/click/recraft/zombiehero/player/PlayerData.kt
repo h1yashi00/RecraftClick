@@ -10,7 +10,8 @@ import kotlin.collections.HashMap
 
 object PlayerData {
     private val monsterData: HashMap<UUID, MonsterType> = hashMapOf()
-    private val gunData: HashMap<UUID, CustomItemFactory.GunType> = hashMapOf()
+    private val mainGunData: HashMap<UUID, CustomItemFactory.MainGunType> = hashMapOf()
+    private val subGunData: HashMap<UUID, CustomItemFactory.SubGunType> = hashMapOf()
     private val shooter: HashMap<UUID, Player> = hashMapOf()
     private val isHeadShot: HashMap<UUID, Int> = hashMapOf()
     private val playerSkillSpeed = HashMap<UUID, Int>()
@@ -69,10 +70,16 @@ object PlayerData {
     fun Player.monsterType(): MonsterType {
         return monsterData[uniqueId] ?: MonsterType.ZOMBIE
     }
-    fun Player.gunType(): CustomItemFactory.GunType {
-        return gunData[uniqueId] ?: CustomItemFactory.GunType.AK47
+    fun Player.mainGunType(): CustomItemFactory.MainGunType {
+        return mainGunData[uniqueId] ?: CustomItemFactory.MainGunType.AK47
     }
-    fun Player.setGunType(gunType: CustomItemFactory.GunType) {
-        gunData[uniqueId] = gunType
+    fun Player.setMainGunType(mainGunType: CustomItemFactory.MainGunType) {
+        mainGunData[uniqueId] = mainGunType
+    }
+    fun Player.subGunType(): CustomItemFactory.SubGunType {
+        return subGunData[uniqueId] ?: CustomItemFactory.SubGunType.DesertEagle
+    }
+    fun Player.setSubGunType(subGunType: CustomItemFactory.SubGunType) {
+        subGunData[uniqueId] = subGunType
     }
 }

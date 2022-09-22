@@ -3,12 +3,15 @@ package click.recraft.zombiehero
 import click.recraft.share.*
 import click.recraft.zombiehero.item.CustomItemFactory.*
 import click.recraft.zombiehero.monster.api.MonsterType
-import click.recraft.zombiehero.player.PlayerData.gunType
+import click.recraft.zombiehero.player.PlayerData.mainGunType
 import click.recraft.zombiehero.player.PlayerData.monsterType
-import click.recraft.zombiehero.player.PlayerData.setGunType
+import click.recraft.zombiehero.player.PlayerData.setMainGunType
 import click.recraft.zombiehero.player.PlayerData.setMonsterType
+import click.recraft.zombiehero.player.PlayerData.setSubGunType
+import click.recraft.zombiehero.player.PlayerData.subGunType
 import org.bukkit.ChatColor
 import org.bukkit.Material
+import org.bukkit.Sound
 
 object GameMenu {
     // DSLの使い方
@@ -19,15 +22,25 @@ object GameMenu {
     // loadが呼び出されないとshop.getItem()を呼んだときに初期化されてしまうので､ここを呼び出す
     fun load() {
     }
-    val gunSelect = ZombieHero.plugin.interactItem(
-        item(Material.EMERALD,
-            displayName = "${ChatColor.GOLD}GunSelect",
+    val mainGunSelect = ZombieHero.plugin.interactItem(
+        item(Material.DIAMOND_SWORD,
+            displayName = "${ChatColor.GOLD}MainGunSelect",
             customModelData = 1000
         ),
         rightClick = true,
         leftClick  = false
     ) {
-        player.openInventory(gunMenu.createInv(player))
+        player.openInventory(mainGunMenu.createInv(player))
+    }
+    val subGunSelect = ZombieHero.plugin.interactItem(
+        item(Material.WOODEN_SWORD,
+            displayName = "${ChatColor.GOLD}SubGunSelect",
+            customModelData = 300
+        ),
+        rightClick = true,
+        leftClick  = false
+    ) {
+        player.openInventory(subGunMenu.createInv(player))
     }
     val zombieSelect = ZombieHero.plugin.interactItem(
         item(Material.ZOMBIE_HEAD,
@@ -40,36 +53,50 @@ object GameMenu {
         player.openInventory(monsterMenu.createInv(player))
     }
     private val factory = ZombieHero.plugin.customItemFactory
-    private val gunMenu = ZombieHero.plugin.menu ("${ChatColor.GOLD}武器ショップ", true) {
-        GunType.values().forEachIndexed { i, gunType ->
-            slot(0, i, factory.createGun(gunType).createItemStack()) {
-            }
+    private val mainGunMenu = ZombieHero.plugin.menu ("${ChatColor.GOLD}メイン武器", true) {
+        MainGunType.values().forEachIndexed { i, gunType ->
+            slot(0, i, factory.createMainGun(gunType).createItemStack()) {}
             slot (1, i, item(Material.GREEN_DYE)) {
                 onClick {
-                    player.setGunType(gunType)
+                    player.setMainGunType(gunType)
                     player.closeInventory()
+                    player.playSound(player, Sound.BLOCK_NOTE_BLOCK_HARP, 2f,2f)
+                    player.sendMessage("メインウェポン: ${gunType.name}を選択しました")
                 }
                 onRender {
-                    if (gunType == player.gunType()) {
-                        chose()
-                    }
+                    selectedColoredGreenDye(gunType == player.mainGunType())
+                }
+            }
+        }
+    }
+    private val subGunMenu = ZombieHero.plugin.menu ("${ChatColor.GOLD}サブ武器", true) {
+        SubGunType.values().forEachIndexed { i, gunType ->
+            slot(0, i, factory.createSubGun(gunType).createItemStack()) {}
+            slot (1, i, item(Material.GREEN_DYE)) {
+                onClick {
+                    player.setSubGunType(gunType)
+                    player.closeInventory()
+                    player.playSound(player, Sound.BLOCK_NOTE_BLOCK_HARP, 2f,2f)
+                    player.sendMessage("サブウェポン: ${gunType.name}を選択しました")
+                }
+                onRender {
+                    selectedColoredGreenDye(gunType == player.subGunType())
                 }
             }
         }
     }
     private val monsterMenu = ZombieHero.plugin.menu("${ChatColor.GREEN}モンスターメニュー", true) {
         MonsterType.values().forEachIndexed { i, monsterType ->
-            slot(0, i, monsterType.head) {
-            }
+            slot(0, i, monsterType.head) {}
             slot(1, i, monsterType.head) {
                 onClick {
                     player.setMonsterType(monsterType)
                     player.closeInventory()
+                    player.playSound(player, Sound.BLOCK_NOTE_BLOCK_HARP, 2f,2f)
+                    player.sendMessage("モンスタータイプ: ${monsterType.name}を選択しました")
                 }
                 onRender {
-                    if (monsterType == player.monsterType()) {
-                        chose()
-                    }
+                    selectedColoredGreenDye(monsterType == player.monsterType())
                 }
             }
         }

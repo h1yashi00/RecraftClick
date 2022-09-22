@@ -17,15 +17,17 @@ import kotlin.collections.HashMap
 class CustomItemFactory : CustomItemManager {
     override val save: HashMap<UUID, CustomItem> = hashMapOf()
 
-    enum class GunType {
+    enum class MainGunType {
         AK47,
         SHOTGUN,
-        DesertEagle,
         AWP,
         MP5,
         MOSIN,
-        Glock,
         Saiga,
+    }
+    enum class SubGunType {
+        DesertEagle,
+        Glock,
     }
     enum class GrenadeType {
         ZombieGrenadeTouch,
@@ -43,18 +45,26 @@ class CustomItemFactory : CustomItemManager {
         HEADSHOT
     }
 
-    fun createGun (
-        type: GunType
+    fun createMainGun (
+        type: MainGunType
     ): Gun {
         val gun = when(type) {
-            GunType.AK47 -> AK47()
-            GunType.SHOTGUN -> M870()
-            GunType.DesertEagle -> DesertEagle()
-            GunType.AWP  -> Awp()
-            GunType.MP5 -> Mp5()
-            GunType.MOSIN -> Mosin()
-            GunType.Glock -> Glock()
-            GunType.Saiga -> Saiga()
+            MainGunType.AK47 -> AK47()
+            MainGunType.SHOTGUN -> M870()
+            MainGunType.AWP  -> Awp()
+            MainGunType.MP5 -> Mp5()
+            MainGunType.MOSIN -> Mosin()
+            MainGunType.Saiga -> Saiga()
+        }
+        register(gun.unique, gun)
+        return gun
+    }
+    fun createSubGun(
+        type: SubGunType
+    ): Gun {
+        val gun = when(type) {
+            SubGunType.DesertEagle -> DesertEagle()
+            SubGunType.Glock -> Glock()
         }
         register(gun.unique, gun)
         return gun

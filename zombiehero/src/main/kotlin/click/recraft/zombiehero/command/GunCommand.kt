@@ -19,9 +19,9 @@ class GunCommand: CommandExecutor {
         if (!player.isOp) return false
         player.inventory.clear()
         MonsterManager.remove(player)
-        CustomItemFactory.GunType.values().forEach {
+        CustomItemFactory.MainGunType.values().forEach {
             player.inventory.addItem(
-                ZombieHero.plugin.customItemFactory.createGun(it).createItemStack()
+                ZombieHero.plugin.customItemFactory.createMainGun(it).createItemStack()
             )
         }
         return true

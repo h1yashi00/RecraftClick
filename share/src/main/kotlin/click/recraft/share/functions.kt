@@ -44,6 +44,7 @@ class ShowingDSL(private val itemStack: ItemStack) {
     lateinit var player: Player
     private val lore = arrayListOf<String>()
     var isChoose = false
+    var selectedColoredGreenDye: Boolean? = null
     fun setUnlock(boolean: Boolean) {
         val addLore = if (boolean) "${ChatColor.GREEN}アンロック" else "${ChatColor.RED}ロック"
         lore.add(addLore)
@@ -51,7 +52,17 @@ class ShowingDSL(private val itemStack: ItemStack) {
     fun chose() {
         isChoose = true
     }
+    fun selectedColoredGreenDye(boolean: Boolean) {
+        selectedColoredGreenDye = boolean
+    }
     fun getITem(): ItemStack {
+        if (selectedColoredGreenDye != null) {
+            return if (selectedColoredGreenDye!!) {
+                item(Material.LIME_DYE)
+            } else {
+                item(Material.GRAY_DYE)
+            }
+        }
         val item = itemStack.clone()
         val meta = item.itemMeta
         meta!!.lore = lore
