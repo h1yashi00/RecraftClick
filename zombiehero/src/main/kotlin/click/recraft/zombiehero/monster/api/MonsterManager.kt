@@ -4,7 +4,7 @@ import click.recraft.zombiehero.Util
 import click.recraft.zombiehero.ZombieHero
 import click.recraft.zombiehero.monster.Skeleton
 import click.recraft.zombiehero.monster.Zombie
-import click.recraft.zombiehero.player.PlayerData.choosedMonster
+import click.recraft.zombiehero.player.PlayerData.monsterType
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.entity.Player
@@ -41,7 +41,7 @@ object MonsterManager {
 
     fun register(player: Player): Monster {
         player.inventory.clear()
-        val monster = getMonsterConstructor(player.choosedMonster(), player)
+        val monster = getMonsterConstructor(player.monsterType(), player)
         remove(player)
         monster.initialize(player)
         save[monster.playerUUID] = monster

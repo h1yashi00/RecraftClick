@@ -16,14 +16,14 @@ abstract class Monster(
     val deathSound: Sound,
     val playerUUID: UUID,
     var walkSpeed: Int,
+    val type: MonsterType,
 
     val maxHealth: Int,
-    val head: ItemStack,
     val chestPlate: ItemStack,
 ) {
     abstract val skill1: Skill
     abstract val skill2: Skill
-    abstract val type: MonsterType
+    val head = type.head
     var isDead = false
     private fun getDefaultItem(): ItemStack {
         val factory = ZombieHero.plugin.customItemFactory

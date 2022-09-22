@@ -3,11 +3,13 @@ package click.recraft.share
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Material
+import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.Inventory
+import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.java.JavaPlugin
 import javax.annotation.Nullable
@@ -41,14 +43,22 @@ fun item(
 class ShowingDSL(private val itemStack: ItemStack) {
     lateinit var player: Player
     private val lore = arrayListOf<String>()
+    var isChoose = false
     fun setUnlock(boolean: Boolean) {
         val addLore = if (boolean) "${ChatColor.GREEN}アンロック" else "${ChatColor.RED}ロック"
         lore.add(addLore)
+    }
+    fun chose() {
+        isChoose = true
     }
     fun getITem(): ItemStack {
         val item = itemStack.clone()
         val meta = item.itemMeta
         meta!!.lore = lore
+        if (isChoose) {
+            meta.addEnchant(Enchantment.ARROW_DAMAGE, 1, false)
+            meta.addItemFlags(ItemFlag.HIDE_ENCHANTS)
+        }
         item.itemMeta = meta
         return item
     }
@@ -133,7 +143,7 @@ fun MenuDSL.slot(
     val index = (line * 9) + slot
     val slotDSL = SlotDSL(this, index, item)
     slotDSLs[index] = slotDSL
-    if (slot >= index) {
+    if (maxSize <= index) {
         maxSize = index
     }
     action.invoke(slotDSL)

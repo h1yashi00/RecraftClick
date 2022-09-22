@@ -1,6 +1,5 @@
 package click.recraft.zombiehero
 
-import click.recraft.zombiehero.item.CustomItemFactory
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.GameMode
@@ -19,12 +18,18 @@ class PlayerJoin: Listener {
     @EventHandler
     fun joinPlayer(event: PlayerJoinEvent) {
         val player = event.player
-        player.inventory.addItem(ZombieHero.plugin.customItemFactory.createSkillItem(CustomItemFactory.SkillType.SPEED_UP).createItemStack())
         player.gameMode = GameMode.SURVIVAL
         player.foodLevel = 20
         player.inventory.clear()
         val playerNum = Bukkit.getOnlinePlayers().size
         player.teleport(ZombieHero.plugin.gameManager.world.randomSpawn())
+        val task = Util.createTask {
+            player.inventory.addItem(
+                GameMenu.gunSelect.getItem(),
+                GameMenu.zombieSelect.getItem(),
+            )
+        }
+        Bukkit.getScheduler().runTaskLater(ZombieHero.plugin, task, 1)
         val game=  ZombieHero.plugin.gameManager
         if (game.isStart()) {
             event.joinMessage = "${ChatColor.YELLOW}${player.name}が参加しました｡ 2人以上で開始します｡ 現在の参加人数: ${playerNum}/32"

@@ -15,6 +15,13 @@ object PlayerData {
     private val isHeadShot: HashMap<UUID, Int> = hashMapOf()
     private val playerSkillSpeed = HashMap<UUID, Int>()
     private val playerSKillHeadShot: MutableSet<UUID> = mutableSetOf()
+
+    fun clear() {
+        shooter.clear()
+        isHeadShot.clear()
+        playerSKillHeadShot.clear()
+        playerSkillSpeed.clear()
+    }
     fun Player.setSkillSpeed(speed: Int) {
         playerSkillSpeed[uniqueId] = speed
     }
@@ -56,10 +63,16 @@ object PlayerData {
     fun Player.isHeadShot() : Boolean {
         return isHeadShot[uniqueId] == ZombieHero.plugin.getTime()
     }
-    fun Player.choosedMonster(): MonsterType {
+    fun Player.setMonsterType(monsterType: MonsterType) {
+        monsterData[uniqueId] = monsterType
+    }
+    fun Player.monsterType(): MonsterType {
         return monsterData[uniqueId] ?: MonsterType.ZOMBIE
     }
-    fun Player.gun(): CustomItemFactory.GunType {
+    fun Player.gunType(): CustomItemFactory.GunType {
         return gunData[uniqueId] ?: CustomItemFactory.GunType.AK47
+    }
+    fun Player.setGunType(gunType: CustomItemFactory.GunType) {
+        gunData[uniqueId] = gunType
     }
 }

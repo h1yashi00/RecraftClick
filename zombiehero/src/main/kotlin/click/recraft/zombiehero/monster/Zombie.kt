@@ -18,7 +18,7 @@ class Zombie(playerUUID: UUID) : Monster(
     deathSound = Sound.ENTITY_ZOMBIE_DEATH,
     walkSpeed = 0,
     maxHealth = 3000,
-    head = ItemStack(Material.ZOMBIE_HEAD),
+    type = MonsterType.ZOMBIE,
     chestPlate = ItemStack(Material.LEATHER_CHESTPLATE).apply {
         val meta = itemMeta!!
         meta as LeatherArmorMeta
@@ -68,7 +68,6 @@ class Zombie(playerUUID: UUID) : Monster(
 
     override val skill1: Skill = Skill1(this)
     override val skill2: Skill = Skill2(this)
-    override val type: MonsterType = MonsterType.ZOMBIE
 
 
     override fun rightClick(event: PlayerInteractEvent) {

@@ -3,7 +3,8 @@ package click.recraft.zombiehero
 import click.recraft.zombiehero.item.CustomItemFactory
 import click.recraft.zombiehero.monster.api.MonsterManager
 import click.recraft.zombiehero.player.HealthManager
-import click.recraft.zombiehero.player.PlayerData.gun
+import click.recraft.zombiehero.player.PlayerData
+import click.recraft.zombiehero.player.PlayerData.gunType
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.GameMode
@@ -58,6 +59,11 @@ class GameManager {
             HealthManager.clear()
             MonsterManager.clear()
             SpawnedEntityManager.clear()
+            PlayerData.clear()
+            player.inventory.addItem(
+                GameMenu.gunSelect.getItem(),
+                GameMenu.zombieSelect.getItem(),
+            )
             player.teleport(world.randomSpawn())
         }
         start()
@@ -78,7 +84,9 @@ class GameManager {
     private fun givePlayerGun() {
         Bukkit.getOnlinePlayers().forEach { player ->
             if (MonsterManager.contains(player)) return@forEach
-            val type = player.gun()
+            player.inventory.clear()
+            player.foodLevel = 20
+            val type = player.gunType()
             val gun = customItemFactory.createGun(type)
             player.inventory.addItem(gun.createItemStack())
             player.inventory.addItem(customItemFactory.createSkillItem(CustomItemFactory.SkillType.SPEED_UP).createItemStack())

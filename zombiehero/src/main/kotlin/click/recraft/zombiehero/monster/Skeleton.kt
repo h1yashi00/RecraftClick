@@ -23,10 +23,10 @@ import java.util.*
 class Skeleton(playerUUID: UUID) : Monster(
     Sound.ENTITY_SKELETON_HURT,
     Sound.ENTITY_SKELETON_DEATH,
+    type = MonsterType.SKELETON,
     walkSpeed = 0,
     playerUUID = playerUUID,
     maxHealth = 3000,
-    head = ItemStack(Material.SKELETON_SKULL),
     chestPlate = ItemStack(Material.LEATHER_CHESTPLATE).apply {
         val meta = itemMeta!!
         meta as LeatherArmorMeta
@@ -36,7 +36,6 @@ class Skeleton(playerUUID: UUID) : Monster(
 ) {
     override val skill1: Skill = Skill1(this)
     override val skill2: Skill = Skill2(this)
-    override val type: MonsterType = MonsterType.SKELETON
 
     private class Skill1(
         override val monster: Monster

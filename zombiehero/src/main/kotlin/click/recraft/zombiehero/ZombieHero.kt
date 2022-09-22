@@ -35,7 +35,7 @@ class ZombieHero: KotlinPlugin() {
     }
     override fun onEnable() {
         plugin = this
-        ShopMenu.load()
+        GameMenu.load()
         val fiveTickTask = Util.createTask {
             importantTaskId.add(taskId)
             // playerのaction barに対して､playerのHealthを送る
