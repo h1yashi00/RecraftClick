@@ -12,6 +12,7 @@ object PlayerData {
     private val monsterData: HashMap<UUID, MonsterType> = hashMapOf()
     private val mainGunData: HashMap<UUID, CustomItemFactory.MainGunType> = hashMapOf()
     private val subGunData: HashMap<UUID, CustomItemFactory.SubGunType> = hashMapOf()
+    private val swordData : HashMap<UUID, CustomItemFactory.SwordType> = hashMapOf()
     private val shooter: HashMap<UUID, Player> = hashMapOf()
     private val isHeadShot: HashMap<UUID, Int> = hashMapOf()
     private val playerSkillSpeed = HashMap<UUID, Int>()
@@ -81,5 +82,11 @@ object PlayerData {
     }
     fun Player.setSubGunType(subGunType: CustomItemFactory.SubGunType) {
         subGunData[uniqueId] = subGunType
+    }
+    fun Player.setSword(sword: CustomItemFactory.SwordType) {
+        swordData[uniqueId] = sword
+    }
+    fun Player.sword(): CustomItemFactory.SwordType {
+        return swordData[uniqueId] ?: CustomItemFactory.SwordType.NORMAL_SWORD
     }
 }

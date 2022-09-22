@@ -31,13 +31,13 @@ class PlayerChatListener: Listener {
         val victim = event.victim
         val attacker = event.attacker
         if (attacker !is Player) return
-        Bukkit.broadcastMessage("${victim.coloredName()} ${headShotLog(victim)} ${attacker.coloredName()}")
+        Bukkit.broadcastMessage("${attacker.coloredName()} ${headShotLog(victim)} ${victim.coloredName()}")
     }
 
     @EventHandler
     fun zombieKillPlayer(event: MonsterAttackPlayerEvent) {
         val victim = event.victim
         val attacker = event.attacker
-        Bukkit.broadcastMessage("${victim.coloredName()} $zombieAttack ${ChatColor.WHITE}${attacker.name}")
+        Bukkit.broadcastMessage("${attacker.coloredName()} $zombieAttack ${ChatColor.WHITE}${victim.name}")
     }
 }

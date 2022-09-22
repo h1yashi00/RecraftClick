@@ -40,7 +40,7 @@ open class Gun (
             "${ChatColor.AQUA}弾数: ${reload.armo}",
             "${ChatColor.AQUA}リロード時間: ${reload.reloadTime.getMilliseconds() / 1000}秒",
             "${ChatColor.AQUA}正確さ: ${shot.accuracy.value}",
-            "${ChatColor.AQUA}レート: ${shot.rate.getMilliseconds() / 1000}秒",
+            "${ChatColor.AQUA}レート: ${shot.rate.getMilliseconds().toDouble() / 1000}秒",
             "${ChatColor.AQUA}ダメージ: ${shot.damage}",
             "${ChatColor.AQUA}発射される弾数: ${shot.shootAmmo}",
             "${ChatColor.AQUA}ダメージ/秒: ${shot.damage * shot.shootAmmo / (shot.rate.getMilliseconds().toDouble() / 1000.0)}",

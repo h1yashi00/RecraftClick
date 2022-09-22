@@ -17,13 +17,12 @@ import javax.annotation.Nullable
 fun item(
     material: Material,
     amount: Int = 1,
-    data: Short = 0,
     displayName: String = "",
     @Nullable lore: List<String> = arrayListOf(),
     customModelData: Int = 0,
     localizedName: String = ""
 ): ItemStack {
-    val item = ItemStack(material, amount, data)
+    val item = ItemStack(material, amount)
     val meta = item.itemMeta!!
     if (customModelData != 0) {
         meta.setCustomModelData(customModelData)

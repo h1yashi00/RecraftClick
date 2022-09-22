@@ -1,7 +1,7 @@
 package click.recraft.zombiehero.item.skill
 
 import click.recraft.share.item
-import click.recraft.zombiehero.SpawnedEntityManager
+import click.recraft.zombiehero.MapObjectManager
 import click.recraft.zombiehero.item.CustomItem
 import org.bukkit.Material
 import org.bukkit.entity.*
@@ -53,8 +53,8 @@ abstract class SkillItem(
             isInvulnerable = true
         }
         save[player.uniqueId] = Passenger(player, armorStand, entity)
-        SpawnedEntityManager.register(entity)
-        SpawnedEntityManager.register(armorStand)
+        MapObjectManager.register(entity)
+        MapObjectManager.register(armorStand)
     }
     fun removePassenger(player: Player) {
         val data = save[player.uniqueId] ?: return

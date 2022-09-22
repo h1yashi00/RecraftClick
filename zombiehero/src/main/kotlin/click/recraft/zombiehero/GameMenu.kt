@@ -8,10 +8,13 @@ import click.recraft.zombiehero.player.PlayerData.monsterType
 import click.recraft.zombiehero.player.PlayerData.setMainGunType
 import click.recraft.zombiehero.player.PlayerData.setMonsterType
 import click.recraft.zombiehero.player.PlayerData.setSubGunType
+import click.recraft.zombiehero.player.PlayerData.setSword
 import click.recraft.zombiehero.player.PlayerData.subGunType
+import click.recraft.zombiehero.player.PlayerData.sword
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.Sound
+import org.bukkit.entity.Player
 
 object GameMenu {
     // DSLの使い方
@@ -22,7 +25,7 @@ object GameMenu {
     // loadが呼び出されないとshop.getItem()を呼んだときに初期化されてしまうので､ここを呼び出す
     fun load() {
     }
-    val mainGunSelect = ZombieHero.plugin.interactItem(
+    private val mainGunSelect = ZombieHero.plugin.interactItem(
         item(Material.DIAMOND_SWORD,
             displayName = "${ChatColor.GOLD}MainGunSelect",
             customModelData = 1000
@@ -32,7 +35,7 @@ object GameMenu {
     ) {
         player.openInventory(mainGunMenu.createInv(player))
     }
-    val subGunSelect = ZombieHero.plugin.interactItem(
+    private val subGunSelect = ZombieHero.plugin.interactItem(
         item(Material.WOODEN_SWORD,
             displayName = "${ChatColor.GOLD}SubGunSelect",
             customModelData = 300
@@ -42,8 +45,9 @@ object GameMenu {
     ) {
         player.openInventory(subGunMenu.createInv(player))
     }
-    val zombieSelect = ZombieHero.plugin.interactItem(
-        item(Material.ZOMBIE_HEAD,
+    private val zombieSelect = ZombieHero.plugin.interactItem(
+        item(
+            Material.ZOMBIE_HEAD,
             displayName = "${ChatColor.GOLD}ZombieSelect",
             customModelData = 200
         ),
@@ -51,6 +55,17 @@ object GameMenu {
         leftClick  = false
     ) {
         player.openInventory(monsterMenu.createInv(player))
+    }
+    private val sword = ZombieHero.plugin.interactItem(
+        item(
+            Material.IRON_SWORD,
+            displayName = "${ChatColor.GOLD}Melee",
+            customModelData = 100
+        ),
+        rightClick = true,
+        leftClick = false
+    ) {
+        player.openInventory(swordMenu.createInv(player))
     }
     private val factory = ZombieHero.plugin.customItemFactory
     private val mainGunMenu = ZombieHero.plugin.menu ("${ChatColor.GOLD}メイン武器", true) {
@@ -101,5 +116,29 @@ object GameMenu {
             }
         }
     }
+    private val swordMenu = ZombieHero.plugin.menu ("${ChatColor.WHITE}近接武器メニュー", true) {
+        SwordType.values().forEachIndexed { i , swordType ->
+            slot(0, i, factory.createSword(swordType).createItemStack()) {}
+            slot(1, i, item(Material.EMERALD)) {
+                onClick {
+                    player.setSword(swordType)
+                    player.closeInventory()
+                    player.playSound(player, Sound.BLOCK_NOTE_BLOCK_HARP, 2f,2f)
+                    player.sendMessage("剣: ${swordType.name}を選択しました")
+                }
+                onRender {
+                    selectedColoredGreenDye(swordType == player.sword())
+                }
+            }
+        }
+    }
 
+    fun join(player: Player) {
+        player.inventory.addItem(
+            mainGunSelect.getItem(),
+            subGunSelect.getItem(),
+            zombieSelect.getItem(),
+            sword.getItem()
+        )
+    }
 }

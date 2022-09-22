@@ -24,11 +24,7 @@ class PlayerJoin: Listener {
         val playerNum = Bukkit.getOnlinePlayers().size
         player.teleport(ZombieHero.plugin.gameManager.world.randomSpawn())
         val task = Util.createTask {
-            player.inventory.addItem(
-                GameMenu.mainGunSelect.getItem(),
-                GameMenu.subGunSelect.getItem(),
-                GameMenu.zombieSelect.getItem(),
-            )
+            GameMenu.join(player)
         }
         Bukkit.getScheduler().runTaskLater(ZombieHero.plugin, task, 1)
         val game=  ZombieHero.plugin.gameManager

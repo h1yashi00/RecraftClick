@@ -15,6 +15,7 @@ class ShootManager {
         val task = Util.createTask {
                 // 処理をすることろ
                 // GunSatsの影響で球が打てなかった場合に､タスクをなくすうようにする
+            ZombieHero.plugin.importantTaskId.add(taskId)
             manager.iterator().forEach {
                 val data = it.value
                 val player = Bukkit.getPlayer(data.playerUUID) ?: return@forEach

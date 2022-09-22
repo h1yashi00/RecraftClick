@@ -1,18 +1,19 @@
 package click.recraft.zombiehero.player
 
+import click.recraft.zombiehero.MapObjectManager
 import click.recraft.zombiehero.Util
 import click.recraft.zombiehero.ZombieHero
 import click.recraft.zombiehero.event.MonsterAttackPlayerEvent
 import click.recraft.zombiehero.event.PlayerDeadPluginHealthEvent
+import click.recraft.zombiehero.item.gun.Gun
 import click.recraft.zombiehero.monster.api.Monster
 import click.recraft.zombiehero.monster.api.MonsterManager
 import click.recraft.zombiehero.player.PlayerData.isHeadShot
-import org.bukkit.Bukkit
-import org.bukkit.GameMode
-import org.bukkit.Sound
+import org.bukkit.*
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
+import org.bukkit.event.block.BlockPlaceEvent
 
 class PlayerListener: Listener {
     private fun reviveMonster(monster: Monster) {
@@ -56,10 +57,35 @@ class PlayerListener: Listener {
     }
 
     @EventHandler
+    fun placeBlock(event: BlockPlaceEvent) {
+        val player = event.player
+        if (player.gameMode != GameMode.SURVIVAL) return
+        val block = event.block
+        MapObjectManager.register(block.location, Material.AIR, 20 * 4)
+    }
+
+    @EventHandler
     fun breakEvent(event: BlockBreakEvent) {
         val player = event.player
-        if (player.isOp) {return}
+        if (player.gameMode != GameMode.SURVIVAL) {return}
         event.isCancelled = true
+        val block = event.block
+        if (block.type != Material.COAL_ORE) {return}
+
+        val monster = MonsterManager.get(player)
+        if (monster != null) return
+        val item = player.inventory.getItem(0)!!
+        val customItem = ZombieHero.plugin.customItemFactory.getItem(item) ?: return
+        if (customItem  !is Gun) return
+
+        val loc = block.location
+        loc.world!!.spawnParticle(Particle.BLOCK_CRACK, loc, 10, block.type.createBlockData())
+        val addArmo = customItem.stats.maxArmo / 3
+        player.sendMessage("${ChatColor.BOLD}${customItem.stats.gunName}の弾を${addArmo}入手した")
+        player.playSound(player, Sound.ENTITY_ITEM_PICKUP, 1f,1f)
+        customItem.stats.totalArmo += addArmo
+        MapObjectManager.register(block.location, block.type, 20 * 3)
+        block.type = Material.AIR
     }
 
     @EventHandler

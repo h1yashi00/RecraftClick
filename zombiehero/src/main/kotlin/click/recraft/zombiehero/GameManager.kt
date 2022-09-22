@@ -1,13 +1,17 @@
 package click.recraft.zombiehero
 
+import click.recraft.share.item
 import click.recraft.zombiehero.item.CustomItemFactory
 import click.recraft.zombiehero.monster.api.MonsterManager
 import click.recraft.zombiehero.player.HealthManager
 import click.recraft.zombiehero.player.PlayerData
 import click.recraft.zombiehero.player.PlayerData.mainGunType
+import click.recraft.zombiehero.player.PlayerData.subGunType
+import click.recraft.zombiehero.player.PlayerData.sword
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.GameMode
+import org.bukkit.Material
 
 class GameManager {
     val requiredPlayerNum: Int = 2
@@ -58,13 +62,9 @@ class GameManager {
             }
             HealthManager.clear()
             MonsterManager.clear()
-            SpawnedEntityManager.clear()
+            MapObjectManager.clear()
             PlayerData.clear()
-            player.inventory.addItem(
-                GameMenu.mainGunSelect.getItem(),
-                GameMenu.subGunSelect.getItem(),
-                GameMenu.zombieSelect.getItem(),
-            )
+            GameMenu.join(player)
             player.teleport(world.randomSpawn())
         }
         start()
@@ -87,11 +87,15 @@ class GameManager {
             if (MonsterManager.contains(player)) return@forEach
             player.inventory.clear()
             player.foodLevel = 20
-            val type = player.mainGunType()
-            val gun = customItemFactory.createMainGun(type)
-            player.inventory.addItem(gun.createItemStack())
-            player.inventory.addItem(customItemFactory.createSkillItem(CustomItemFactory.SkillType.SPEED_UP).createItemStack())
-            player.inventory.addItem(customItemFactory.createSkillItem(CustomItemFactory.SkillType.HEADSHOT).createItemStack())
+            val mainGun = customItemFactory.createMainGun(player.mainGunType())
+            val subGun = customItemFactory.createSubGun(player.subGunType())
+            val sword = customItemFactory.createSword(player.sword())
+            player.inventory.setItem(0, mainGun.createItemStack())
+            player.inventory.setItem(1, subGun.createItemStack())
+            player.inventory.setItem(2, sword.createItemStack())
+            player.inventory.setItem(3, item(Material.DIAMOND_PICKAXE))
+            player.inventory.setItem(5, customItemFactory.createSkillItem(CustomItemFactory.SkillType.SPEED_UP).createItemStack())
+            player.inventory.setItem(6, customItemFactory.createSkillItem(CustomItemFactory.SkillType.HEADSHOT).createItemStack())
         }
     }
 
