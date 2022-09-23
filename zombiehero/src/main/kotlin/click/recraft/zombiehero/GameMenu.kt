@@ -3,8 +3,10 @@ package click.recraft.zombiehero
 import click.recraft.share.*
 import click.recraft.zombiehero.item.CustomItemFactory.*
 import click.recraft.zombiehero.monster.api.MonsterType
+import click.recraft.zombiehero.player.PlayerData.grenade
 import click.recraft.zombiehero.player.PlayerData.mainGunType
 import click.recraft.zombiehero.player.PlayerData.monsterType
+import click.recraft.zombiehero.player.PlayerData.setGrenade
 import click.recraft.zombiehero.player.PlayerData.setMainGunType
 import click.recraft.zombiehero.player.PlayerData.setMonsterType
 import click.recraft.zombiehero.player.PlayerData.setSubGunType
@@ -66,6 +68,17 @@ object GameMenu {
         leftClick = false
     ) {
         player.openInventory(swordMenu.createInv(player))
+    }
+    private val grenade = ZombieHero.plugin.interactItem(
+        item(
+            Material.SLIME_BALL,
+            displayName = "${ChatColor.GOLD}Grenade",
+            customModelData = 110
+        ),
+        rightClick = true,
+        leftClick = false
+    ) {
+        player.openInventory(grenadeMenu.createInv(player))
     }
     private val factory = ZombieHero.plugin.customItemFactory
     private val mainGunMenu = ZombieHero.plugin.menu ("${ChatColor.GOLD}メイン武器", true) {
@@ -132,13 +145,30 @@ object GameMenu {
             }
         }
     }
+    private val grenadeMenu = ZombieHero.plugin.menu ("${ChatColor.WHITE}グレネードメニュー", true) {
+        GrenadeType.values().forEachIndexed { i, grenadeType ->
+            slot(0, i, factory.createGrenade(grenadeType).createItemStack()) {}
+            slot(1, i, item(Material.EMERALD)) {
+                onClick {
+                    player.setGrenade(grenadeType)
+                    player.closeInventory()
+                    player.playSound(player, Sound.BLOCK_NOTE_BLOCK_HARP, 2f,2f)
+                    player.sendMessage("グレネード: ${grenadeType.name}を選択しました")
+                }
+                onRender {
+                    selectedColoredGreenDye(grenadeType == player.grenade())
+                }
+            }
+        }
+    }
 
     fun join(player: Player) {
         player.inventory.addItem(
             mainGunSelect.getItem(),
             subGunSelect.getItem(),
             zombieSelect.getItem(),
-            sword.getItem()
+            sword.getItem(),
+            grenade.getItem()
         )
     }
 }

@@ -5,6 +5,7 @@ import click.recraft.zombiehero.item.CustomItemFactory
 import click.recraft.zombiehero.monster.api.MonsterManager
 import click.recraft.zombiehero.player.HealthManager
 import click.recraft.zombiehero.player.PlayerData
+import click.recraft.zombiehero.player.PlayerData.grenade
 import click.recraft.zombiehero.player.PlayerData.mainGunType
 import click.recraft.zombiehero.player.PlayerData.subGunType
 import click.recraft.zombiehero.player.PlayerData.sword
@@ -90,11 +91,13 @@ class GameManager {
             val mainGun = customItemFactory.createMainGun(player.mainGunType())
             val subGun = customItemFactory.createSubGun(player.subGunType())
             val sword = customItemFactory.createSword(player.sword())
+            val grenade = customItemFactory.createGrenade(player.grenade())
             player.inventory.setItem(0, mainGun.createItemStack())
             player.inventory.setItem(1, subGun.createItemStack())
             player.inventory.setItem(2, sword.createItemStack())
-            player.inventory.setItem(3, item(Material.DIAMOND_PICKAXE))
-            player.inventory.setItem(30, item(Material.DIAMOND_AXE))
+            player.inventory.setItem(3, grenade.createItemStack())
+            player.inventory.setItem(4, item(Material.DIAMOND_PICKAXE))
+            player.inventory.setItem(31, item(Material.DIAMOND_AXE))
             player.inventory.setItem(5, customItemFactory.createSkillItem(CustomItemFactory.SkillType.SPEED_UP).createItemStack())
             player.inventory.setItem(6, customItemFactory.createSkillItem(CustomItemFactory.SkillType.HEADSHOT).createItemStack())
         }
