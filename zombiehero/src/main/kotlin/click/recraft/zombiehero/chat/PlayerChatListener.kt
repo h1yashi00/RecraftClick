@@ -9,6 +9,7 @@ import org.bukkit.ChatColor
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
+import org.bukkit.event.player.AsyncPlayerChatEvent
 
 class PlayerChatListener: Listener {
     private val gun = "\uE003"
@@ -25,6 +26,14 @@ class PlayerChatListener: Listener {
             return "$gun$headshotBullet$headshotHead"
         }
         return gun
+    }
+
+    @EventHandler
+    fun playerChat(event: AsyncPlayerChatEvent) {
+        val player = event.player
+        val msg = event.message
+        event.isCancelled = true
+        Bukkit.broadcastMessage("${player.coloredName()} ${ChatColor.BOLD} >> ${ChatColor.GRAY} $msg")
     }
     @EventHandler
     fun playerKillZombie(event: PlayerDeadPluginHealthEvent) {
