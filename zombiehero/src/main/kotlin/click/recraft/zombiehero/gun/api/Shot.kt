@@ -3,6 +3,7 @@ package click.recraft.zombiehero.gun.api
 import click.recraft.zombiehero.UseNms
 import click.recraft.zombiehero.Util
 import click.recraft.zombiehero.ZombieHero
+import click.recraft.zombiehero.event.BulletHitBlock
 import click.recraft.zombiehero.event.BulletHitLivingEntityEvent
 import click.recraft.zombiehero.item.gun.Gun
 import org.bukkit.*
@@ -55,6 +56,7 @@ interface Shot {
             bullet.apply { x += (direction.x / 2) ; y += (direction.y / 2); z += (direction.z /2)}
             if (bullet.block.type.isSolid) {
                 bulletHitBlockEffect(bullet.block)
+                Bukkit.getPluginManager().callEvent(BulletHitBlock(bullet.block, player))
                 return
             }
             val bulletBoundingBox = Util.makeBoundingBox(bullet,0.1)

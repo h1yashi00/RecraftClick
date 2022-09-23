@@ -1,16 +1,16 @@
 package click.recraft.zombiehero.player
 
-import click.recraft.zombiehero.MapObjectManager
-import click.recraft.zombiehero.Util
-import click.recraft.zombiehero.ZombieHero
+import click.recraft.share.item
+import click.recraft.zombiehero.*
+import click.recraft.zombiehero.event.BulletHitBlock
 import click.recraft.zombiehero.event.MonsterAttackPlayerEvent
 import click.recraft.zombiehero.event.PlayerDeadPluginHealthEvent
-import click.recraft.zombiehero.item.gun.Gun
 import click.recraft.zombiehero.monster.api.Monster
 import click.recraft.zombiehero.monster.api.MonsterManager
 import click.recraft.zombiehero.player.PlayerData.isHeadShot
 import org.bukkit.*
 import org.bukkit.event.EventHandler
+import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.block.BlockPlaceEvent
@@ -57,35 +57,51 @@ class PlayerListener: Listener {
     }
 
     @EventHandler
+    fun hitBullet(event: BulletHitBlock) {
+        val block = event.block
+        if (block.type == Material.GLASS) {
+            event.player.breakBlock(block)
+        }
+    }
+
+    @EventHandler
     fun placeBlock(event: BlockPlaceEvent) {
         val player = event.player
         if (player.gameMode != GameMode.SURVIVAL) return
         val block = event.block
-        MapObjectManager.register(block.location, Material.AIR, 20 * 4)
+        if (block.type == Material.GLASS) {
+            val slot = event.hand
+            player.inventory.setItem(slot, item(Material.GLASS))
+        }
+        MapObjectManager.placedBlock(block)
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     fun breakEvent(event: BlockBreakEvent) {
         val player = event.player
-        if (player.gameMode != GameMode.SURVIVAL) {return}
+        if (player.gameMode != GameMode.SURVIVAL) return
         event.isCancelled = true
         val block = event.block
-        if (block.type != Material.COAL_ORE) {return}
+        if (MapObjectManager.containsPlaced(block)) {
+            MapObjectManager.remove(block)
+        }
+        else {
+            MapObjectManager.mapBlock(block)
+        }
+        block.type = Material.AIR
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = false)
+    fun humanBreakBlock(event: BlockBreakEvent) {
+        val player = event.player
+        if (player.gameMode != GameMode.SURVIVAL) {return}
+        val block = event.block
 
         val monster = MonsterManager.get(player)
         if (monster != null) return
-        val item = player.inventory.getItem(0)!!
-        val customItem = ZombieHero.plugin.customItemFactory.getItem(item) ?: return
-        if (customItem  !is Gun) return
-
-        val loc = block.location
-        loc.world!!.spawnParticle(Particle.BLOCK_CRACK, loc, 10, block.type.createBlockData())
-        val addArmo = customItem.stats.maxArmo / 3
-        player.sendMessage("${ChatColor.BOLD}${customItem.stats.gunName}の弾を${addArmo}入手した")
-        player.playSound(player, Sound.ENTITY_ITEM_PICKUP, 1f,1f)
-        customItem.stats.totalArmo += addArmo
-        MapObjectManager.register(block.location, block.type, 20 * 3)
-        block.type = Material.AIR
+        val gameBlock = GameBlockBreak.get(block) ?: return
+        event.isCancelled = true
+        gameBlock.function(block, player)
     }
 
     @EventHandler

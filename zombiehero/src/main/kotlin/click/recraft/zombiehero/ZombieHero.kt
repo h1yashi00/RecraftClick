@@ -68,5 +68,6 @@ class ZombieHero: KotlinPlugin() {
     }
 
     override fun onDisable() {
+        MapObjectManager.clear()
     }
 }

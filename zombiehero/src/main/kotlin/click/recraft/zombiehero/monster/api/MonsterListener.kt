@@ -32,7 +32,6 @@ abstract class MonsterListener(
         if (!(event.action == Action.LEFT_CLICK_BLOCK || event.action == Action.LEFT_CLICK_AIR)) return
         val player = event.player
         monsterManager.get(player) ?: return
-        event.isCancelled = true
         player.world.playSound(player.location, "minecraft:swing_arm", 0.5f,1f)
     }
     @EventHandler

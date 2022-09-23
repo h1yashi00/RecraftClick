@@ -94,6 +94,7 @@ class GameManager {
             player.inventory.setItem(1, subGun.createItemStack())
             player.inventory.setItem(2, sword.createItemStack())
             player.inventory.setItem(3, item(Material.DIAMOND_PICKAXE))
+            player.inventory.setItem(30, item(Material.DIAMOND_AXE))
             player.inventory.setItem(5, customItemFactory.createSkillItem(CustomItemFactory.SkillType.SPEED_UP).createItemStack())
             player.inventory.setItem(6, customItemFactory.createSkillItem(CustomItemFactory.SkillType.HEADSHOT).createItemStack())
         }

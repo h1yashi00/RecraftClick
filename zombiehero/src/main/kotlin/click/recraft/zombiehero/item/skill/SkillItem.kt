@@ -53,8 +53,8 @@ abstract class SkillItem(
             isInvulnerable = true
         }
         save[player.uniqueId] = Passenger(player, armorStand, entity)
-        MapObjectManager.register(entity)
-        MapObjectManager.register(armorStand)
+        MapObjectManager.placedBlock(entity)
+        MapObjectManager.placedBlock(armorStand)
     }
     fun removePassenger(player: Player) {
         val data = save[player.uniqueId] ?: return

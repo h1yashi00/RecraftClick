@@ -5,27 +5,41 @@ import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.block.Block
+import org.bukkit.block.data.BlockData
 import org.bukkit.entity.Entity
 import java.util.*
+import kotlin.collections.HashMap
 
-object MapObjectManager: OneTickTimerTask {
+object MapObjectManager : OneTickTimerTask {
     private val saveEntity: MutableSet<UUID> = mutableSetOf()
-    private val saveBlock: HashMap<Block, UUID> = hashMapOf()
-    private val brokenBlockSave: MutableSet<BlockType> = mutableSetOf()
-    private class BlockType (
-        val location: Location,
-        val type: Material,
-        var tick: Int
-    )
+    private val placedBlocks : MutableSet<Location> = mutableSetOf()
+    private val mapBlocks : HashMap<Location, BlockData> = hashMapOf()
+    private val resourceBlocks: HashMap<Location, ResourceBlock> = hashMapOf()
 
-    fun register(entity: Entity) {
+    fun placedBlock(entity: Entity) {
         entity.uniqueId
         saveEntity.add(entity.uniqueId)
     }
 
-    fun register(location: Location, type: Material, restoreTick : Int) {
-        val blockType = BlockType(location, type, restoreTick)
-        brokenBlockSave.add(blockType)
+    fun placedBlock(block: Block) {
+        placedBlocks.add(block.location)
+    }
+    fun mapBlock(block: Block) {
+        mapBlocks[block.location] = block.blockData
+    }
+
+    private data class ResourceBlock(
+        val blockData: BlockData,
+        val location: Location,
+        var tick: Int
+    )
+    fun resourceBlock(block: Block, tick: Int) {
+        resourceBlocks[block.location] = ResourceBlock(block.blockData, block.location, tick)
+    }
+
+    fun containsPlaced(block: Block): Boolean { return placedBlocks.contains(block.location) }
+    fun remove(block: Block) {
+        placedBlocks.remove(block.location)
     }
 
     fun clear() {
@@ -35,21 +49,28 @@ object MapObjectManager: OneTickTimerTask {
         }
         saveEntity.clear()
 
-        saveBlock.forEach {(block, _) ->
-            block.type = Material.AIR
+        placedBlocks.iterator().forEach {
+            it.block.type = Material.AIR
         }
+        placedBlocks.clear()
+
+        mapBlocks.iterator().forEach { (loc, data) ->
+            loc.block.setBlockData(data, false)
+        }
+        mapBlocks.clear()
+
+        resourceBlocks.iterator().forEach {(loc, data) ->
+            loc.block.setBlockData(data.blockData, false)
+        }
+        resourceBlocks.clear()
     }
+
     override fun loopEveryOneTick() {
-        val removeItems = arrayListOf<BlockType>()
-        brokenBlockSave.iterator().forEach {
-            val tick = it.tick - 1
-            if (tick <= 0) {
-                it.location.block.type = it.type
-                removeItems.add(it)
-                return@forEach
+        resourceBlocks.iterator().forEach {(loc, data) ->
+            data.tick += -1
+            if (data.tick <= 0) {
+                loc.block.setBlockData(data.blockData, false)
             }
-            it.tick = tick
         }
-        removeItems.forEach { brokenBlockSave.remove(it) }
     }
 }
