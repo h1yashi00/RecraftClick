@@ -9,7 +9,7 @@ import org.bukkit.entity.Player
 class NormalGrenade : Grenade(
     "普通のグレネード",
     Tick.sec(1.5),
-    201,
+    202,
     useDelayTick = Tick.sec(1.0),
     99999,
     10

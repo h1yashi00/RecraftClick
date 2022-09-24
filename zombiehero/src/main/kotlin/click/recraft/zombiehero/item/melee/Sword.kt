@@ -36,7 +36,7 @@ class Sword (
 ) {
 
     fun attack(player: Player) {
-        player.addPotionEffect(PotionEffect(PotionEffectType.SLOW_DIGGING, 20,10))
+        player.addPotionEffect(PotionEffect(PotionEffectType.SLOW_DIGGING, 20,10, false, false))
         player.swingMainHand()
         player.playSound(player.location, swingSound.type.sound, swingSound.volume, swingSound.pitch)
 
