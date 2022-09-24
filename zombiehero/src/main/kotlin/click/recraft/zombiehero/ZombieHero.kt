@@ -10,7 +10,6 @@ import click.recraft.zombiehero.item.CustomItemFactory
 import click.recraft.zombiehero.item.grenade.*
 import click.recraft.zombiehero.gun.api.GunListener
 import click.recraft.zombiehero.gun.api.ShootManager
-import click.recraft.zombiehero.item.melee.MeleeCoolDownManager
 import click.recraft.zombiehero.monster.SkeletonListener
 import click.recraft.zombiehero.monster.ZombieListener
 import click.recraft.zombiehero.player.*
@@ -23,7 +22,6 @@ class ZombieHero: KotlinPlugin() {
     val shootManager     : ShootManager by lazy { ShootManager()     }
     val reloadManagerFullBullet    : ReloadManagerFullBullet    by lazy { ReloadManagerFullBullet()    }
     val oneBulletReloadManager: ReloadManagerOneBullet by lazy { ReloadManagerOneBullet() }
-    val meleeCoolDownManager: MeleeCoolDownManager by lazy { MeleeCoolDownManager() }
     val customItemFactory: CustomItemFactory by lazy {CustomItemFactory()}
     val gameManager: GameManager by lazy { GameManager() }
     // ゲーム終了時に､すべてのタスクを終了するようにしているが､このリストに入っているtaskIdは､

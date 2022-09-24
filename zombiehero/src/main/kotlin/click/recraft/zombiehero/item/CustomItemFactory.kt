@@ -1,6 +1,5 @@
 package click.recraft.zombiehero.item
 
-import click.recraft.zombiehero.ZombieHero
 import click.recraft.zombiehero.gun.api.GameSound
 import click.recraft.zombiehero.gun.api.Tick
 import click.recraft.zombiehero.item.grenade.ZombieBomb
@@ -73,7 +72,6 @@ class CustomItemFactory : CustomItemManager {
         val sword = when(swordType) {
             SwordType.NORMAL_SWORD -> Sword(
                     "nata",
-                    ZombieHero.plugin.meleeCoolDownManager,
                     100,
                     Tick.sec(1.0),
                     1,
@@ -82,7 +80,6 @@ class CustomItemFactory : CustomItemManager {
                 )
             SwordType.BIG_SWORD -> Sword(
                 "hummer",
-                ZombieHero.plugin.meleeCoolDownManager,
                 10,
                 Tick.sec(0.3),
                 2,

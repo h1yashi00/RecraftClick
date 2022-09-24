@@ -56,14 +56,10 @@ abstract class CustomItemListener (
     @EventHandler
     fun changeItem(event: PlayerItemHeldEvent) {
         val player = event.player
-        var item = getItem(player.inventory.getItem(event.newSlot))
-        if (item != null) {
-            item.currentItem(event)
-        }
-        else {
-            item = getItem(player.inventory.getItem(event.previousSlot)) ?: return
-            item.prevItem(event)
-        }
+        val item = getItem(player.inventory.getItem(event.newSlot))
+        item?.currentItem(event)
+        val prevItem = getItem(player.inventory.getItem(event.previousSlot))
+        prevItem?.prevItem(event)
     }
 
     @EventHandler

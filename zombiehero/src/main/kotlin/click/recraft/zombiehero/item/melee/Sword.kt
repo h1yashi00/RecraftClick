@@ -21,12 +21,11 @@ import java.util.*
 
 class Sword (
     val name: String,
-    private val meleeCoolDownManager: MeleeCoolDownManager,
     private val damage: Int,
     val coolDown: Tick,
     customModelData: Int,
     override val walkSpeed: Int,
-    val swingSound: GameSound
+    private val swingSound: GameSound
 ): WalkSpeed, CustomItem (
     item(
         Material.PINK_DYE,
@@ -66,23 +65,27 @@ class Sword (
         Bukkit.getScheduler().runTaskTimer(ZombieHero.plugin, task,0,2)
     }
 
+    var itemChanged = false
     override fun currentItem(event: PlayerItemHeldEvent) {
+        itemChanged = true
+        println("currentItem")
     }
 
     override fun prevItem(event: PlayerItemHeldEvent) {
+        itemChanged = true
+        println("prevItem")
     }
 
     override fun inInvItemClick(clickType: ClickType, player: Player) {
     }
 
     override fun rightClick(event: PlayerInteractEvent) {
-        val player = event.player
-        val item = player.inventory.itemInMainHand
         event.isCancelled = true
-        if (meleeCoolDownManager.contains(this.unique)) {
-            return
+        itemChanged = false
+        val task = Util.createTask {
+            attack(event.player)
         }
-        meleeCoolDownManager.register(this, player, item)
+        Bukkit.getScheduler().runTaskLater(ZombieHero.plugin, task,coolDown.tick.toLong())
     }
 
     override fun leftClick(event: PlayerInteractEvent) {
