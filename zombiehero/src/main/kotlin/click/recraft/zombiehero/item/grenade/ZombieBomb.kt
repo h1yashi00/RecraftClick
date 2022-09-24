@@ -14,7 +14,8 @@ class ZombieBomb: Grenade(
     Tick.sec(1.5),
     200,
     Tick.sec(30.0),
-    999999
+    999999,
+    0
 ) {
     override fun pickUp(player: Player, item: Item) {
     }
@@ -25,7 +26,7 @@ class ZombieBomb: Grenade(
         loc.world!!.playSound(loc, sound.type.sound, sound.volume, sound.pitch)
     }
 
-    override fun explosion(location: Location) {
+    override fun explosion(entity: Item, location: Location) {
         val entities = location.world!!.getNearbyEntities(Util.makeBoundingBox(location, 5.0))
         location.world!!.playSound(location, Sound.ENTITY_GENERIC_EXPLODE, 0.2f,0.5f)
         entities.forEach {

@@ -3,6 +3,7 @@ package click.recraft.zombiehero.player
 import click.recraft.share.item
 import click.recraft.zombiehero.*
 import click.recraft.zombiehero.event.BulletHitBlock
+import click.recraft.zombiehero.event.GrenadeExplodeEvent
 import click.recraft.zombiehero.event.MonsterAttackPlayerEvent
 import click.recraft.zombiehero.event.PlayerDeadPluginHealthEvent
 import click.recraft.zombiehero.monster.api.Monster
@@ -14,6 +15,8 @@ import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.block.BlockPlaceEvent
+import java.util.*
+import kotlin.collections.HashMap
 
 class PlayerListener: Listener {
     private fun reviveMonster(monster: Monster) {
@@ -61,6 +64,21 @@ class PlayerListener: Listener {
         val block = event.block
         if (block.type == Material.GLASS) {
             event.player.breakBlock(block)
+        }
+    }
+
+    @EventHandler
+    fun grenade(event: GrenadeExplodeEvent) {
+        val grenade = event.grenade
+        val player = event.player
+        val damageEntities: HashMap<UUID, Double> = hashMapOf()
+        event.damagedEntity.iterator().forEach { (uuid, damage) ->
+            damageEntities[uuid] = damage * grenade.damageMultiplier
+        }
+        event.blockList.forEach { block ->
+            if (block.type == Material.GLASS) {
+                player.breakBlock(block)
+            }
         }
     }
 

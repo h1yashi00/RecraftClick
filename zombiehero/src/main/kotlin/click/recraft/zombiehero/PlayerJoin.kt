@@ -27,6 +27,7 @@ class PlayerJoin: Listener {
             GameMenu.join(player)
         }
         Bukkit.getScheduler().runTaskLater(ZombieHero.plugin, task, 1)
+        ZombieHero.plugin.gameManager.bar.addPlayer(player)
         val game=  ZombieHero.plugin.gameManager
         if (game.isStart()) {
             event.joinMessage = "${ChatColor.YELLOW}${player.name}が参加しました｡ 2人以上で開始します｡ 現在の参加人数: ${playerNum}/32"

@@ -21,6 +21,7 @@ abstract class Grenade (
     customModelData: Int,
     private val useDelayTick: Tick,
     private val pickUpDelay: Int,
+    val damageMultiplier: Int
 )
 : CustomItem(
     item(
@@ -32,7 +33,7 @@ abstract class Grenade (
 ) {
     private var useDelay = ZombieHero.plugin.getTime()
     abstract fun pickUp(player: Player, item: Item)
-    abstract fun explosion(location: Location)
+    abstract fun explosion(entity: Item, location: Location)
 
     fun getRemainingTime(): String {
         val remainTime = (useDelay - ZombieHero.plugin.getTime()) * 0.05
@@ -42,15 +43,16 @@ abstract class Grenade (
         return "%.1f".format(remainTime)
     }
 
-    open fun launchGrenade(location: Location) {
+    open fun launchGrenade(player: Player, location: Location) {
         val dir = location.direction.clone()
         val item = createItemStack()
         val world = location.world!!
         val entity = world.dropItem(location, item)
+        entity.owner = player.uniqueId
         entity.velocity = dir.multiply(1)
         entity.pickupDelay = pickUpDelay
         val task = Util.createTask {
-            explosion(entity.location)
+            explosion(entity, location)
             entity.remove()
         }
         Bukkit.getScheduler().runTaskLater(ZombieHero.plugin, task, explosionDelay.tick.toLong())
@@ -61,9 +63,10 @@ abstract class Grenade (
 
     override fun rightClick(event: PlayerInteractEvent) {
         event.isCancelled = true
+        val player = event.player
         val passedTime = ZombieHero.plugin.getTime() - useDelay
         if (passedTime > 0) {
-            launchGrenade(event.player.eyeLocation)
+            launchGrenade(player, player.eyeLocation)
             useDelay = ZombieHero.plugin.getTime() + useDelayTick.tick
         }
     }

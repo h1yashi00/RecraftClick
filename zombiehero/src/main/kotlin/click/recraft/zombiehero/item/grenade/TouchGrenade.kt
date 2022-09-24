@@ -16,18 +16,19 @@ abstract class TouchGrenade (
     explosionDelay,
     customModelData = customModelData,
     useDelayTick = useDelayTick,
-    pickUpDelay
+    pickUpDelay,
+    10
 ) {
     var touched = false
     override fun pickUp(player: Player, item: Item) {
-        explosion(item.location)
+        explosion(item, item.location)
         touched = true
         item.remove()
     }
 
 
-    override fun launchGrenade(location: Location) {
+    override fun launchGrenade(player: Player, location: Location) {
         touched = false
-        super.launchGrenade(location)
+        super.launchGrenade(player, location)
     }
 }

@@ -13,35 +13,74 @@ import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.GameMode
 import org.bukkit.Material
+import org.bukkit.boss.BarColor
+import org.bukkit.boss.BarFlag
+import org.bukkit.boss.BarStyle
 
 class GameManager {
     val requiredPlayerNum: Int = 2
     var startFlag = false
     private val customItemFactory = ZombieHero.plugin.customItemFactory
     val world = GameWorld(Bukkit.getWorld("world")!!)
+    val bar = Bukkit.createBossBar("${ChatColor.BOLD}Recraft.Click Monster Hunt", BarColor.YELLOW, BarStyle.SEGMENTED_20, BarFlag.CREATE_FOG)
+    private var humanSurvived = false
 
     fun isStart(): Boolean {
         return startFlag
     }
 
+    // 02:00 ← これみたいなフォーマットにするために､作成した関数
+    private fun addZero(value: Int): String {
+        return if (value / 10 <= 0) {
+            "0$value"
+        } else {
+            "$value"
+        }
+    }
+    private fun timeFormat(time: Int): String {
+        val min = time / 60
+        val sec = time % 60
+        return "${addZero(min)}:${addZero(sec)}"
+    }
 
+    private fun humanSurviveTime() {
+        val threeMin = 60 * 3
+        var countDownHumanSurvive = threeMin
+        val task = Util.createTask {
+            if (countDownHumanSurvive <= 0) {
+                humanSurvived = true
+                checkGameCondition()
+                cancel()
+            }
+            bar.progress = countDownHumanSurvive.toDouble() / threeMin.toDouble()
+            bar.setTitle("${ChatColor.BOLD}人間生存まであと${timeFormat(countDownHumanSurvive)}")
+            countDownHumanSurvive += -1
+        }
+        Bukkit.getScheduler().runTaskTimer(ZombieHero.plugin, task, 0, 20)
+    }
 
     fun start() {
         startFlag = true
-        var countDownTime = 20
+        humanSurvived = false
+        var countDownTime = 0
         val task = Util.createTask {
-            Util.broadcastTitle("ゾンビを選出します(残り${countDownTime}秒)")
+            bar.progress = 1.0
+            bar.setTitle("${ChatColor.GREEN}${ChatColor.BOLD}ゾンビ${ChatColor.BOLD}を選出しています...(残り${countDownTime}秒)")
             if (countDownTime == 10) {
                 Bukkit.getOnlinePlayers().forEach { it.playSound(it.location, "minecraft:countdown", 1f,1f) }
             }
             countDownTime -= 1
             if (countDownTime < 0) {
                 val lateTask = Util.createTask {
-                    Bukkit.getOnlinePlayers().forEach { it.playSound(it.location, "minecraft:man_shout", 1f,1f) }
+                    Bukkit.getOnlinePlayers().forEach { player ->
+                        player.playSound(player.location, "minecraft:man_shout", 1f,1f)
+                    }
                     chooseEnemy()
                     givePlayerGun()
+                    humanSurviveTime()
                 }
                 Bukkit.getScheduler().runTaskLater(ZombieHero.plugin, lateTask, (20 * listOf(3,4,5).random()).toLong())
+
                 cancel()
             }
         }
@@ -103,24 +142,35 @@ class GameManager {
         }
     }
 
+
+    private fun humanWin() {
+        Util.broadcastTitle("${ChatColor.WHITE}Human Win", 20 , 20 * 3,20)
+        Bukkit.getOnlinePlayers().forEach { it.playSound(it.location, "zombie_lose_dying", 0.5F ,1F) }
+        val task = Util.createTask {
+            finish()
+        }
+        Bukkit.getScheduler().runTaskLater(ZombieHero.plugin, task, 20 * 7)
+    }
+    private fun zombieWin() {
+        Util.broadcastTitle("${ChatColor.GREEN}Zombie Win", 20 , 20 * 3,20)
+        Bukkit.getOnlinePlayers().forEach { it.playSound(it.location, "zombie_win_laugh", 0.5F ,1F) }
+        val task = Util.createTask {
+            finish()
+        }
+        Bukkit.getScheduler().runTaskLater(ZombieHero.plugin, task, 20 * 7)
+    }
     // ラウンドが終了の場合は､trueを返す
     fun checkGameCondition(): Boolean {
+        if (humanSurvived) {
+            humanWin()
+            return true
+        }
         if (MonsterManager.humansNum() == 0) {
-            Util.broadcastTitle("${ChatColor.GREEN}Zombie Win", 20 , 20 * 3,20)
-            Bukkit.getOnlinePlayers().forEach { it.playSound(it.location, "zombie_win_laugh", 0.5F ,1F) }
-            val task = Util.createTask {
-                finish()
-            }
-            Bukkit.getScheduler().runTaskLater(ZombieHero.plugin, task, 20 * 7)
+            zombieWin()
             return true
         }
         if (MonsterManager.aliveMonsters() == 0) {
-            Util.broadcastTitle("${ChatColor.WHITE}Human Win", 20 , 20 * 3,20)
-            Bukkit.getOnlinePlayers().forEach { it.playSound(it.location, "zombie_lose_dying", 0.5F ,1F) }
-            val task = Util.createTask {
-                finish()
-            }
-            Bukkit.getScheduler().runTaskLater(ZombieHero.plugin, task, 20 * 7)
+            humanWin()
             return true
         }
         return false
