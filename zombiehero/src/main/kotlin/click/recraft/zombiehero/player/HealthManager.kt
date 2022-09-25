@@ -8,12 +8,15 @@ import click.recraft.zombiehero.item.CustomItem
 import click.recraft.zombiehero.item.grenade.Grenade
 import click.recraft.zombiehero.item.gun.Gun
 import click.recraft.zombiehero.item.melee.Sword
+import click.recraft.zombiehero.monster.api.MonsterManager
 import click.recraft.zombiehero.player.PlayerData.isPlayerSkillHeadShot
 import click.recraft.zombiehero.task.OneTickTimerTask
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
+import org.bukkit.GameMode
+import org.bukkit.Sound
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import java.util.*
@@ -62,6 +65,11 @@ object HealthManager: OneTickTimerTask {
         customItem: CustomItem?,
         isHeadshot: Boolean = false
     ) {
+        if ( this is Player) {
+            if (gameMode != GameMode.SURVIVAL) {
+                return
+            }
+        }
         val headShotSkill = Bukkit.getPlayer(damager.uniqueId)?.isPlayerSkillHeadShot() ?: false
         val dmg = if (isHeadshot || headShotSkill) {damage * 2} else {damage}
         val pluginHealthDamageEvent = PluginHealthDamageEvent(
@@ -77,6 +85,9 @@ object HealthManager: OneTickTimerTask {
         }
         // damage animationのために必要
         UseNms.sendDamageAnimationPacket(pluginHealthDamageEvent.victim)
+        if (MonsterManager.contains(this as Player)) {
+            world.playSound(location, Sound.ENTITY_PLAYER_HURT, 1f, 1f)
+        }
          // human
         if (pluginHealthDamageEvent.victim !is Player) return
         val hp = pluginHealthDamageEvent.victim.getPluginHealth()
@@ -91,7 +102,7 @@ object HealthManager: OneTickTimerTask {
             Bukkit.getPluginManager().callEvent(event)
             currentHp = event.reviveHp
         }
-        healths[uniqueId] = currentHp
+        setPluginHealth(currentHp)
         sendPlayerHealth(pluginHealthDamageEvent.victim)
     }
 

@@ -1,12 +1,12 @@
 package click.recraft.zombiehero.monster
 
+import click.recraft.zombiehero.event.PluginHealthDamageEvent
 import click.recraft.zombiehero.monster.api.MonsterListener
 import org.bukkit.Sound
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.block.Action
-import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import java.util.Random
 
@@ -22,8 +22,8 @@ class ZombieListener: MonsterListener() {
         monster.rightClick(event)
     }
     @EventHandler(priority = EventPriority.LOWEST)
-    fun damageZombie(event: EntityDamageEvent) {
-        val player = event.entity
+    fun damageZombie(event: PluginHealthDamageEvent) {
+        val player = event.victim
         if (player !is Player) return
         val monster = get(player) ?: return
         if (monster !is Zombie) return

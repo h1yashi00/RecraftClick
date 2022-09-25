@@ -1,6 +1,7 @@
 package click.recraft.zombiehero.monster.api
 
 import click.recraft.zombiehero.Util
+import click.recraft.zombiehero.event.PluginHealthDamageEvent
 import click.recraft.zombiehero.player.HealthManager.damagePluginHealth
 import click.recraft.zombiehero.player.HealthManager.getPluginHealth
 import org.bukkit.entity.Entity
@@ -10,7 +11,6 @@ import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.block.Action
 import org.bukkit.event.entity.EntityDamageByEntityEvent
-import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.player.PlayerInteractEvent
 
 abstract class MonsterListener(
@@ -21,9 +21,10 @@ abstract class MonsterListener(
         return monsterManager.get(player)
     }
     @EventHandler(priority= EventPriority.HIGHEST, ignoreCancelled = true)
-    fun damage(event: EntityDamageEvent) {
-        val monster = get(event.entity) ?: return
-        val loc = event.entity.location
+    fun damage(event: PluginHealthDamageEvent) {
+        val victim = event.victim
+        val monster = get(victim) ?: return
+        val loc = victim.location
         loc.world!!.playSound(loc,monster.damageSound, 1f,1f)
     }
 
