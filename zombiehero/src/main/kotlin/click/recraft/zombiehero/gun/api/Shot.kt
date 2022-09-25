@@ -98,11 +98,11 @@ interface Shot {
                                 Vector()
                             }
                             else {
-                                dir.multiply(accumulateKnockBack).apply { y = if (y < 0) {y * -1} else {y} }
+                                dir.multiply(accumulateKnockBack).apply { y = 0.1 }
                             }
                         }
                         else {
-                            dir.multiply(accumulateKnockBack).apply { y = if (y < 0) {y * -1} else {y} }
+                            dir.multiply(accumulateKnockBack).apply { y = 0.1 }
                         }
                         saveKnockBack.remove(event.hitLivingEntity.uniqueId)
                     }
