@@ -1,22 +1,22 @@
 package click.recraft.zombiehero.event
 
-import org.bukkit.Location
+import click.recraft.zombiehero.item.melee.Sword
 import org.bukkit.entity.LivingEntity
+import org.bukkit.entity.Player
 import org.bukkit.event.Cancellable
 import org.bukkit.event.Event
 import org.bukkit.event.HandlerList
-import org.bukkit.util.BoundingBox
 
-class BulletHitLivingEntityEvent (
-    var shooter: LivingEntity,
-    var bulletLocation: Location,
-    var bulletBoundingBox: BoundingBox,
-    var hitLivingEntity: LivingEntity,
-    var knockBack: Double,
-    var damage: Double
-): Event(), Cancellable{
+class SwordAttackPlayerEvent(
+    val source: Player,
+    val sword: Sword,
+    var damage: Double,
+    val isHeadShot: Boolean,
+    val victim: LivingEntity
+): Event(), Cancellable {
     companion object {
         private val HANDLERS = HandlerList()
+
         @JvmStatic
         fun getHandlerList(): HandlerList {
             return HANDLERS
@@ -26,13 +26,12 @@ class BulletHitLivingEntityEvent (
         return HANDLERS
     }
 
-    var canceller = false
-
+    var cancel = false
     override fun isCancelled(): Boolean {
-        return canceller
+        return cancel
     }
 
     override fun setCancelled(cancel: Boolean) {
-        canceller = cancel
+        this.cancel = cancel
     }
 }

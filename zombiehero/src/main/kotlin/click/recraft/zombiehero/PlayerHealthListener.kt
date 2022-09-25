@@ -10,8 +10,6 @@ import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.EntityRegainHealthEvent
 
 class PlayerHealthListener: Listener {
-    // プレイヤーが攻撃されたらHpを更新して､Actionbarを更新して､
-
     @EventHandler
     fun health(event: EntityRegainHealthEvent) {
         val player = event.entity
@@ -20,10 +18,12 @@ class PlayerHealthListener: Listener {
     }
 
     @EventHandler
-    fun playerDamage(event: EntityDamageEvent) {
-        val player = if (event.entity !is Player) return else event.entity as Player
-        player.damagePluginHealth(event.damage.toInt())
-        event.damage = 0.0
+    fun damage(event: EntityDamageEvent) {
+        val player = event.entity
+        if (player !is Player) return
+        if (event.cause != EntityDamageEvent.DamageCause.FALL) return
+        event.isCancelled = true
+        player.damagePluginHealth(player, event.damage.toInt(), null)
     }
     @EventHandler
     fun entityDamageByPlayer(event: EntityDamageByEntityEvent) {

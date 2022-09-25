@@ -1,20 +1,20 @@
 package click.recraft.zombiehero.event
 
-import click.recraft.zombiehero.monster.api.Monster
-import org.bukkit.entity.Player
+import click.recraft.zombiehero.item.CustomItem
+import org.bukkit.entity.LivingEntity
 import org.bukkit.event.Cancellable
 import org.bukkit.event.Event
 import org.bukkit.event.HandlerList
 
-class MonsterAttackPlayerEvent (
-    val attacker: Player,
-    val victim: Player,
-    val monster: Monster
+class PluginHealthDamageEvent(
+    val damager: LivingEntity,
+    val victim: LivingEntity,
+    var damage: Int,
+    val sourceCustomItem: CustomItem?,
+    val isHeadShot: Boolean,
 ): Event(), Cancellable {
-
     companion object {
-        private val HANDLERS = HandlerList()
-
+        val HANDLERS = HandlerList()
         @JvmStatic
         fun getHandlerList(): HandlerList {
             return HANDLERS
@@ -23,7 +23,8 @@ class MonsterAttackPlayerEvent (
     override fun getHandlers(): HandlerList {
         return HANDLERS
     }
-    var cancel = false
+
+    private var cancel = false
     override fun isCancelled(): Boolean {
         return cancel
     }

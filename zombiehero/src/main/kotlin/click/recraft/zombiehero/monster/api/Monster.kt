@@ -3,9 +3,7 @@ package click.recraft.zombiehero.monster.api
 import click.recraft.share.item
 import click.recraft.zombiehero.ZombieHero
 import click.recraft.zombiehero.item.CustomItemFactory
-import click.recraft.zombiehero.player.HealthManager.damagePluginHealth
-import click.recraft.zombiehero.player.HealthManager.getPluginHealth
-import click.recraft.zombiehero.player.HealthManager.healPluginHealth
+import click.recraft.zombiehero.player.HealthManager.setPluginHealth
 import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.entity.Player
@@ -42,9 +40,7 @@ abstract class Monster(
         inv.addItem(item(Material.GLASS,1))
         inv.setItem(skill1.index, skill1.item)
         inv.setItem(skill2.index, skill2.item)
-        val currentHealth = player.getPluginHealth()
-        player.damagePluginHealth(currentHealth)
-        player.healPluginHealth(maxHealth)
+        player.setPluginHealth(maxHealth)
     }
     fun passOneSec() {
         skill1.passOneSec()

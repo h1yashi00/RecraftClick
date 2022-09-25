@@ -16,6 +16,7 @@ import org.bukkit.Material
 import org.bukkit.boss.BarColor
 import org.bukkit.boss.BarFlag
 import org.bukkit.boss.BarStyle
+import org.bukkit.entity.Player
 
 class GameManager {
     val requiredPlayerNum: Int = 2
@@ -94,18 +95,24 @@ class GameManager {
                     it.cancel()
                 }
             }
-            player.sendExperienceChange(0f,0)
             player.gameMode = GameMode.SURVIVAL
             player.inventory.clear()
             player.activePotionEffects.forEach {
                 player.removePotionEffect(it.type)
             }
-            HealthManager.clear()
-            MonsterManager.clear()
-            MapObjectManager.clear()
-            PlayerData.clear()
             GameMenu.join(player)
             player.teleport(world.randomSpawn())
+            player.sendExperienceChange(0f,0)
+        }
+        HealthManager.clear()
+        MonsterManager.clear()
+        MapObjectManager.clear()
+        PlayerData.clear()
+        world.world.entities.forEach { entity ->
+            if (entity is Player) {
+                return@forEach
+            }
+            entity.remove()
         }
         start()
     }

@@ -6,6 +6,7 @@ import click.recraft.zombiehero.ZombieHero
 import click.recraft.zombiehero.event.BulletHitBlock
 import click.recraft.zombiehero.event.BulletHitLivingEntityEvent
 import click.recraft.zombiehero.item.gun.Gun
+import click.recraft.zombiehero.player.HealthManager.damagePluginHealth
 import org.bukkit.*
 import org.bukkit.block.Block
 import org.bukkit.entity.ArmorStand
@@ -70,7 +71,6 @@ interface Shot {
                 if (entity !is LivingEntity) return@forEach
                 val event = BulletHitLivingEntityEvent (
                     player,
-                    isHeadShot = Util.isHeadLocation(bulletBoundingBox, entity.eyeLocation.clone()),
                     bulletLocation = bullet.clone(),
                     hitLivingEntity = entity,
                     knockBack = knockBack,
@@ -81,7 +81,7 @@ interface Shot {
                 if (event.isCancelled) {
                     return
                 }
-                event.hitLivingEntity.damage(event.damage)
+                event.hitLivingEntity.damagePluginHealth(event.shooter, event.damage.toInt(), gun, Util.isHeadLocation(bulletBoundingBox, entity.eyeLocation.clone()))
                 val dir = event.shooter.location.direction.clone()
                 event.hitLivingEntity.noDamageTicks = 0
                 if (saveKnockBack.containsKey(event.hitLivingEntity.uniqueId)) {

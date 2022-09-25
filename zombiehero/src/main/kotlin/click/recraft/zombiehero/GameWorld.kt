@@ -4,7 +4,7 @@ import org.bukkit.Location
 import org.bukkit.World
 
 class GameWorld(
-    world: World
+    val world: World
 ) {
     private val spawns : List<Location> = listOf(
         Location(world, -13.0, 0.0, 81.0),

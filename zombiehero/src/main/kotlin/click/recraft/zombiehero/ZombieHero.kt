@@ -1,7 +1,6 @@
 package click.recraft.zombiehero
 
 import click.recraft.share.*
-import click.recraft.zombiehero.chat.PlayerChatListener
 import click.recraft.zombiehero.command.GunCommand
 import click.recraft.zombiehero.command.MonsterCommand
 import click.recraft.zombiehero.gun.api.ReloadManagerFullBullet
@@ -44,6 +43,7 @@ class ZombieHero: KotlinPlugin() {
             time += 1
             WalkSpeedManager.loopEveryOneTick()
             MapObjectManager.loopEveryOneTick()
+            SwordManager.loopEveryOneTick()
         }
         Bukkit.getScheduler().runTaskTimer(this, fiveTickTask, 10, 5)
         Bukkit.getScheduler().runTaskTimer(this, oneTickTask, 10, 1)
@@ -59,7 +59,6 @@ class ZombieHero: KotlinPlugin() {
         server.pluginManager.registerEvents(GrenadeListener(), this)
         server.pluginManager.registerEvents(BulletHitListener(), this)
         server.pluginManager.registerEvents(PlayerListener(), this)
-        server.pluginManager.registerEvents(PlayerChatListener(), this)
         getCommand("gun")!!.setExecutor(GunCommand())
         getCommand("monster")!!.setExecutor(MonsterCommand())
         super.onEnable()

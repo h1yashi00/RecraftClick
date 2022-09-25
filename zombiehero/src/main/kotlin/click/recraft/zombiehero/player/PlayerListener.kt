@@ -2,19 +2,21 @@ package click.recraft.zombiehero.player
 
 import click.recraft.share.item
 import click.recraft.zombiehero.*
-import click.recraft.zombiehero.event.BulletHitBlock
-import click.recraft.zombiehero.event.GrenadeExplodeEvent
-import click.recraft.zombiehero.event.MonsterAttackPlayerEvent
-import click.recraft.zombiehero.event.PlayerDeadPluginHealthEvent
+import click.recraft.zombiehero.chat.ZombieHeroChatIcon
+import click.recraft.zombiehero.event.*
+import click.recraft.zombiehero.item.CustomItem
+import click.recraft.zombiehero.item.gun.Gun
+import click.recraft.zombiehero.item.melee.Sword
 import click.recraft.zombiehero.monster.api.Monster
 import click.recraft.zombiehero.monster.api.MonsterManager
-import click.recraft.zombiehero.player.PlayerData.isHeadShot
 import org.bukkit.*
+import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.block.BlockPlaceEvent
+import org.bukkit.event.player.AsyncPlayerChatEvent
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -29,33 +31,70 @@ class PlayerListener: Listener {
         }
         Bukkit.getScheduler().runTaskLater(ZombieHero.plugin, task, 20 * 10)
     }
-    @EventHandler
-    fun deathMonster(event: PlayerDeadPluginHealthEvent) {
-        val player = event.victim
-        val world = player.world
-        val location = player.location
-        val monster = MonsterManager.get(player) ?: return
-        world.playSound(location, monster.deathSound, 2f,0.1f)
-        event.reviveHp = monster.maxHealth
 
-        // 復活できない
-        if (player.isHeadShot()) {
-            monster.isDead = true
-            player.sendTitle("", "ラストショットがヘッドショットだったため復活できません", 20,20 * 3,20)
-            player.gameMode = GameMode.SPECTATOR
-            ZombieHero.plugin.gameManager.checkGameCondition()
-            return
+    private fun headShotLog(item: CustomItem?, isHeadShot: Boolean): String {
+        val icon = when (item) {
+            is Sword -> {ZombieHeroChatIcon.knifeKill}
+            is Gun -> {ZombieHeroChatIcon.gun}
+            else -> ""
         }
-        reviveMonster(monster)
+        return if (isHeadShot) {
+            "${icon}${ZombieHeroChatIcon.headshotBullet}${ZombieHeroChatIcon.headshotHead}"
+        }
+        else {
+            icon
+        }
+    }
+    private fun Player.coloredName(): String {
+        MonsterManager.get(this) ?: return "${ChatColor.WHITE}${name}${ChatColor.GRAY}"
+        return "${ChatColor.GREEN}${name}${ChatColor.GRAY}"
     }
 
     @EventHandler
-    fun deathHuman(event: PlayerDeadPluginHealthEvent) {
-        val player = event.victim
-        var monster = MonsterManager.get(player)
-        if (monster != null) return
-        // human
-        monster = MonsterManager.register(player)
+    fun playerChat(event: AsyncPlayerChatEvent) {
+        val player = event.player
+        val msg = event.message
+        event.isCancelled = true
+        Bukkit.broadcastMessage("${player.coloredName()} ${ChatColor.BOLD} >> ${ChatColor.GRAY} $msg")
+    }
+    @EventHandler
+    fun deathMonster(event: PlayerDeadPluginHealthEvent) {
+        val victim = event.victim
+        val attacker = if (event.attacker !is Player) return else {event.attacker}
+        val world = victim.world
+        val location = victim.location
+        var monster = MonsterManager.get(victim)
+        val victimIsHuman = monster == null
+        val deathMsg = if (victimIsHuman) {
+            "${attacker.coloredName()} ${ZombieHeroChatIcon.zombieAttack} ${victim.coloredName()}"
+        } else {
+            "${attacker.coloredName()} ${headShotLog(event.customItem ,event.isHeadShot)} ${victim.coloredName()}"
+        }
+
+        Bukkit.broadcastMessage(deathMsg)
+
+        if (victimIsHuman) {
+            // 人間が感染させられた
+            monster = MonsterManager.register(victim)
+            world.playSound(victim.location, "minecraft:stab_knife_body", 1f,0.7f)
+            if (ZombieHero.plugin.gameManager.checkGameCondition()) return
+            world.playSound(victim.location, "minecraft:man_shout", 0.5f,1f)
+        }
+        else {
+            // ゾンビが死んだ
+            if (monster == null) return
+            world.playSound(location, monster.deathSound, 2f,0.1f)
+            event.reviveHp = monster.maxHealth
+            // 復活できない
+            if (event.isHeadShot) {
+                monster.isDead = true
+                victim.sendTitle("", "ラストショットがヘッドショットだったため復活できません", 20,20 * 3,20)
+                victim.gameMode = GameMode.SPECTATOR
+                ZombieHero.plugin.gameManager.checkGameCondition()
+                return
+            }
+        }
+        // ヘッドショットされなければ､どちらも復活する
         reviveMonster(monster)
     }
 
@@ -120,14 +159,5 @@ class PlayerListener: Listener {
         val gameBlock = GameBlockBreak.get(block) ?: return
         event.isCancelled = true
         gameBlock.function(block, player)
-    }
-
-    @EventHandler
-    fun monster(event: MonsterAttackPlayerEvent) {
-        val victim = event.victim
-        val world = victim.world
-        world.playSound(victim.location, "minecraft:stab_knife_body", 1f,0.7f)
-        if (ZombieHero.plugin.gameManager.checkGameCondition()) return
-        world.playSound(victim.location, "minecraft:man_shout", 0.5f,1f)
     }
 }

@@ -6,7 +6,6 @@ import click.recraft.zombiehero.monster.Skeleton
 import click.recraft.zombiehero.monster.Zombie
 import click.recraft.zombiehero.player.PlayerData.monsterType
 import org.bukkit.Bukkit
-import org.bukkit.ChatColor
 import org.bukkit.entity.Player
 import java.util.*
 
@@ -61,7 +60,6 @@ object MonsterManager {
 
     fun chooseRandomEnemyMonster() {
         if (humans().size == 0) {
-            println("${ChatColor.RED}NO HUMANS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ")
             return
         }
         val human = humans().random()

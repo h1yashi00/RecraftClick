@@ -3,6 +3,7 @@ package click.recraft.zombiehero.item.grenade
 import click.recraft.zombiehero.ZombieHero
 import click.recraft.zombiehero.event.GrenadeExplodeEvent
 import click.recraft.zombiehero.item.CustomItemListener
+import click.recraft.zombiehero.player.HealthManager.damagePluginHealth
 import org.bukkit.Bukkit
 import org.bukkit.entity.Item
 import org.bukkit.entity.LivingEntity
@@ -47,7 +48,7 @@ class GrenadeListener: CustomItemListener (
         data.damagedEntity.iterator().forEach { (uuid, damage) ->
             val entity = Bukkit.getEntity(uuid)
             if (entity !is LivingEntity) return@forEach
-            entity.damage(damage)
+            entity.damagePluginHealth(player, damage.toInt(), data.grenade)
         }
     }
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = false)

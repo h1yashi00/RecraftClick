@@ -1,17 +1,20 @@
 package click.recraft.zombiehero.player
 
+import click.recraft.zombiehero.UseNms
 import click.recraft.zombiehero.ZombieHero
 import click.recraft.zombiehero.event.PlayerDeadPluginHealthEvent
+import click.recraft.zombiehero.event.PluginHealthDamageEvent
 import click.recraft.zombiehero.item.CustomItem
 import click.recraft.zombiehero.item.grenade.Grenade
 import click.recraft.zombiehero.item.gun.Gun
 import click.recraft.zombiehero.item.melee.Sword
-import click.recraft.zombiehero.player.PlayerData.shooter
+import click.recraft.zombiehero.player.PlayerData.isPlayerSkillHeadShot
 import click.recraft.zombiehero.task.OneTickTimerTask
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
+import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import java.util.*
 
@@ -52,18 +55,44 @@ object HealthManager: OneTickTimerTask {
         player.spigot().sendMessage(ChatMessageType.ACTION_BAR, textComponent)
     }
 
-
-
-    fun Player.damagePluginHealth(damage: Int) {
-        val hp = getPluginHealth()
-        var currentHp = hp - damage
-        if (currentHp < 0) {
-            val event = PlayerDeadPluginHealthEvent(this, shooter())
+    // this == damagerの場合は自害(Fall, 手榴弾?など)である
+    fun LivingEntity.damagePluginHealth(
+        damager: LivingEntity,
+        damage: Int,
+        customItem: CustomItem?,
+        isHeadshot: Boolean = false
+    ) {
+        val headShotSkill = Bukkit.getPlayer(damager.uniqueId)?.isPlayerSkillHeadShot() ?: false
+        val dmg = if (isHeadshot || headShotSkill) {damage * 2} else {damage}
+        val pluginHealthDamageEvent = PluginHealthDamageEvent(
+            damager ,
+            this,
+            dmg,
+           customItem,
+            isHeadshot
+        )
+        Bukkit.getPluginManager().callEvent(pluginHealthDamageEvent)
+        if (pluginHealthDamageEvent.isCancelled) {
+            return
+        }
+        // damage animationのために必要
+        UseNms.sendDamageAnimationPacket(pluginHealthDamageEvent.victim)
+         // human
+        if (pluginHealthDamageEvent.victim !is Player) return
+        val hp = pluginHealthDamageEvent.victim.getPluginHealth()
+        var currentHp = hp - pluginHealthDamageEvent.damage
+        if (currentHp <= 0) {
+            val event = PlayerDeadPluginHealthEvent (
+                pluginHealthDamageEvent.victim,
+                pluginHealthDamageEvent.damager,
+                pluginHealthDamageEvent.sourceCustomItem,
+                pluginHealthDamageEvent.isHeadShot
+            )
             Bukkit.getPluginManager().callEvent(event)
             currentHp = event.reviveHp
         }
         healths[uniqueId] = currentHp
-        sendPlayerHealth(this)
+        sendPlayerHealth(pluginHealthDamageEvent.victim)
     }
 
     fun Player.healPluginHealth(heal: Int) {
@@ -71,6 +100,11 @@ object HealthManager: OneTickTimerTask {
         val currentHp = hp + heal
         healths[uniqueId] = currentHp
         sendPlayerHealth(this)
+    }
+
+    // ゾンビになった際などのベースのHPが変更された際に使用する
+    fun Player.setPluginHealth(health: Int) {
+        healths[uniqueId] = health
     }
 
     fun Player.getPluginHealth(): Int {

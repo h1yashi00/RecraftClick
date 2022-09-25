@@ -3,6 +3,7 @@ package click.recraft.zombiehero.monster
 import click.recraft.zombiehero.Util
 import click.recraft.zombiehero.ZombieHero
 import click.recraft.zombiehero.monster.api.MonsterListener
+import click.recraft.zombiehero.player.HealthManager.damagePluginHealth
 import click.recraft.zombiehero.player.HealthManager.healPluginHealth
 import org.bukkit.Bukkit
 import org.bukkit.Particle
@@ -73,7 +74,8 @@ class SkeletonListener(
         val loc2 = entity.location.clone()
         val dir = loc.subtract(loc2).toVector().normalize()
         entity.velocity = dir.multiply(0.3)
-        entity.damage(10.0)
+        entity.damagePluginHealth(entity, 10, null)
+
         monster.walkSpeed += 20
         player.healPluginHealth(50)
         val task = Util.createTask {

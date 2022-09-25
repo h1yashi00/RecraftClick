@@ -35,8 +35,8 @@ class CustomItemFactory : CustomItemManager {
         NormalGrenade
     }
     enum class SwordType {
-        NORMAL_SWORD,
-        BIG_SWORD,
+        NATA,
+        Hammer,
     }
 
     enum class SkillType {
@@ -70,20 +70,22 @@ class CustomItemFactory : CustomItemManager {
     }
     fun createSword(swordType: SwordType): Sword {
         val sword = when(swordType) {
-            SwordType.NORMAL_SWORD -> Sword(
-                    "nata",
-                    100,
-                    Tick.sec(1.0),
+            SwordType.NATA -> Sword(
+                    "Nata",
+                 500,
+                    Tick.sec(0.5),
+                    0.5,
                     1,
                 -10,
                 GameSound(GameSound.Type.SWING_SMALL)
                 )
-            SwordType.BIG_SWORD -> Sword(
-                "hummer",
-                10,
-                Tick.sec(0.3),
+            SwordType.Hammer -> Sword(
+                "Hammer",
+                700,
+                Tick.sec(2.0),
+                3.0,
                 2,
-                200,
+                -150,
                 GameSound(GameSound.Type.SWING_BIG)
             )
         }

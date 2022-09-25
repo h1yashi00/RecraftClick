@@ -1,8 +1,8 @@
 package click.recraft.zombiehero.monster.api
 
 import click.recraft.zombiehero.Util
-import click.recraft.zombiehero.event.MonsterAttackPlayerEvent
-import org.bukkit.Bukkit
+import click.recraft.zombiehero.player.HealthManager.damagePluginHealth
+import click.recraft.zombiehero.player.HealthManager.getPluginHealth
 import org.bukkit.entity.Entity
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -37,7 +37,7 @@ abstract class MonsterListener(
     @EventHandler
     fun attack(event: EntityDamageByEntityEvent) {
         val player = if (event.damager is Player) {event.damager as Player} else return
-        val monster = monsterManager.get(player) ?: return
+        monsterManager.get(player) ?: return
         event.isCancelled = true
         val loc = player.eyeLocation.clone()
         val dir = loc.direction
@@ -50,13 +50,12 @@ abstract class MonsterListener(
             if (entity !is Player) return@forEach
             if (entity == player) return@forEach
             if (monsterManager.contains(entity)) return@forEach
-            val customEvent = MonsterAttackPlayerEvent(
+            val entityHp = entity.getPluginHealth()
+            entity.damagePluginHealth(
                 player,
-                entity,
-                monster
+                entityHp,
+                null,
             )
-            monsterManager.register(entity)
-            Bukkit.getPluginManager().callEvent(customEvent)
         }
     }
 }
