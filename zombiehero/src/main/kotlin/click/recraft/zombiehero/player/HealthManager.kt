@@ -65,11 +65,10 @@ object HealthManager: OneTickTimerTask {
         customItem: CustomItem?,
         isHeadshot: Boolean = false
     ) {
-        if ( this is Player) {
-            if (gameMode != GameMode.SURVIVAL) {
-                return
-            }
+        if ( this !is Player) {
+            return
         }
+        if (gameMode != GameMode.SURVIVAL) {return}
         val headShotSkill = Bukkit.getPlayer(damager.uniqueId)?.isPlayerSkillHeadShot() ?: false
         val dmg = if (isHeadshot || headShotSkill) {damage * 2} else {damage}
         val pluginHealthDamageEvent = PluginHealthDamageEvent(
@@ -85,7 +84,7 @@ object HealthManager: OneTickTimerTask {
         }
         // damage animationのために必要
         UseNms.sendDamageAnimationPacket(pluginHealthDamageEvent.victim)
-        if (MonsterManager.contains(this as Player)) {
+        if (MonsterManager.contains(this)) {
             world.playSound(location, Sound.ENTITY_PLAYER_HURT, 1f, 1f)
         }
          // human

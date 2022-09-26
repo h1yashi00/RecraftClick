@@ -46,12 +46,14 @@ class Sword (
         dir: Vector,
         particle: Particle
     ) {
-        val world = baseLoc.world!!
         val loc = baseLoc.clone()
         val currentDir = dir.clone().apply {x /= 2; y /= 2; z /= 2}
         (0..(range * 2)).forEach { _ ->
             loc.apply { add(currentDir) }
-            world.spawnParticle(particle, loc, 1)
+            if (loc.block.type.isSolid) {
+                return
+            }
+//            world.spawnParticle(particle, loc, 1)
             val box = Util.makeBoundingBox(loc, 0.1)
             val entities = loc.world!!.getNearbyEntities(box)
             entities.removeIf{ it == source }

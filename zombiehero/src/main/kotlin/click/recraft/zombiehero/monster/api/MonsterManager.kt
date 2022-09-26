@@ -6,6 +6,7 @@ import click.recraft.zombiehero.monster.Skeleton
 import click.recraft.zombiehero.monster.Zombie
 import click.recraft.zombiehero.player.PlayerData.monsterType
 import org.bukkit.Bukkit
+import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import java.util.*
 
@@ -27,8 +28,9 @@ object MonsterManager {
         return save[player.uniqueId]
     }
 
-    fun contains(player: Player): Boolean {
-        return save.containsKey(player.uniqueId)
+    fun contains(livingEntity: LivingEntity): Boolean {
+        if (livingEntity !is Player) return false
+        return save.containsKey(livingEntity.uniqueId)
     }
 
     private fun getMonsterConstructor(type: MonsterType, player: Player): Monster {
@@ -40,19 +42,16 @@ object MonsterManager {
 
     fun register(player: Player): Monster {
         player.inventory.clear()
-        val monster = getMonsterConstructor(player.monsterType(), player)
-        remove(player)
-        monster.initialize(player)
-        save[monster.playerUUID] = monster
-        return monster
+        return register(player, player.monsterType())
     }
 
-    fun register(player: Player, type: MonsterType) {
+    fun register(player: Player, type: MonsterType): Monster {
         player.inventory.clear()
         val monster = getMonsterConstructor(type, player)
         remove(player)
         monster.initialize(player)
         save[monster.playerUUID] = monster
+        return monster
     }
 
 
