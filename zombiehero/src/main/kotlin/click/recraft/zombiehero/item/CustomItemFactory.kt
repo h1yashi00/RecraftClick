@@ -29,10 +29,12 @@ class CustomItemFactory : CustomItemManager {
         Glock,
     }
     enum class GrenadeType {
-        ZombieGrenadeTouch,
-        ZombieBomb,
         HITGrenade,
         NormalGrenade
+    }
+    enum class ZombieItem {
+        ZombieGrenadeTouch,
+        ZombieBomb,
     }
     enum class SwordType {
         NATA,
@@ -73,7 +75,7 @@ class CustomItemFactory : CustomItemManager {
             SwordType.NATA -> Sword(
                     "Nata",
                  500,
-                    Tick.sec(0.5),
+                    Tick.sec(1.0),
                     0.5,
                     1,
                 -10,
@@ -82,7 +84,7 @@ class CustomItemFactory : CustomItemManager {
             SwordType.Hammer -> Sword(
                 "Hammer",
                 700,
-                Tick.sec(2.0),
+                Tick.sec(1.5),
                 3.0,
                 2,
                 -150,
@@ -102,10 +104,16 @@ class CustomItemFactory : CustomItemManager {
     }
     fun createGrenade(grenadeType: GrenadeType): CustomItem {
         val grenade = when(grenadeType) {
-            GrenadeType.ZombieGrenadeTouch -> ZombieGrenadeTouch()
-            GrenadeType.ZombieBomb -> ZombieBomb()
             GrenadeType.HITGrenade   -> HitGrenade("hitGrenade")
             GrenadeType.NormalGrenade -> NormalGrenade()
+        }
+        register(grenade.unique, grenade)
+        return grenade
+    }
+    fun createZombieItem(zombieItem: ZombieItem): CustomItem {
+        val grenade = when(zombieItem) {
+            ZombieItem.ZombieGrenadeTouch -> ZombieGrenadeTouch()
+            ZombieItem.ZombieBomb -> ZombieBomb()
         }
         register(grenade.unique, grenade)
         return grenade

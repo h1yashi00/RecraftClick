@@ -27,7 +27,7 @@ abstract class Monster(
     var isDead = false
     private fun getDefaultItem(): ItemStack {
         val factory = ZombieHero.plugin.customItemFactory
-        return factory.createGrenade(CustomItemFactory.GrenadeType.ZombieGrenadeTouch).createItemStack()
+        return factory.createZombieItem(CustomItemFactory.ZombieItem.ZombieGrenadeTouch).createItemStack()
     }
     val uniqueId: UUID = UUID.randomUUID()
 

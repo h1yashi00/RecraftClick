@@ -139,12 +139,10 @@ class PlayerListener: Listener {
         if (player.gameMode != GameMode.SURVIVAL) return
         event.isCancelled = true
         val block = event.block
-        if (MapObjectManager.containsPlaced(block)) {
-            MapObjectManager.remove(block)
+        if (!MapObjectManager.containsPlaced(block)) {
+            return
         }
-        else {
-            MapObjectManager.mapBlock(block)
-        }
+        MapObjectManager.remove(block)
         block.type = Material.AIR
     }
 

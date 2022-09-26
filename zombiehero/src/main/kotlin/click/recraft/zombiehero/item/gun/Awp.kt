@@ -9,7 +9,7 @@ class Awp : Gun (
     shootManager = ZombieHero.plugin.shootManager,
     reload = Reload (
         7,
-        Tick.sec(1.5),
+        Tick.sec(3.0),
         ZombieHero.plugin.reloadManagerFullBullet,
     ),
     shot = OneShot (

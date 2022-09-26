@@ -88,13 +88,17 @@ class GameManager {
         Bukkit.getScheduler().runTaskTimer(ZombieHero.plugin, task, 0, 20)
     }
     private fun finish() {
+        Bukkit.getScheduler().pendingTasks.forEach {
+            if (!ZombieHero.plugin.importantTaskId.contains(it.taskId)) {
+                it.cancel()
+            }
+        }
+        HealthManager.clear()
+        MonsterManager.clear()
+        MapObjectManager.clear()
+        PlayerData.clear()
         Bukkit.getOnlinePlayers().forEach { player ->
             player.foodLevel = 20
-            Bukkit.getScheduler().pendingTasks.forEach {
-                if (!ZombieHero.plugin.importantTaskId.contains(it.taskId)) {
-                    it.cancel()
-                }
-            }
             player.gameMode = GameMode.SURVIVAL
             player.inventory.clear()
             player.activePotionEffects.forEach {
@@ -104,10 +108,6 @@ class GameManager {
             player.teleport(world.randomSpawn())
             player.sendExperienceChange(0f,0)
         }
-        HealthManager.clear()
-        MonsterManager.clear()
-        MapObjectManager.clear()
-        PlayerData.clear()
         world.world.entities.forEach { entity ->
             if (entity is Player) {
                 return@forEach

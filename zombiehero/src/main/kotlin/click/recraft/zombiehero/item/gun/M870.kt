@@ -14,7 +14,7 @@ class M870: Gun(
     ),
     shot = MultiShot (
         rate = Tick.sec(0.5),
-        10,
+        30,
         5,
         0.3,
         Accuracy(200,30),
