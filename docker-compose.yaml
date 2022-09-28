@@ -1,0 +1,28 @@
+version: '3'
+
+networks:
+  recraft:
+services:
+  redis:
+    networks:
+      - recraft
+    image: "redis:latest"
+    ports:
+      - "6379:6379"
+    volumes:
+      - "./data/redis:/data"
+  bungee:
+    depends_on:
+      - redis
+    build:
+      context: .
+      dockerfile: docker/bungee/Dockerfile
+    image: multi_bungee
+    environment:
+      - TZ=Asia/Tokyo
+    networks:
+      - recraft
+    ports:
+      - "25580:25577"
+    volumes:
+      - "./bungee/build/libs:/work/plugins"

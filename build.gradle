@@ -7,9 +7,38 @@ repositories {
 
 subprojects {
     apply plugin: 'kotlin'
-
     group 'org.example'
     version '1.0-SNAPSHOT'
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        implementation "org.jetbrains.kotlin:kotlin-stdlib"
+    }
+    jar {
+        exclude("META-INF/BC1024KE.RSA", "META-INF/BC1024KE.SF", "META-INF/BC1024KE.DSA")
+        exclude("META-INF/BC2048KE.RSA", "META-INF/BC2048KE.SF", "META-INF/BC2048KE.DSA")
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+        from { configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+    }
+}
+
+project("bungee") {
+    repositories {
+        maven { url 'https://oss.sonatype.org/content/repositories/snapshots' } // This lets gradle find the BungeeCord files online
+    }
+    dependencies {
+        compileOnly 'net.md-5:bungeecord-api:1.19-R0.1-SNAPSHOT'
+        // https://mvnrepository.com/artifact/com.github.docker-java/docker-java
+        implementation 'com.github.docker-java:docker-java:3.2.13'
+        implementation 'com.spotify:docker-client:8.16.0'
+
+        implementation 'redis.clients:jedis:4.2.3'
+        implementation 'com.google.code.gson:gson:2.9.0'
+    }
+}
+
+project("zombiehero") {
     repositories {
         mavenCentral()
         maven { url = "https://hub.spigotmc.org/nexus/content/repositories/snapshots/" }
@@ -25,10 +54,5 @@ subprojects {
     jar {
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
         from { configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
-    }
-}
-project("zombiehero") {
-    dependencies {
-        compileOnly project(":share")
     }
 }
