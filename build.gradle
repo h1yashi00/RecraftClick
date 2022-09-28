@@ -12,8 +12,13 @@ subprojects {
     repositories {
         mavenCentral()
     }
+    test {
+        useJUnitPlatform()
+    }
     dependencies {
         implementation "org.jetbrains.kotlin:kotlin-stdlib"
+        testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+        testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
     }
     jar {
         exclude("META-INF/BC1024KE.RSA", "META-INF/BC1024KE.SF", "META-INF/BC1024KE.DSA")
@@ -35,6 +40,17 @@ project("bungee") {
 
         implementation 'redis.clients:jedis:4.2.3'
         implementation 'com.google.code.gson:gson:2.9.0'
+        compileOnly project(":share")
+    }
+}
+
+project("share") {
+    repositories {
+        maven { url = "https://hub.spigotmc.org/nexus/content/repositories/snapshots/" }
+    }
+    dependencies {
+        compileOnly("org.spigotmc:spigot-api:1.19-R0.1-SNAPSHOT")
+        implementation 'redis.clients:jedis:4.2.3'
     }
 }
 
@@ -47,6 +63,7 @@ project("zombiehero") {
         mavenLocal()
     }
     dependencies {
+        compileOnly project(":share")
         implementation "org.jetbrains.kotlin:kotlin-stdlib"
         compileOnly ("org.spigotmc:spigot-api:1.19-R0.1-SNAPSHOT")
         compileOnly ("org.spigotmc:spigot:1.19-R0.1-SNAPSHOT")
@@ -54,5 +71,16 @@ project("zombiehero") {
     jar {
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
         from { configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+    }
+}
+
+project("lobby") {
+    repositories {
+        maven { url = "https://hub.spigotmc.org/nexus/content/repositories/snapshots/" }
+    }
+    dependencies {
+        compileOnly project(":share")
+        compileOnly("org.spigotmc:spigot-api:1.19-R0.1-SNAPSHOT")
+        implementation 'redis.clients:jedis:4.2.3'
     }
 }
