@@ -32,7 +32,7 @@ object Util {
     }
     fun broadcastTitle(msg: String) {
         Bukkit.getOnlinePlayers().forEach { player ->
-            player.sendTitle(msg, "", 0,20 * 1,0)
+            player.sendTitle(msg, "", 3 * 10,20 * 3,10)
         }
     }
     fun broadcastTitle(msg: String, fadeIn: Int, stay: Int, fadeOut: Int) {

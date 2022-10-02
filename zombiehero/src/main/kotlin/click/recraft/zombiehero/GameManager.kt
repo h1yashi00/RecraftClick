@@ -1,5 +1,7 @@
 package click.recraft.zombiehero
 
+import click.recraft.share.RedisManager
+import click.recraft.share.TeleportServer
 import click.recraft.share.item
 import click.recraft.zombiehero.item.CustomItemFactory
 import click.recraft.zombiehero.monster.api.MonsterManager
@@ -23,8 +25,11 @@ class GameManager {
     var startFlag = false
     private val customItemFactory = ZombieHero.plugin.customItemFactory
     val world = GameWorld(Bukkit.getWorld("world")!!)
-    val bar = Bukkit.createBossBar("${ChatColor.BOLD}Recraft.Click Monster Hunt", BarColor.YELLOW, BarStyle.SEGMENTED_20, BarFlag.CREATE_FOG)
+    val bar = Bukkit.createBossBar("${ChatColor.BOLD}Recraft.Click Monster Hunt ${currentPhase()}", BarColor.YELLOW, BarStyle.SEGMENTED_20, BarFlag.CREATE_FOG)
     private var humanSurvived = false
+    private fun currentPhase(): String {
+        return "${ZombieHero.plugin.info.currentPhase}/${ZombieHero.plugin.info.maxPhase}"
+    }
 
     fun isStart(): Boolean {
         return startFlag
@@ -54,7 +59,7 @@ class GameManager {
                 cancel()
             }
             bar.progress = countDownHumanSurvive.toDouble() / threeMin.toDouble()
-            bar.setTitle("${ChatColor.BOLD}人間生存まであと${timeFormat(countDownHumanSurvive)}")
+            bar.setTitle("${ChatColor.BOLD}人間生存まであと${timeFormat(countDownHumanSurvive)} ${currentPhase()}")
             countDownHumanSurvive += -1
         }
         Bukkit.getScheduler().runTaskTimer(ZombieHero.plugin, task, 0, 20)
@@ -114,6 +119,23 @@ class GameManager {
             }
             entity.remove()
         }
+
+        val info = RedisManager.serverUpdatePhase()
+        if (info == null) {
+            Util.broadcastTitle("Game finished !!!!!!!")
+            val task = Util.createTask {
+                Bukkit.getOnlinePlayers().forEach { player ->
+                    TeleportServer.send(player, "lobby", ZombieHero.plugin)
+                }
+                val lateTask = Util.createTask {
+                    ZombieHero.plugin.onDisable()
+                }
+                Bukkit.getScheduler().runTaskLater(ZombieHero.plugin, lateTask, 20 * 3)
+            }
+            Bukkit.getScheduler().runTaskLater(ZombieHero.plugin, task, 20 * 3)
+            return
+        }
+        ZombieHero.plugin.info = info
         start()
     }
 

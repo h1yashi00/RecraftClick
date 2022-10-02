@@ -44,6 +44,6 @@ object ContainerCreator {
 
     fun delete(containerID : String){
         dockerClient.stopContainerCmd(containerID).exec()
-        dockerClient.removeContainerCmd(containerID).exec()
+//        dockerClient.removeContainerCmd(containerID).exec()
     }
 }

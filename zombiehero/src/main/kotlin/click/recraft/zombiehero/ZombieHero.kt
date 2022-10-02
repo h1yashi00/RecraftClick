@@ -1,6 +1,7 @@
 package click.recraft.zombiehero
 
 import click.recraft.share.*
+import click.recraft.share.protocol.ServerInfo
 import click.recraft.zombiehero.command.GunCommand
 import click.recraft.zombiehero.command.MonsterCommand
 import click.recraft.zombiehero.gun.api.ReloadManagerFullBullet
@@ -31,11 +32,14 @@ class ZombieHero: KotlinPlugin() {
     fun getTime(): Int {
         return time
     }
+    var info: ServerInfo = ServerInfo("",0,0,0, 0)
     override fun onEnable() {
         plugin = this
         GameMenu.load()
         RedisManager.load(Jedis("redis", 6379))
-        RedisManager.serverIsReady()
+        val containerID = System.getenv("SERVER_NAME")
+        info = RedisManager.serverIsReady() ?: throw IllegalStateException("Cannot find $containerID server info !!!!!!!")
+
         val fiveTickTask = Util.createTask {
             importantTaskId.add(taskId)
             // playerのaction barに対して､playerのHealthを送る

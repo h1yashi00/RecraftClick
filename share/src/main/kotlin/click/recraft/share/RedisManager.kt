@@ -1,6 +1,7 @@
 package click.recraft.share
 
 import click.recraft.share.protocol.ChannelMessage
+import click.recraft.share.protocol.MessageType
 import click.recraft.share.protocol.ServerInfo
 import redis.clients.jedis.Jedis
 
@@ -11,6 +12,13 @@ object RedisManager {
         this.jedis = jedis
     }
 
+    fun removeValueTransaction(key: String, filed: String) {
+        jedis.watch(key)
+        val multi = jedis.multi()
+        multi.hdel(key, filed)
+        multi.exec()
+        jedis.unwatch()
+    }
     private fun transaction(key: String, filed: String, value: String) {
         jedis.watch(key)
         val multi = jedis.multi()
@@ -18,18 +26,24 @@ object RedisManager {
         multi.exec()
         jedis.unwatch()
     }
-    fun serverIsReady() {
+
+    fun serverUpdatePhase(): ServerInfo? {
         val containerID = System.getenv("SERVER_NAME")
-        println(containerID)
-        getServers().forEach { (key, info) ->
-            println(key)
-            if (key == containerID) {
-                println(key)
-                info.currentPhase = 1
-                println(key)
-                transaction("servers", key, info.toJson())
-            }
+        val info = getServers()[containerID] ?: return null
+        if (info.maxPhase <= info.currentPhase) {
+            publishToBungee(ChannelMessage(MessageType.DELETE))
+            return null
         }
+        info.currentPhase += 1
+        transaction("servers", containerID, info.toJson())
+        return info
+    }
+    fun serverIsReady(): ServerInfo? {
+        val containerID = System.getenv("SERVER_NAME")
+        val info = getServers()[containerID] ?: return null
+        info.currentPhase = 1
+        transaction("servers", containerID, info.toJson())
+        return info
     }
     fun registerServer(info: ServerInfo) {
         transaction("servers",info.containerId, info.toJson())

@@ -18,7 +18,7 @@ class BungeeChannelPubSub(private val proxy: ProxyServer) : JedisPubSub() {
     private fun createServer() {
         val info = ServerInfo(
             "zombiehero$id",
-            0,0,0,0
+            0,5,0,5
         )
         save.add(info)
         ContainerCreator.create(info.containerId)
@@ -30,6 +30,7 @@ class BungeeChannelPubSub(private val proxy: ProxyServer) : JedisPubSub() {
 
     private fun deleteServer(containerID: String) {
         ContainerCreator.delete(containerID)
+        RedisManager.removeValueTransaction("servers", containerID)
         proxy.servers.remove(containerID)
     }
 
