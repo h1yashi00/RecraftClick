@@ -2,22 +2,12 @@ package click.recraft.share.protocol
 
 import com.google.gson.Gson
 
-enum class Request {
-    Create,
-    Delete;
-    companion object {
-        private val gson = Gson()
-        fun fromJson(json: String): Request {
-            return gson.fromJson(json, Request::class.java)!!
-        }
-    }
-}
 
 data class ServerInfo(
     val containerId: String,
-    val currentPlayerNum: Int,
+    var currentPlayerNum: Int,
     val maxPlayerNum: Int,
-    val currentPhase: Int,
+    var currentPhase: Int,
     val maxPhase: Int,
 ) {
     companion object {

@@ -44,6 +44,9 @@ class ShowingDSL(private val itemStack: ItemStack) {
     private val lore = arrayListOf<String>()
     var isChoose = false
     var selectedColoredGreenDye: Boolean? = null
+    fun setLore(lores: List<String>) {
+        lore.addAll(lores)
+    }
     fun setUnlock(boolean: Boolean) {
         val addLore = if (boolean) "${ChatColor.GREEN}アンロック" else "${ChatColor.RED}ロック"
         lore.add(addLore)

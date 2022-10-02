@@ -3,24 +3,28 @@ package click.recraft.lobby
 import click.recraft.share.KotlinPlugin
 import click.recraft.share.RedisManager
 import org.bukkit.Bukkit
+import org.bukkit.event.Listener
 import redis.clients.jedis.Jedis
 
 class Main: KotlinPlugin() {
-    private val listeners = listOf(
-        PlayerJoin(),
-        Protect()
-    )
+    private val listeners: List<Listener> by lazy {
+        listOf(
+            PlayerJoin(),
+            Protect(),
+            Menu
+        )
+    }
     companion object {
         lateinit var plugin: KotlinPlugin
     }
     override fun onEnable() {
+        this.server.messenger.registerOutgoingPluginChannel(this, "BungeeCord")
         Bukkit.getWorld("world")!!.isAutoSave = false
         plugin = this
         RedisManager.load(Jedis("redis", 6379))
         Menu.load()
-
-        listeners.forEach {server.pluginManager.registerEvents(it, this)}
         super.onEnable()
+        listeners.forEach {server.pluginManager.registerEvents(it, this)}
     }
 
     override fun onDisable() {

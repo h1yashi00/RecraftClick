@@ -10,8 +10,6 @@ services:
     image: "redis:latest"
     ports:
       - "6379:6379"
-#    volumes:
-#      - "./data/redis:/data"
   bungee:
     depends_on:
       - redis
@@ -21,6 +19,8 @@ services:
     image: bungee
     environment:
       - TZ=Asia/Tokyo
+      - SERVER_NAME=bungee
+      - DOCKER_HOST=tcp://host.docker.internal:2375
     networks:
       - recraft
     ports:
@@ -37,10 +37,36 @@ services:
     image: "lobby"
     environment:
       - TZ=Asia/Tokyo
+      - SERVER_NAME=lobby
     networks:
       - recraft
     ports:
       - "25566:25565"
-    volumes:
-      - "./lobby/build/libs:/work/plugins"
-      - "./worlds/lobby:/work/world"
+  # BungeeのDockerCreatorに詳細が書いてある｡
+  zombiehero:
+    # depends_on:
+    #   - redis
+    #   - bungee
+    #   - lobby
+    build:
+      context: .
+      dockerfile: docker/zombiehero/Dockerfile
+    image: "zombiehero"
+    environment:
+      - TZ=Asia/Tokyo
+      - SERVER_NAME=zombiehero
+    networks:
+      - recraft
+    ports:
+      - "25566:25565"
+  nginx:
+    depends_on:
+      - bungee
+    image: "nginxreverseproxy"
+    build:
+      context: .
+      dockerfile: docker/nginx/Dockerfile
+    networks:
+      - recraft
+    ports:
+      - "25565:25565"

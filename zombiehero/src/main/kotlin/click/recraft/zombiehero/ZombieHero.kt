@@ -13,6 +13,7 @@ import click.recraft.zombiehero.monster.SkeletonListener
 import click.recraft.zombiehero.monster.ZombieListener
 import click.recraft.zombiehero.player.*
 import org.bukkit.Bukkit
+import redis.clients.jedis.Jedis
 
 class ZombieHero: KotlinPlugin() {
     companion object {
@@ -33,6 +34,8 @@ class ZombieHero: KotlinPlugin() {
     override fun onEnable() {
         plugin = this
         GameMenu.load()
+        RedisManager.load(Jedis("redis", 6379))
+        RedisManager.serverIsReady()
         val fiveTickTask = Util.createTask {
             importantTaskId.add(taskId)
             // playerのaction barに対して､playerのHealthを送る
@@ -66,5 +69,6 @@ class ZombieHero: KotlinPlugin() {
 
     override fun onDisable() {
         MapObjectManager.clear()
+        RedisManager.shutdown()
     }
 }

@@ -1,6 +1,5 @@
 package click.recraft.share
 
-import click.recraft.share.protocol.ServerInfo
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import redis.clients.jedis.Jedis
@@ -17,14 +16,13 @@ internal class RedisManagerTest {
     }
     @Test
     fun a() {
-        val info = ServerInfo(
-            "test",
-            0,
-            0,
-            10,
-            10
-        )
-        RedisManager.setServer(info)
-        println(RedisManager.getServers())
+//        val info = ServerInfo(
+//            "test",
+//            0,
+//            0,
+//            10,
+//            10
+//        )
+//        println(RedisManager.getServers())
     }
 }
