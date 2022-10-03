@@ -29,6 +29,7 @@ object ContainerCreator {
             .newHostConfig()
             .withPublishAllPorts(true)
             .withAutoRemove(true)
+            .withMemory(5368709120)
         val createContainer = dockerClient
             .createContainerCmd("zombiehero")
             .withEnv("SERVER_NAME=$containerID")

@@ -8,6 +8,7 @@ build_image() {
   gradle :bungee:jar
   gradle :zombiehero:jar
   gradle :bungee:jar
+  gradle :lobby:jar
 
   docker-compose build -m 5g
 }

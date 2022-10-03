@@ -10,6 +10,10 @@ services:
     image: "redis:latest"
     ports:
       - "6379:6379"
+    deploy:
+      resources:
+        limits:
+          memory: 1G
   bungee:
     depends_on:
       - redis
@@ -27,6 +31,10 @@ services:
       - "25580:25577"
     volumes:
       - "./bungee/build/libs:/work/plugins"
+    deploy:
+      resources:
+        limits:
+          memory: 2G
   lobby:
     depends_on:
       - redis
@@ -42,6 +50,10 @@ services:
       - recraft
     ports:
       - "25566:25565"
+    deploy:
+      resources:
+        limits:
+          memory: 5G
   # BungeeのDockerCreatorに詳細が書いてある｡
   zombiehero:
     # depends_on:
@@ -70,3 +82,7 @@ services:
       - recraft
     ports:
       - "25565:25565"
+    deploy:
+      resources:
+        limits:
+          memory: 2G
