@@ -21,6 +21,8 @@ services:
       context: .
       dockerfile: docker/bungee/Dockerfile
     image: bungee
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     environment:
       - TZ=Asia/Tokyo
       - SERVER_NAME=bungee
