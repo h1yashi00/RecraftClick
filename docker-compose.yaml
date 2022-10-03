@@ -68,7 +68,7 @@ services:
     image: "zombiehero"
     environment:
       - TZ=Asia/Tokyo
-      - SERVER_NAME=zombiehero
+      - SERVER_NAME=debug
     networks:
       - recraft
     ports:

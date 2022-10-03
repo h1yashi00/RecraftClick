@@ -68,7 +68,7 @@ class GameManager {
     fun start() {
         startFlag = true
         humanSurvived = false
-        var countDownTime = 0
+        var countDownTime = 20
         val task = Util.createTask {
             bar.progress = 1.0
             bar.setTitle("${ChatColor.GREEN}${ChatColor.BOLD}ゾンビ${ChatColor.BOLD}を選出しています...(残り${countDownTime}秒)")
@@ -98,6 +98,24 @@ class GameManager {
                 it.cancel()
             }
         }
+        val info = RedisManager.serverUpdatePhase()
+        if (info == null) {
+            Util.broadcastTitle("Game finished !!!!!!!")
+            bar.progress = 1.0
+            bar.setTitle("${ChatColor.WHITE}FINISH")
+            val task = Util.createTask {
+                Bukkit.getOnlinePlayers().forEach { player ->
+                    TeleportServer.send(player, "lobby", ZombieHero.plugin)
+                }
+                val lateTask = Util.createTask {
+                    ZombieHero.plugin.onDisable()
+                }
+                Bukkit.getScheduler().runTaskLater(ZombieHero.plugin, lateTask, 20 * 3)
+            }
+            Bukkit.getScheduler().runTaskLater(ZombieHero.plugin, task, 20 * 3)
+            return
+        }
+
         HealthManager.clear()
         MonsterManager.clear()
         MapObjectManager.clear()
@@ -120,21 +138,6 @@ class GameManager {
             entity.remove()
         }
 
-        val info = RedisManager.serverUpdatePhase()
-        if (info == null) {
-            Util.broadcastTitle("Game finished !!!!!!!")
-            val task = Util.createTask {
-                Bukkit.getOnlinePlayers().forEach { player ->
-                    TeleportServer.send(player, "lobby", ZombieHero.plugin)
-                }
-                val lateTask = Util.createTask {
-                    ZombieHero.plugin.onDisable()
-                }
-                Bukkit.getScheduler().runTaskLater(ZombieHero.plugin, lateTask, 20 * 3)
-            }
-            Bukkit.getScheduler().runTaskLater(ZombieHero.plugin, task, 20 * 3)
-            return
-        }
         ZombieHero.plugin.info = info
         start()
     }

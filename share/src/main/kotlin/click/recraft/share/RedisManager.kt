@@ -7,6 +7,10 @@ import redis.clients.jedis.Jedis
 
 object RedisManager {
     private lateinit var jedis: Jedis
+    private var debug = false
+    fun debugging() {
+        debug = true
+    }
     fun load(jedis: Jedis) {
         jedis.apply { select(0) }
         this.jedis = jedis
@@ -28,6 +32,7 @@ object RedisManager {
     }
 
     fun serverUpdatePhase(): ServerInfo? {
+        if (debug) return ServerInfo("debug", 0,0,0,0)
         val containerID = System.getenv("SERVER_NAME")
         val info = getServers()[containerID] ?: return null
         if (info.maxPhase <= info.currentPhase) {
