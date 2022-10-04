@@ -29,10 +29,9 @@ class BungeeChannelPubSub(private val proxy: ProxyServer) : JedisPubSub() {
     }
 
     private fun deleteServer(containerID: String) {
-        println("delete server is $containerID")
-        ContainerCreator.delete(containerID)
         RedisManager.removeValueTransaction("servers", containerID)
         proxy.servers.remove(containerID)
+        ContainerCreator.delete(containerID)
     }
 
     override fun onMessage(channel: String, message: String) {
