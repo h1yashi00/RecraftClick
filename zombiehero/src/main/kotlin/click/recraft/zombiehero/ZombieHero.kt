@@ -35,6 +35,7 @@ class ZombieHero: KotlinPlugin() {
     var info: ServerInfo = ServerInfo("",0,0,0, 0)
     override fun onEnable() {
         plugin = this
+        server.messenger.registerOutgoingPluginChannel(this, "BungeeCord")
         val containerID = System.getenv("SERVER_NAME")
         info = if (containerID == "debug") {
             RedisManager.debugging()
