@@ -35,7 +35,6 @@ class BungeeChannelPubSub(private val proxy: ProxyServer) : JedisPubSub() {
     }
 
     override fun onMessage(channel: String, message: String) {
-        println(message)
         val channelMessage = ChannelMessage.fromJson(message)
         when (channelMessage.type) {
             MessageType.CREATE -> createServer()

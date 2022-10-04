@@ -4,7 +4,7 @@ import click.recraft.share.KotlinPlugin
 import click.recraft.share.RedisManager
 import org.bukkit.Bukkit
 import org.bukkit.event.Listener
-import redis.clients.jedis.Jedis
+import redis.clients.jedis.JedisPool
 
 class Main: KotlinPlugin() {
     private val listeners: List<Listener> by lazy {
@@ -21,7 +21,7 @@ class Main: KotlinPlugin() {
         this.server.messenger.registerOutgoingPluginChannel(this, "BungeeCord")
         Bukkit.getWorld("world")!!.isAutoSave = false
         plugin = this
-        RedisManager.load(Jedis("redis", 6379))
+        RedisManager.load(JedisPool("redis", 6379))
         Menu.load()
         super.onEnable()
         listeners.forEach {server.pluginManager.registerEvents(it, this)}

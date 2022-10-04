@@ -8,7 +8,7 @@ import redis.clients.jedis.JedisPool
 class Main: Plugin() {
     private val pool = JedisPool("redis", 6379)
     override fun onEnable() {
-        RedisManager.load(pool.resource!!)
+        RedisManager.load(pool)
         proxy.scheduler.runAsync(this) {
             pool.resource.subscribe(BungeeChannelPubSub(proxy), System.getenv("SERVER_NAME"))
         }

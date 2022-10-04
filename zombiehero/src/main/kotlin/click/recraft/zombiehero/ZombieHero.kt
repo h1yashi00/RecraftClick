@@ -14,7 +14,7 @@ import click.recraft.zombiehero.monster.SkeletonListener
 import click.recraft.zombiehero.monster.ZombieListener
 import click.recraft.zombiehero.player.*
 import org.bukkit.Bukkit
-import redis.clients.jedis.Jedis
+import redis.clients.jedis.JedisPool
 
 class ZombieHero: KotlinPlugin() {
     companion object {
@@ -41,7 +41,7 @@ class ZombieHero: KotlinPlugin() {
             RedisManager.debugging()
             ServerInfo("debug", 0,0,0,0)
         } else {
-            RedisManager.load(Jedis("redis", 6379))
+            RedisManager.load(JedisPool("redis", 6379))
             RedisManager.serverIsReady() ?: throw IllegalStateException("Cannot find $containerID server info !!!!!!!")
         }
         GameMenu.load()

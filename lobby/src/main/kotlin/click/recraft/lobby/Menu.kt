@@ -20,12 +20,12 @@ object Menu: Listener {
     private var servers: MutableList<ServerInfo> = mutableListOf()
     private var lastChecked = System.currentTimeMillis()
     private fun updateServers() {
-        servers = RedisManager.getServers().values.toMutableList()
         val now = System.currentTimeMillis()
         if (lastChecked + (1000 * 5) > now) {
             return
         }
         lastChecked = now
+        servers = RedisManager.getServers().values.toMutableList()
         if (servers.size == 0) {
             val msg = ChannelMessage(
                 MessageType.CREATE
