@@ -30,6 +30,10 @@ class GameManager {
     private fun currentPhase(): String {
         return "${ZombieHero.plugin.info.currentPhase}/${ZombieHero.plugin.info.maxPhase}"
     }
+    private var countdown = false
+    fun isCountdowning(): Boolean {
+        return countdown
+    }
 
     fun isStart(): Boolean {
         return startFlag
@@ -67,6 +71,7 @@ class GameManager {
 
     fun start() {
         startFlag = true
+        countdown = true
         humanSurvived = false
         var countDownTime = 20
         val task = Util.createTask {
@@ -78,12 +83,14 @@ class GameManager {
             countDownTime -= 1
             if (countDownTime < 0) {
                 val lateTask = Util.createTask {
+                    if (Bukkit.getOnlinePlayers().size == 1) {shutdownServer(); return@createTask}
                     Bukkit.getOnlinePlayers().forEach { player ->
                         player.playSound(player.location, "minecraft:man_shout", 1f,1f)
                     }
                     chooseEnemy()
                     givePlayerGun()
                     humanSurviveTime()
+                    countdown = false
                 }
                 Bukkit.getScheduler().runTaskLater(ZombieHero.plugin, lateTask, (20 * listOf(3,4,5).random()).toLong())
 
@@ -91,6 +98,21 @@ class GameManager {
             }
         }
         Bukkit.getScheduler().runTaskTimer(ZombieHero.plugin, task, 0, 20)
+    }
+    private fun shutdownServer() {
+        Util.broadcastTitle("Game finished !!!!!!!")
+        bar.progress = 1.0
+        bar.setTitle("${ChatColor.WHITE}FINISH")
+        val task = Util.createTask {
+            Bukkit.getOnlinePlayers().forEach { player ->
+                TeleportServer.send(player, "lobby", ZombieHero.plugin)
+            }
+            val lateTask = Util.createTask {
+                ZombieHero.plugin.onDisable()
+            }
+            Bukkit.getScheduler().runTaskLater(ZombieHero.plugin, lateTask, 20 * 3)
+        }
+        Bukkit.getScheduler().runTaskLater(ZombieHero.plugin, task, 20 * 3)
     }
     private fun finish() {
         Bukkit.getScheduler().pendingTasks.forEach {
@@ -100,19 +122,7 @@ class GameManager {
         }
         val info = RedisManager.serverUpdatePhase()
         if (info == null) {
-            Util.broadcastTitle("Game finished !!!!!!!")
-            bar.progress = 1.0
-            bar.setTitle("${ChatColor.WHITE}FINISH")
-            val task = Util.createTask {
-                Bukkit.getOnlinePlayers().forEach { player ->
-                    TeleportServer.send(player, "lobby", ZombieHero.plugin)
-                }
-                val lateTask = Util.createTask {
-                    ZombieHero.plugin.onDisable()
-                }
-                Bukkit.getScheduler().runTaskLater(ZombieHero.plugin, lateTask, 20 * 3)
-            }
-            Bukkit.getScheduler().runTaskLater(ZombieHero.plugin, task, 20 * 3)
+            shutdownServer()
             return
         }
 

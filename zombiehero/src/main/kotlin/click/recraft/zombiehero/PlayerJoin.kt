@@ -1,5 +1,6 @@
 package click.recraft.zombiehero
 
+import click.recraft.zombiehero.monster.api.MonsterManager
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.GameMode
@@ -30,11 +31,16 @@ class PlayerJoin: Listener {
         ZombieHero.plugin.gameManager.bar.addPlayer(player)
         val game=  ZombieHero.plugin.gameManager
         if (game.isStart()) {
-            event.joinMessage = "${ChatColor.YELLOW}${player.name}が参加しました｡ 2人以上で開始します｡ 現在の参加人数: ${playerNum}/32"
+            // 途中参加してきたプレイヤーで､すでにゲームが始まっている場合､敵チームに入れて､スペクテイターにする.
+            if (!game.isCountdowning()) {
+                MonsterManager.register(player)
+                player.gameMode = GameMode.SPECTATOR
+            }
+            event.joinMessage = "${ChatColor.YELLOW}${player.name}が参加しました"
             return
         }
+        event.joinMessage = "${ChatColor.YELLOW}${player.name}が参加しました｡ 2人以上で開始します｡ 現在の参加人数: ${playerNum}/32"
         if (playerNum >= game.requiredPlayerNum) {
-            event.joinMessage = "${ChatColor.YELLOW}${player.name}が参加しました"
             game.start()
         }
     }
