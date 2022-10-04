@@ -64,8 +64,4 @@ object RedisManager {
         }
         return servers
     }
-
-    fun shutdown() {
-        jedis.shutdown()
-    }
 }

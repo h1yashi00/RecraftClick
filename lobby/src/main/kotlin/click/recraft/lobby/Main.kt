@@ -28,6 +28,5 @@ class Main: KotlinPlugin() {
     }
 
     override fun onDisable() {
-        RedisManager.shutdown()
     }
 }

@@ -15,7 +15,6 @@ class Main: Plugin() {
     }
 
     override fun onDisable() {
-        RedisManager.shutdown()
         pool.destroy()
     }
 }

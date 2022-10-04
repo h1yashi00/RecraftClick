@@ -3,6 +3,8 @@ package click.recraft.zombiehero
 import click.recraft.share.RedisManager
 import click.recraft.share.TeleportServer
 import click.recraft.share.item
+import click.recraft.share.protocol.ChannelMessage
+import click.recraft.share.protocol.MessageType
 import click.recraft.zombiehero.item.CustomItemFactory
 import click.recraft.zombiehero.monster.api.MonsterManager
 import click.recraft.zombiehero.player.HealthManager
@@ -83,7 +85,11 @@ class GameManager {
             countDownTime -= 1
             if (countDownTime < 0) {
                 val lateTask = Util.createTask {
-                    if (Bukkit.getOnlinePlayers().size == 1) {shutdownServer(); return@createTask}
+                    if (Bukkit.getOnlinePlayers().size == 1) {
+                        RedisManager.publishToBungee(ChannelMessage(MessageType.DELETE))
+                        shutdownServer()
+                        return@createTask
+                    }
                     Bukkit.getOnlinePlayers().forEach { player ->
                         player.playSound(player.location, "minecraft:man_shout", 1f,1f)
                     }
@@ -107,10 +113,6 @@ class GameManager {
             Bukkit.getOnlinePlayers().forEach { player ->
                 TeleportServer.send(player, "lobby", ZombieHero.plugin)
             }
-            val lateTask = Util.createTask {
-                ZombieHero.plugin.onDisable()
-            }
-            Bukkit.getScheduler().runTaskLater(ZombieHero.plugin, lateTask, 20 * 3)
         }
         Bukkit.getScheduler().runTaskLater(ZombieHero.plugin, task, 20 * 3)
     }

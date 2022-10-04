@@ -78,6 +78,5 @@ class ZombieHero: KotlinPlugin() {
 
     override fun onDisable() {
         MapObjectManager.clear()
-        RedisManager.shutdown()
     }
 }
