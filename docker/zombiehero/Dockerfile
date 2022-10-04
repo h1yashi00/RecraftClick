@@ -10,6 +10,7 @@ COPY data/worlds/zombiehero/ ./world
 COPY data/server.properties .
 COPY data/spigot.yml .
 COPY data/start.sh .
+COPY data/ops.json .
 
 RUN touch eula.txt
 RUN echo "eula=true" >> eula.txt

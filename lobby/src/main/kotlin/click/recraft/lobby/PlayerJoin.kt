@@ -13,7 +13,7 @@ class PlayerJoin : Listener {
         val player = event.player
         player.inventory.clear()
         player.inventory.addItem(Menu.item.getItem())
-        player.gameMode = GameMode.CREATIVE
+        player.gameMode = GameMode.SURVIVAL
         val world = Bukkit.getWorld("world")!!
         event.joinMessage = "${ChatColor.YELLOW}${player.name}が参加しました"
         player.teleport(world.spawnLocation)

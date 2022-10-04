@@ -84,6 +84,7 @@ object HealthManager: OneTickTimerTask {
         }
         // damage animationのために必要
         UseNms.sendDamageAnimationPacket(pluginHealthDamageEvent.victim)
+        if (pluginHealthDamageEvent.victim is Player) {val loc = pluginHealthDamageEvent.victim.location; pluginHealthDamageEvent.victim.playSound(loc, Sound.ENTITY_PLAYER_HURT,1F,1f)}
         if (MonsterManager.contains(this)) {
             world.playSound(location, Sound.ENTITY_PLAYER_HURT, 1f, 1f)
         }

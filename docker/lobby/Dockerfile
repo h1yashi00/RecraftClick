@@ -9,6 +9,7 @@ COPY lobby/build/libs ./plugins
 COPY data/worlds/lobby/ ./world
 COPY data/server.properties .
 COPY data/spigot.yml .
+COPY data/ops.json .
 
 RUN touch eula.txt
 RUN echo "eula=true" >> eula.txt
