@@ -6,6 +6,7 @@ ADD https://api.papermc.io/v2/projects/paper/versions/1.19.2/builds/177/download
 
 
 COPY zombiehero/build/libs ./plugins
+COPY data/defaultPlugins ./plugins
 COPY data/worlds/zombiehero/ ./world
 COPY data/server.properties .
 COPY data/spigot.yml .

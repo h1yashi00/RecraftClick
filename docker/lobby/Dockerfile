@@ -4,7 +4,9 @@ WORKDIR work
 
 ADD https://api.papermc.io/v2/projects/paper/versions/1.19.2/builds/177/downloads/paper-1.19.2-177.jar .
 
+
 COPY docker/lobby/ .
+COPY data/defaultPlugins ./plugins
 COPY lobby/build/libs ./plugins
 COPY data/worlds/lobby/ ./world
 COPY data/server.properties .
