@@ -9,6 +9,7 @@ COPY zombiehero/build/libs ./plugins
 COPY data/defaultPlugins ./plugins
 COPY data/worlds/zombiehero/ ./world
 COPY data/server.properties .
+COPY data/bukkit.yml .
 COPY data/spigot.yml .
 COPY data/start.sh .
 COPY data/ops.json .

@@ -6,8 +6,7 @@ ADD https://ci.md-5.net/job/BungeeCord/lastSuccessfulBuild/artifact/bootstrap/ta
 
 COPY docker/bungee/ .
 RUN mkdir ./plugins
-
-#COPY bungee/build/libs/bungee-1.0-SNAPSHOT.jar ./plugins
+COPY data/server-icon.png .
 
 RUN touch start.sh
 RUN echo "java -jar BungeeCord.jar" >> start.sh

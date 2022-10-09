@@ -10,6 +10,7 @@ COPY data/defaultPlugins ./plugins
 COPY lobby/build/libs ./plugins
 COPY data/worlds/lobby/ ./world
 COPY data/server.properties .
+COPY data/bukkit.yml .
 COPY data/spigot.yml .
 COPY data/ops.json .
 

@@ -7,6 +7,7 @@ import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.block.BlockFromToEvent
 import org.bukkit.event.entity.CreatureSpawnEvent
 import org.bukkit.event.entity.EntityChangeBlockEvent
+import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.EntityExplodeEvent
 
 class Protect: Listener {
@@ -14,6 +15,15 @@ class Protect: Listener {
     fun playerBreakBlock(event: BlockBreakEvent) {
         val player = event.player
         event.isCancelled = !player.isOp
+    }
+    @EventHandler
+    fun playerAttack(event: EntityDamageByEntityEvent) {
+        if (event.damager is Player) {
+            if (event.damager.isOp) {
+                return
+            }
+        }
+        event.isCancelled = true
     }
     @EventHandler
     fun block(event: EntityChangeBlockEvent) {
