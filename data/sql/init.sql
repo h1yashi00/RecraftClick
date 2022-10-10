@@ -54,10 +54,10 @@ create table if not exists player_zombiehero_stats (
      player_uuid    uuid not null,
      coin           int default 0,
      times_played   int default 0,
-     wins           int default 0,
-     loses          int default 0,
-     monster_kills int default 0,
      human_kills    int default 0,
+     monster_kills int default 0,
+     gun_kills int default 0,
+     melee_kills int default 0,
      primary key (player_uuid)
 );
 

@@ -14,8 +14,8 @@ class PlayerJoin : Listener {
         val player = event.player
         player.inventory.clear()
         player.inventory.addItem(
-            ServerSelectMenu.serverSelectItem.getItem(),
-            PlayerStatsMenu.item.getItem()
+            MenuServerSelect.serverSelectItem.getItem(),
+            MenuPlayerStats.item.getItem()
         )
         player.gameMode = GameMode.SURVIVAL
         val world = Bukkit.getWorld("world")!!

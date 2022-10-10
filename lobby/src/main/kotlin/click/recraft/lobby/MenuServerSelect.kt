@@ -13,7 +13,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.Inventory
 
-object ServerSelectMenu: Listener {
+object MenuServerSelect: Listener {
     fun load() {
     }
 

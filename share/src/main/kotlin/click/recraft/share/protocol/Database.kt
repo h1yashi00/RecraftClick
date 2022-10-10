@@ -36,14 +36,23 @@ data class PlayerData(
     val firstJoin: Timestamp,
     var lastJoin: Timestamp,
     var lastLogout: Timestamp,
-) {
-}
+)
+data class PlayerZombieHeroStats (
+    val uuid: UUID,
+    var coin: Int = 0,
+    var timesPlayed: Int = 0,
+    var monsterKills: Int = 0,
+    var humanKills: Int = 0,
+    var gunKills: Int = 0,
+    var meleeKills: Int = 0
+)
 
 object Database {
     private lateinit var con: Connection
     private var plugin: JavaPlugin? = null
     private val savePlayerData: HashMap<UUID, PlayerData> = hashMapOf()
     private val savePlayerOptoin: HashMap<UUID, PlayerOption> = hashMapOf()
+    private val savePlayerZombieHeroStats: HashMap<UUID, PlayerZombieHeroStats> = hashMapOf()
 
     fun initialize(plugin: JavaPlugin?, url: String = "jdbc:mysql://db/recraft") {
         Class.forName("com.mysql.jdbc.Driver")
@@ -223,4 +232,99 @@ object Database {
             Bukkit.getScheduler().runTaskAsynchronously(plugin!!, async)
         }
     }
+    //
+    //
+    // Zombie hero stats
+    //
+    //
+    private fun insertPlayerZombieHeroStats(player: Player) {
+        val stat = con.prepareStatement("insert into player_zombiehero_stats (player_uuid) values (?)")
+        stat.setString(1, player.uniqueId.toString())
+        stat.executeUpdate()
+        savePlayerZombieHeroStats[player.uniqueId] = PlayerZombieHeroStats(player.uniqueId)
+        stat.close()
+    }
+    private fun updatePlayerZombieHeroStats(stats: PlayerZombieHeroStats) {
+        val stat = con.prepareStatement("update player_zombiehero_stats set player_uuid = ?, coin = ?, times_played = ?, monster_kills = ?, human_kills = ?, gun_kills = ?, melee_kills = ?")
+        stat.setString(1, stats.uuid.toString())
+        stat.setInt(2,stats.coin)
+        stat.setInt(3,stats.timesPlayed)
+        stat.setInt(4,stats.monsterKills)
+        stat.setInt(5,stats.humanKills)
+        stat.setInt(6,stats.gunKills)
+        stat.setInt(7,stats.meleeKills)
+        stat.executeUpdate()
+        savePlayerZombieHeroStats[stats.uuid] = stats
+        stat.close()
+    }
+
+    private fun getPlayerZombieHeroStats(player: Player): PlayerZombieHeroStats {
+        if (savePlayerZombieHeroStats.containsKey(player.uniqueId)) {
+            return savePlayerZombieHeroStats[player.uniqueId]!!
+        }
+        val stat = con.prepareStatement("select * from player_zombiehero_stats where player_uuid = ?")
+        stat.setString(1, player.uniqueId.toString())
+        val result = stat.executeQuery()
+        if (!result.next()) {
+            insertPlayerZombieHeroStats(player)
+        }
+        else {
+            savePlayerZombieHeroStats[player.uniqueId] = PlayerZombieHeroStats(
+                player.uniqueId,
+                coin = result.getInt("coin"),
+                timesPlayed = result.getInt("times_played"),
+                monsterKills = result.getInt("monster_kills"),
+                humanKills = result.getInt("human_kills"),
+                gunKills = result.getInt("gun_kills"),
+                meleeKills = result.getInt("melee_kills")
+            )
+        }
+        stat.close()
+        return savePlayerZombieHeroStats[player.uniqueId]!!
+    }
+
+    fun getPlayerZombieHeroStats(player: Player, function: PlayerZombieHeroStats.() -> Unit) {
+        if (plugin == null) {
+            function.invoke(getPlayerZombieHeroStats(player))
+            return
+        }
+        else {
+            val async = Util.createTask {
+                val stats = getPlayerZombieHeroStats(player)
+                val sync = Util.createTask {
+                    function.invoke(stats)
+                }
+                Bukkit.getScheduler().runTask(plugin!!, sync)
+            }
+            Bukkit.getScheduler().runTaskAsynchronously(plugin!!, async)
+        }
+    }
+    fun killZombie(killer: Player, weaponType: WeaponType) {
+        val killerStats = getPlayerZombieHeroStats(killer)
+        killerStats.monsterKills += 1
+        when (weaponType) {
+            WeaponType.GUN -> killerStats.gunKills += 1
+            WeaponType.MELEE -> killerStats.meleeKills += 1
+        }
+        updatePlayerZombieHeroStats(killerStats)
+    }
+    fun zombieKillHuman(player: Player) {
+        val stats = getPlayerZombieHeroStats(player)
+        stats.humanKills += 1
+        updatePlayerZombieHeroStats(stats)
+    }
+    fun playGame(player: Player) {
+        val stats = getPlayerZombieHeroStats(player)
+        stats.timesPlayed += 1
+        updatePlayerZombieHeroStats(stats)
+    }
+    fun coin(player: Player, amount: Int) {
+        val stats = getPlayerZombieHeroStats(player)
+        stats.coin += amount
+        updatePlayerZombieHeroStats(stats)
+    }
+}
+enum class WeaponType {
+    GUN,
+    MELEE;
 }

@@ -5,7 +5,7 @@ import click.recraft.share.protocol.Database
 import org.bukkit.ChatColor
 import org.bukkit.Material
 
-object PlayerStatsMenu {
+object MenuPlayerStats {
     fun load() {
     }
     val item = Main.plugin.interactItem(

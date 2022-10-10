@@ -12,7 +12,7 @@ class Main: KotlinPlugin() {
         listOf(
             PlayerJoin(),
             Protect(),
-            ServerSelectMenu,
+            MenuServerSelect,
             PlayerQuit()
         )
     }
@@ -24,8 +24,8 @@ class Main: KotlinPlugin() {
         Bukkit.getWorld("world")!!.isAutoSave = false
         plugin = this
         RedisManager.load(JedisPool("redis", 6379))
-        ServerSelectMenu.load()
-        PlayerStatsMenu.load()
+        MenuServerSelect.load()
+        MenuPlayerStats.load()
         Database.initialize(this)
         super.onEnable()
         listeners.forEach {server.pluginManager.registerEvents(it, this)}
