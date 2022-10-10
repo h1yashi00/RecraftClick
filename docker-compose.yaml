@@ -41,6 +41,7 @@ services:
     depends_on:
       - redis
       - bungee
+      - db
     build:
       context: .
       dockerfile: docker/lobby/Dockerfile
@@ -84,6 +85,47 @@ services:
       - recraft
     ports:
       - "25565:25565"
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+  db:
+    image: mariadb:latest
+    networks:
+      - recraft
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      - TZ=Asia/Tokyo
+      - MYSQL_ROOT_PASSWORD=narikakeisgod
+    volumes:
+      - ./data/sql:/docker-entrypoint-initdb.d
+      - ./db-data:/var/lib/mysql
+      - ./docker/mysql:/etc/mysql/conf.d
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+
+  phpmyadmin:
+    depends_on:
+      - db
+    networks:
+      - recraft
+    image: phpmyadmin
+    restart: always
+    ports:
+      - "8080:80"
+    volumes:
+      - ./db-data:/var/lib/mysql
+    environment:
+      - TZ=Asia/Tokyo
+      - PMA_ARBITRARY=1
+      - PMA_HOST=db
+      - PMA_PORT=3306
+      - PMA_USER=root
+      - PMA_PASSWORD=narikakeisgod
     deploy:
       resources:
         limits:

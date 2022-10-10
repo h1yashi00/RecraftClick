@@ -2,6 +2,7 @@ package click.recraft.lobby
 
 import click.recraft.share.KotlinPlugin
 import click.recraft.share.RedisManager
+import click.recraft.share.protocol.Database
 import org.bukkit.Bukkit
 import org.bukkit.event.Listener
 import redis.clients.jedis.JedisPool
@@ -11,7 +12,8 @@ class Main: KotlinPlugin() {
         listOf(
             PlayerJoin(),
             Protect(),
-            Menu
+            ServerSelectMenu,
+            PlayerQuit()
         )
     }
     companion object {
@@ -22,7 +24,9 @@ class Main: KotlinPlugin() {
         Bukkit.getWorld("world")!!.isAutoSave = false
         plugin = this
         RedisManager.load(JedisPool("redis", 6379))
-        Menu.load()
+        ServerSelectMenu.load()
+        PlayerStatsMenu.load()
+        Database.initialize(this)
         super.onEnable()
         listeners.forEach {server.pluginManager.registerEvents(it, this)}
     }

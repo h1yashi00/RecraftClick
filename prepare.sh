@@ -23,4 +23,4 @@ socat TCP-LISTEN:2375,reuseaddr,fork UNIX-CONNECT:/var/run/docker.sock &
 set -e
 
 echo "stop_docker_service build_image" | xargs -P 0 -n 1 bash -c
-docker-compose up --abort-on-container-exit lobby bungee redis nginx && docker-compose rm -fsv
+docker-compose up --abort-on-container-exit lobby bungee redis nginx db phpmyadmin && docker-compose rm -fsv

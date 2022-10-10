@@ -58,14 +58,14 @@ class ShowingDSL(private val itemStack: ItemStack) {
         selectedColoredGreenDye = boolean
     }
     fun getITem(): ItemStack {
+        val item = itemStack.clone()
         if (selectedColoredGreenDye != null) {
             return if (selectedColoredGreenDye!!) {
-                item(Material.LIME_DYE)
+                item(Material.LIME_DYE, displayName = item.itemMeta!!.displayName)
             } else {
-                item(Material.GRAY_DYE)
+                item(Material.GRAY_DYE, displayName = item.itemMeta!!.displayName)
             }
         }
-        val item = itemStack.clone()
         val meta = item.itemMeta
         meta!!.lore = lore
         if (isChoose) {

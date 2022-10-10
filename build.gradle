@@ -19,6 +19,7 @@ subprojects {
         implementation "org.jetbrains.kotlin:kotlin-stdlib"
         testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
         testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+        testImplementation 'org.mockito:mockito-core:4.8.0'
     }
     jar {
         exclude("META-INF/BC1024KE.RSA", "META-INF/BC1024KE.SF", "META-INF/BC1024KE.DSA")
@@ -50,8 +51,10 @@ project("share") {
         maven { url = "https://hub.spigotmc.org/nexus/content/repositories/snapshots/" }
     }
     dependencies {
-        compileOnly("org.spigotmc:spigot-api:1.19-R0.1-SNAPSHOT")
+        implementation "org.spigotmc:spigot-api:1.19-R0.1-SNAPSHOT"
         implementation 'redis.clients:jedis:4.2.3'
+        // https://mvnrepository.com/artifact/mysql/mysql-connector-java
+        implementation 'mysql:mysql-connector-java:5.1.13'
     }
 }
 

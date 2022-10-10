@@ -13,7 +13,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.Inventory
 
-object Menu: Listener {
+object ServerSelectMenu: Listener {
     fun load() {
     }
 
@@ -34,7 +34,7 @@ object Menu: Listener {
         }
     }
 
-    val item = Main.plugin.interactItem(
+    val serverSelectItem = Main.plugin.interactItem(
         item(Material.EMERALD, displayName = "${ChatColor.BOLD}サーバ選択"),
         rightClick = true,
         leftClick = false
