@@ -31,7 +31,7 @@ connection_throttle_limit: 100
 server_connect_timeout: 5000
 timeout: 30000
 stats: 0bed8e67-23cb-4d84-ad91-893da06b8bcc
-player_limit: -1
+player_limit: 100
 ip_forward: true
 groups:
   md_5:
