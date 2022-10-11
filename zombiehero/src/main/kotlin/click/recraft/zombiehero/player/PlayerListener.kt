@@ -8,7 +8,7 @@ import click.recraft.zombiehero.chat.ZombieHeroChatIcon
 import click.recraft.zombiehero.event.*
 import click.recraft.zombiehero.item.CustomItem
 import click.recraft.zombiehero.item.gun.Gun
-import click.recraft.zombiehero.item.melee.Sword
+import click.recraft.zombiehero.item.melee.Melee
 import click.recraft.zombiehero.monster.api.Monster
 import click.recraft.zombiehero.monster.api.MonsterManager
 import org.bukkit.*
@@ -36,7 +36,7 @@ class PlayerListener: Listener {
 
     private fun headShotLog(item: CustomItem?, isHeadShot: Boolean): String {
         val icon = when (item) {
-            is Sword -> {ZombieHeroChatIcon.knifeKill}
+            is Melee -> {ZombieHeroChatIcon.knifeKill}
             is Gun -> {ZombieHeroChatIcon.gun}
             else -> ""
         }
@@ -88,7 +88,7 @@ class PlayerListener: Listener {
             // ゾンビが死んだ
             if (monster == null) return
             val type = when (event.customItem) {
-                is Sword -> WeaponType.MELEE
+                is Melee -> WeaponType.MELEE
                 is Gun   -> WeaponType.GUN
                 else -> WeaponType.MELEE
             }

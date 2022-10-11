@@ -57,7 +57,7 @@ class ZombieHero: KotlinPlugin() {
             time += 1
             WalkSpeedManager.loopEveryOneTick()
             MapObjectManager.loopEveryOneTick()
-            SwordManager.loopEveryOneTick()
+            MeleeManager.loopEveryOneTick()
         }
         Bukkit.getScheduler().runTaskTimer(this, fiveTickTask, 10, 5)
         Bukkit.getScheduler().runTaskTimer(this, oneTickTask, 10, 1)

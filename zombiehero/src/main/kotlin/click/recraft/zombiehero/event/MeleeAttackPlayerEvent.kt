@@ -1,15 +1,15 @@
 package click.recraft.zombiehero.event
 
-import click.recraft.zombiehero.item.melee.Sword
+import click.recraft.zombiehero.item.melee.Melee
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import org.bukkit.event.Cancellable
 import org.bukkit.event.Event
 import org.bukkit.event.HandlerList
 
-class SwordAttackPlayerEvent(
+class MeleeAttackPlayerEvent(
     val source: Player,
-    val sword: Sword,
+    val melee: Melee,
     var damage: Double,
     val isHeadShot: Boolean,
     val victim: LivingEntity

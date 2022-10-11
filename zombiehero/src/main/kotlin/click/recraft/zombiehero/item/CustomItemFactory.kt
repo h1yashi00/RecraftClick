@@ -1,5 +1,6 @@
 package click.recraft.zombiehero.item
 
+import click.recraft.share.protocol.TextureItem
 import click.recraft.zombiehero.gun.api.GameSound
 import click.recraft.zombiehero.gun.api.Tick
 import click.recraft.zombiehero.item.grenade.ZombieBomb
@@ -7,7 +8,7 @@ import click.recraft.zombiehero.item.grenade.HitGrenade
 import click.recraft.zombiehero.item.grenade.NormalGrenade
 import click.recraft.zombiehero.item.grenade.ZombieGrenadeTouch
 import click.recraft.zombiehero.item.gun.*
-import click.recraft.zombiehero.item.melee.Sword
+import click.recraft.zombiehero.item.melee.Melee
 import click.recraft.zombiehero.item.skill.HeadShot
 import click.recraft.zombiehero.item.skill.SpeedUp
 import java.util.*
@@ -36,7 +37,7 @@ class CustomItemFactory : CustomItemManager {
         ZombieGrenadeTouch,
         ZombieBomb,
     }
-    enum class SwordType {
+    enum class MeleeType {
         NATA,
         Hammer,
     }
@@ -70,29 +71,29 @@ class CustomItemFactory : CustomItemManager {
         register(gun.unique, gun)
         return gun
     }
-    fun createSword(swordType: SwordType): Sword {
-        val sword = when(swordType) {
-            SwordType.NATA -> Sword(
+    fun createMelee(meleeType: MeleeType): Melee {
+        val melee = when(meleeType) {
+            MeleeType.NATA -> Melee(
                     "Nata",
                  500,
                     Tick.sec(1.0),
                     0.5,
-                    1,
+                    TextureItem.MELEE_NATA,
                 -10,
                 GameSound(GameSound.Type.SWING_SMALL)
                 )
-            SwordType.Hammer -> Sword(
+            MeleeType.Hammer -> Melee(
                 "Hammer",
                 700,
                 Tick.sec(1.5),
                 3.0,
-                2,
+                TextureItem.MELEE_HAMMER,
                 -150,
                 GameSound(GameSound.Type.SWING_BIG)
             )
         }
-        register(sword.unique, sword)
-        return sword
+        register(melee.unique, melee)
+        return melee
     }
     fun createSkillItem(skillType: SkillType): CustomItem {
         val skill = when (skillType) {

@@ -7,7 +7,7 @@ import click.recraft.zombiehero.event.PluginHealthDamageEvent
 import click.recraft.zombiehero.item.CustomItem
 import click.recraft.zombiehero.item.grenade.Grenade
 import click.recraft.zombiehero.item.gun.Gun
-import click.recraft.zombiehero.item.melee.Sword
+import click.recraft.zombiehero.item.melee.Melee
 import click.recraft.zombiehero.monster.api.MonsterManager
 import click.recraft.zombiehero.player.PlayerData.isPlayerSkillHeadShot
 import click.recraft.zombiehero.task.OneTickTimerTask
@@ -36,7 +36,7 @@ object HealthManager: OneTickTimerTask {
                 val gunStats = customItem.stats
                 "${gunStats.currentArmo}/${gunStats.maxArmo}"
             }
-            is Sword -> {
+            is Melee -> {
                 customItem.name
             }
             is Grenade -> {

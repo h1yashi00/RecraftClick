@@ -2,7 +2,6 @@ package click.recraft.lobby
 
 import click.recraft.share.*
 import click.recraft.share.protocol.Database
-import click.recraft.share.protocol.TextureItem
 import org.bukkit.ChatColor
 import org.bukkit.Material
 
@@ -21,18 +20,14 @@ object MenuPlayerZombieHeroStats {
             onRender {
                 Database.getPlayerZombieHeroStats(player) {
                     setLore(listOf (
-                        "コイン: $coin",
-                        "プレイした: $timesPlayed",
-                        "モンスターを倒した: $monsterKills",
-                        "銃で倒した: $gunKills",
-                        "近接武器で倒した: $meleeKills",
-                        "感染させた: $humanKills",
+                        "${ChatColor.WHITE}コイン: $coin",
+                        "${ChatColor.WHITE}プレイした: $timesPlayed",
+                        "${ChatColor.WHITE}モンスターを倒した: $monsterKills",
+                        "${ChatColor.WHITE}銃で倒した: $gunKills",
+                        "${ChatColor.WHITE}近接武器で倒した: $meleeKills",
+                        "${ChatColor.WHITE}感染させた: $humanKills",
                     ))
                 }
-            }
-        }
-        TextureItem.values().forEachIndexed { index, textureItem ->
-            slot(1, index, textureItem.getItem()) {
             }
         }
     }

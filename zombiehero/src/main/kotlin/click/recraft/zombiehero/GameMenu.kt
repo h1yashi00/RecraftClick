@@ -10,9 +10,9 @@ import click.recraft.zombiehero.player.PlayerData.setGrenade
 import click.recraft.zombiehero.player.PlayerData.setMainGunType
 import click.recraft.zombiehero.player.PlayerData.setMonsterType
 import click.recraft.zombiehero.player.PlayerData.setSubGunType
-import click.recraft.zombiehero.player.PlayerData.setSword
+import click.recraft.zombiehero.player.PlayerData.setMelee
 import click.recraft.zombiehero.player.PlayerData.subGunType
-import click.recraft.zombiehero.player.PlayerData.sword
+import click.recraft.zombiehero.player.PlayerData.melee
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.Sound
@@ -58,7 +58,7 @@ object GameMenu {
     ) {
         player.openInventory(monsterMenu.createInv(player))
     }
-    private val sword = ZombieHero.plugin.interactItem(
+    private val melee = ZombieHero.plugin.interactItem(
         item(
             Material.IRON_SWORD,
             displayName = "${ChatColor.GOLD}Melee",
@@ -67,7 +67,7 @@ object GameMenu {
         rightClick = true,
         leftClick = false
     ) {
-        player.openInventory(swordMenu.createInv(player))
+        player.openInventory(meleeMenu.createInv(player))
     }
     private val grenade = ZombieHero.plugin.interactItem(
         item(
@@ -129,18 +129,18 @@ object GameMenu {
             }
         }
     }
-    private val swordMenu = ZombieHero.plugin.menu ("${ChatColor.WHITE}近接武器メニュー", true) {
-        SwordType.values().forEachIndexed { i , swordType ->
-            slot(0, i, factory.createSword(swordType).createItemStack()) {}
+    private val meleeMenu = ZombieHero.plugin.menu ("${ChatColor.WHITE}近接武器メニュー", true) {
+        MeleeType.values().forEachIndexed { i, meleeType ->
+            slot(0, i, factory.createMelee(meleeType).createItemStack()) {}
             slot(1, i, item(Material.EMERALD)) {
                 onClick {
-                    player.setSword(swordType)
+                    player.setMelee(meleeType)
                     player.closeInventory()
                     player.playSound(player, Sound.BLOCK_NOTE_BLOCK_HARP, 2f,2f)
-                    player.sendMessage("剣: ${swordType.name}を選択しました")
+                    player.sendMessage("剣: ${meleeType.name}を選択しました")
                 }
                 onRender {
-                    selectedColoredGreenDye(swordType == player.sword())
+                    selectedColoredGreenDye(meleeType == player.melee())
                 }
             }
         }
@@ -167,7 +167,7 @@ object GameMenu {
             mainGunSelect.getItem(),
             subGunSelect.getItem(),
             zombieSelect.getItem(),
-            sword.getItem(),
+            melee.getItem(),
             grenade.getItem()
         )
     }

@@ -10,7 +10,7 @@ object PlayerData {
     private val monsterData: HashMap<UUID, MonsterType> = hashMapOf()
     private val mainGunData: HashMap<UUID, CustomItemFactory.MainGunType> = hashMapOf()
     private val subGunData: HashMap<UUID, CustomItemFactory.SubGunType> = hashMapOf()
-    private val swordData : HashMap<UUID, CustomItemFactory.SwordType> = hashMapOf()
+    private val meleeData : HashMap<UUID, CustomItemFactory.MeleeType> = hashMapOf()
     private val grenadeData : HashMap<UUID, CustomItemFactory.GrenadeType> = hashMapOf()
     private val playerSkillSpeed = HashMap<UUID, Int>()
     private val playerSKillHeadShot: MutableSet<UUID> = mutableSetOf()
@@ -60,11 +60,11 @@ object PlayerData {
     fun Player.setSubGunType(subGunType: CustomItemFactory.SubGunType) {
         subGunData[uniqueId] = subGunType
     }
-    fun Player.setSword(sword: CustomItemFactory.SwordType) {
-        swordData[uniqueId] = sword
+    fun Player.setMelee(melee: CustomItemFactory.MeleeType) {
+        meleeData[uniqueId] = melee
     }
-    fun Player.sword(): CustomItemFactory.SwordType {
-        return swordData[uniqueId] ?: CustomItemFactory.SwordType.NATA
+    fun Player.melee(): CustomItemFactory.MeleeType {
+        return meleeData[uniqueId] ?: CustomItemFactory.MeleeType.NATA
     }
     fun Player.setGrenade(grenade: CustomItemFactory.GrenadeType) {
         grenadeData[uniqueId] = grenade

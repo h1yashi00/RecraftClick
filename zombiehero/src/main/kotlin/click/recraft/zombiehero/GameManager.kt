@@ -12,7 +12,7 @@ import click.recraft.zombiehero.player.PlayerData
 import click.recraft.zombiehero.player.PlayerData.grenade
 import click.recraft.zombiehero.player.PlayerData.mainGunType
 import click.recraft.zombiehero.player.PlayerData.subGunType
-import click.recraft.zombiehero.player.PlayerData.sword
+import click.recraft.zombiehero.player.PlayerData.melee
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.GameMode
@@ -173,11 +173,11 @@ class GameManager {
             player.foodLevel = 20
             val mainGun = customItemFactory.createMainGun(player.mainGunType())
             val subGun = customItemFactory.createSubGun(player.subGunType())
-            val sword = customItemFactory.createSword(player.sword())
+            val melee = customItemFactory.createMelee(player.melee())
             val grenade = customItemFactory.createGrenade(player.grenade())
             player.inventory.setItem(0, mainGun.createItemStack())
             player.inventory.setItem(1, subGun.createItemStack())
-            player.inventory.setItem(2, sword.createItemStack())
+            player.inventory.setItem(2, melee.createItemStack())
             player.inventory.setItem(3, grenade.createItemStack())
             player.inventory.setItem(4, item(Material.DIAMOND_PICKAXE))
             player.inventory.setItem(31, item(Material.DIAMOND_AXE))

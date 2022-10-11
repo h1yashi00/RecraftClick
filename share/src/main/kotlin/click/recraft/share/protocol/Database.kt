@@ -2,7 +2,6 @@ package click.recraft.share.protocol
 
 import click.recraft.share.Util
 import org.bukkit.Bukkit
-import org.bukkit.ChatColor
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 import java.sql.Connection
@@ -298,28 +297,22 @@ object Database {
     fun killZombie(killer: Player, weaponType: WeaponType) {
         val killerStats = getPlayerZombieHeroStats(killer)
         killerStats.monsterKills += 1
+        killerStats.coin += 10
         when (weaponType) {
             WeaponType.GUN -> killerStats.gunKills += 1
             WeaponType.MELEE -> killerStats.meleeKills += 1
         }
-        coin(killer, 10)
         updatePlayerZombieHeroStats(killerStats)
     }
     fun zombieKillHuman(player: Player) {
         val stats = getPlayerZombieHeroStats(player)
         stats.humanKills += 1
+        stats.coin += 20
         updatePlayerZombieHeroStats(stats)
-        coin(player, 15)
     }
     fun playGame(player: Player) {
         val stats = getPlayerZombieHeroStats(player)
         stats.timesPlayed += 1
-        updatePlayerZombieHeroStats(stats)
-    }
-    fun coin(player: Player, amount: Int) {
-        player.sendMessage("${ChatColor.GOLD}$amount coinを入手しました")
-        val stats = getPlayerZombieHeroStats(player)
-        stats.coin += amount
         updatePlayerZombieHeroStats(stats)
     }
     fun removeCache(player: Player) {

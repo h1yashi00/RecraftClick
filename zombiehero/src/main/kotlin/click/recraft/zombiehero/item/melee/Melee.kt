@@ -1,18 +1,18 @@
 package click.recraft.zombiehero.item.melee
 
 import click.recraft.share.item
+import click.recraft.share.protocol.TextureItem
 import click.recraft.zombiehero.Util
 import click.recraft.zombiehero.ZombieHero
-import click.recraft.zombiehero.event.SwordAttackPlayerEvent
+import click.recraft.zombiehero.event.MeleeAttackPlayerEvent
 import click.recraft.zombiehero.gun.api.GameSound
 import click.recraft.zombiehero.gun.api.Tick
 import click.recraft.zombiehero.item.CustomItem
 import click.recraft.zombiehero.player.HealthManager.damagePluginHealth
-import click.recraft.zombiehero.player.SwordManager
+import click.recraft.zombiehero.player.MeleeManager
 import click.recraft.zombiehero.player.WalkSpeed
 import org.bukkit.Bukkit
 import org.bukkit.Location
-import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
@@ -24,18 +24,18 @@ import org.bukkit.potion.PotionEffectType
 import org.bukkit.util.Vector
 import java.util.*
 
-class Sword (
+class Melee (
     val name: String,
     private val damage: Int,
     private val attackSpan: Tick,
     private val knockBack: Double,
-    customModelData: Int,
+    textureItem: TextureItem,
     override val walkSpeed: Int,
     private val swingSound: GameSound
 ): WalkSpeed, CustomItem (
     item(
-        Material.PINK_DYE,
-        customModelData = customModelData,
+        textureItem.material,
+        customModelData = textureItem.customModelData,
         localizedName = UUID.randomUUID().toString(), )
 ) {
 
@@ -60,9 +60,9 @@ class Sword (
             if (entities.isEmpty()) return@forEach
             entities.forEach { entity ->
                 if (entity !is LivingEntity) return@forEach
-                val customEvent = SwordAttackPlayerEvent(
+                val customEvent = MeleeAttackPlayerEvent(
                     source = source,
-                    sword = this,
+                    melee = this,
                     damage = damage.toDouble(),
                     Util.isHeadLocation(box, entity.eyeLocation),
                     entity
@@ -71,7 +71,7 @@ class Sword (
                 if (customEvent.isCancelled) {
                     return@forEach
                 }
-                customEvent.victim.damagePluginHealth(customEvent.source, customEvent.damage.toInt(), customEvent.sword, customEvent.isHeadShot)
+                customEvent.victim.damagePluginHealth(customEvent.source, customEvent.damage.toInt(), customEvent.melee, customEvent.isHeadShot)
                 entity.velocity = dir.clone().multiply(knockBack).apply {y = 0.1}
             }
             return
@@ -101,18 +101,18 @@ class Sword (
 
     // rightClickが3回ほど発生するので､それを阻止する
     override fun rightClick(event: PlayerInteractEvent) {
-        if (SwordManager.isAttacking(this)) {
+        if (MeleeManager.isAttacking(this)) {
             return
         }
         holdingPlayer = event.player.uniqueId
         progress = 1f
         attackingStart = ZombieHero.plugin.getTime()
         itemChanged = false
-        SwordManager.registerAttacking(this)
+        MeleeManager.registerAttacking(this)
     }
     fun oneTick() {
         if (itemChanged) {
-            SwordManager.remove(this)
+            MeleeManager.remove(this)
         }
         val player = Bukkit.getPlayer(holdingPlayer) ?: return
         val passed = ZombieHero.plugin.getTime() - attackingStart
@@ -120,7 +120,7 @@ class Sword (
         player.sendExperienceChange(progress,0)
         if (progress <= 0) {
             attack(player)
-            SwordManager.remove(this)
+            MeleeManager.remove(this)
         }
     }
 
