@@ -10,6 +10,6 @@ class PlayerQuit: Listener {
     fun playerQuit(event: PlayerQuitEvent) {
         val player = event.player
         Database.quitUpdate(player)
-        Database.removePlayerData(player)
+        Database.removeCache(player)
     }
 }

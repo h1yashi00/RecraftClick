@@ -147,11 +147,6 @@ object Database {
             updatePlayerDataAsync(player, this)
         }
     }
-    fun removePlayerData(player: Player) {
-        savePlayerOptoin.remove(player.uniqueId)
-        savePlayerData.remove(player.uniqueId)
-    }
-
     // sync function
     fun getPlayerDataSync (player: Player, function: PlayerData.() -> Unit) {
         if (savePlayerData.contains(player.uniqueId)) {
@@ -326,6 +321,11 @@ object Database {
         val stats = getPlayerZombieHeroStats(player)
         stats.coin += amount
         updatePlayerZombieHeroStats(stats)
+    }
+    fun removeCache(player: Player) {
+        savePlayerOptoin.remove(player.uniqueId)
+        savePlayerData.remove(player.uniqueId)
+        savePlayerZombieHeroStats.remove(player.uniqueId)
     }
 }
 enum class WeaponType {
