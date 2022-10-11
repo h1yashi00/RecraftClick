@@ -15,12 +15,16 @@ class PlayerJoin : Listener {
         player.inventory.clear()
         player.inventory.addItem(
             MenuServerSelect.serverSelectItem.getItem(),
-            MenuPlayerStats.item.getItem()
+            MenuPlayerStats.item.getItem(),
+            MenuPlayerZombieHeroStats.item.getItem()
         )
         player.gameMode = GameMode.SURVIVAL
         val world = Bukkit.getWorld("world")!!
         event.joinMessage = "${ChatColor.YELLOW}${player.name}が参加しました"
         player.teleport(world.spawnLocation)
+        Database.getPlayerZombieHeroStats(player) {
+            player.sendMessage("コインの枚数: $coin")
+        }
         Database.getPlayerOption(player) {
             if (autoResourcePackDownload) {
                 player.setResourcePack("https://www.dropbox.com/s/u5o5pydskkjohc3/Archive.zip?dl=1")

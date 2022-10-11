@@ -1,11 +1,12 @@
 package click.recraft.zombiehero.item.gun
 
+import click.recraft.share.protocol.TextureItem
 import click.recraft.zombiehero.ZombieHero
 import click.recraft.zombiehero.gun.api.*
 
 class AK47: Gun(
     name = "AK-47",
-    customModeValue = 1,
+    textureItem = TextureItem.GUN_AK47,
     shootManager = ZombieHero.plugin.shootManager,
     reload = Reload (
         30,

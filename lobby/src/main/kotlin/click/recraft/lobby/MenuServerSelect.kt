@@ -35,7 +35,7 @@ object MenuServerSelect: Listener {
     }
 
     val serverSelectItem = Main.plugin.interactItem(
-        item(Material.EMERALD, displayName = "${ChatColor.BOLD}サーバ選択"),
+        item(Material.COMPASS, displayName = "${ChatColor.BOLD}サーバ選択"),
         rightClick = true,
         leftClick = false
     ) {

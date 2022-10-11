@@ -26,6 +26,7 @@ class Main: KotlinPlugin() {
         RedisManager.load(JedisPool("redis", 6379))
         MenuServerSelect.load()
         MenuPlayerStats.load()
+        MenuPlayerZombieHeroStats.load()
         Database.initialize(this)
         super.onEnable()
         listeners.forEach {server.pluginManager.registerEvents(it, this)}

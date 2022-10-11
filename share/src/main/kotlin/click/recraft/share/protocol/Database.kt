@@ -2,6 +2,7 @@ package click.recraft.share.protocol
 
 import click.recraft.share.Util
 import org.bukkit.Bukkit
+import org.bukkit.ChatColor
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 import java.sql.Connection
@@ -245,23 +246,20 @@ object Database {
         stat.close()
     }
     private fun updatePlayerZombieHeroStats(stats: PlayerZombieHeroStats) {
-        val stat = con.prepareStatement("update player_zombiehero_stats set player_uuid = ?, coin = ?, times_played = ?, monster_kills = ?, human_kills = ?, gun_kills = ?, melee_kills = ?")
-        stat.setString(1, stats.uuid.toString())
-        stat.setInt(2,stats.coin)
-        stat.setInt(3,stats.timesPlayed)
-        stat.setInt(4,stats.monsterKills)
-        stat.setInt(5,stats.humanKills)
-        stat.setInt(6,stats.gunKills)
-        stat.setInt(7,stats.meleeKills)
+        val stat = con.prepareStatement("update player_zombiehero_stats set coin = ?, times_played = ?, monster_kills = ?, human_kills = ?, gun_kills = ?, melee_kills = ? where player_uuid = ?")
+        stat.setInt(1,stats.coin)
+        stat.setInt(2,stats.timesPlayed)
+        stat.setInt(3,stats.monsterKills)
+        stat.setInt(4,stats.humanKills)
+        stat.setInt(5,stats.gunKills)
+        stat.setInt(6,stats.meleeKills)
+        stat.setString(7, stats.uuid.toString())
         stat.executeUpdate()
         savePlayerZombieHeroStats[stats.uuid] = stats
         stat.close()
     }
 
     private fun getPlayerZombieHeroStats(player: Player): PlayerZombieHeroStats {
-        if (savePlayerZombieHeroStats.containsKey(player.uniqueId)) {
-            return savePlayerZombieHeroStats[player.uniqueId]!!
-        }
         val stat = con.prepareStatement("select * from player_zombiehero_stats where player_uuid = ?")
         stat.setString(1, player.uniqueId.toString())
         val result = stat.executeQuery()
@@ -284,6 +282,9 @@ object Database {
     }
 
     fun getPlayerZombieHeroStats(player: Player, function: PlayerZombieHeroStats.() -> Unit) {
+        if (savePlayerZombieHeroStats.containsKey(player.uniqueId)) {
+            return function.invoke(savePlayerZombieHeroStats[player.uniqueId]!!)
+        }
         if (plugin == null) {
             function.invoke(getPlayerZombieHeroStats(player))
             return
@@ -306,12 +307,14 @@ object Database {
             WeaponType.GUN -> killerStats.gunKills += 1
             WeaponType.MELEE -> killerStats.meleeKills += 1
         }
+        coin(killer, 10)
         updatePlayerZombieHeroStats(killerStats)
     }
     fun zombieKillHuman(player: Player) {
         val stats = getPlayerZombieHeroStats(player)
         stats.humanKills += 1
         updatePlayerZombieHeroStats(stats)
+        coin(player, 15)
     }
     fun playGame(player: Player) {
         val stats = getPlayerZombieHeroStats(player)
@@ -319,6 +322,7 @@ object Database {
         updatePlayerZombieHeroStats(stats)
     }
     fun coin(player: Player, amount: Int) {
+        player.sendMessage("${ChatColor.GOLD}$amount coinを入手しました")
         val stats = getPlayerZombieHeroStats(player)
         stats.coin += amount
         updatePlayerZombieHeroStats(stats)

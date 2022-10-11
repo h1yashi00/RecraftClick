@@ -1,6 +1,8 @@
 package click.recraft.zombiehero.player
 
 import click.recraft.share.item
+import click.recraft.share.protocol.Database
+import click.recraft.share.protocol.WeaponType
 import click.recraft.zombiehero.*
 import click.recraft.zombiehero.chat.ZombieHeroChatIcon
 import click.recraft.zombiehero.event.*
@@ -73,7 +75,9 @@ class PlayerListener: Listener {
 
         Bukkit.broadcastMessage(deathMsg)
 
+
         if (victimIsHuman) {
+            Database.zombieKillHuman(attacker)
             // 人間が感染させられた
             monster = MonsterManager.register(victim)
             world.playSound(victim.location, "minecraft:stab_knife_body", 1f,0.7f)
@@ -83,6 +87,14 @@ class PlayerListener: Listener {
         else {
             // ゾンビが死んだ
             if (monster == null) return
+            val type = when (event.customItem) {
+                is Sword -> WeaponType.MELEE
+                is Gun   -> WeaponType.GUN
+                else -> WeaponType.MELEE
+            }
+
+            Database.killZombie(attacker, type)
+
             world.playSound(location, monster.deathSound, 2f,0.1f)
             event.reviveHp = monster.maxHealth
             // 復活できない

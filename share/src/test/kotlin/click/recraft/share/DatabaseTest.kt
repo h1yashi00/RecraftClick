@@ -25,9 +25,6 @@ class DatabaseTest {
     }
     @Test
     fun a() {
-        val player = mock(Player::class.java)
-        `when`(player.uniqueId).thenReturn(UUID.fromString("372dc1e6-30b3-4201-a5e8-69f690483bae"))
-        `when`(player.name).thenReturn("hankake")
         Database.getPlayerDataSync (player) {
             println(firstJoin)
             println(lastJoin)
@@ -36,48 +33,30 @@ class DatabaseTest {
     }
     @Test
     fun join() {
-        val player = mock(Player::class.java)
-        `when`(player.uniqueId).thenReturn(UUID.fromString("372dc1e6-30b3-4201-a5e8-69f690483bae"))
-        `when`(player.name).thenReturn("hankake")
         Database.joinUpdate(player)
     }
     @Test
     fun quit() {
-        val player = mock(Player::class.java)
-        `when`(player.uniqueId).thenReturn(UUID.fromString("372dc1e6-30b3-4201-a5e8-69f690483bae"))
-        `when`(player.name).thenReturn("hankake")
         Database.quitUpdate(player)
     }
     @Test
     fun changeNameJoin() {
-        val player = mock(Player::class.java)
-        `when`(player.uniqueId).thenReturn(UUID.fromString("372dc1e6-30b3-4201-a5e8-69f690483bae"))
-        `when`(player.name).thenReturn("hankake80")
         Database.joinUpdate(player)
     }
     @Test
     fun b() {
-        val player = mock(Player::class.java)
-        `when`(player.uniqueId).thenReturn(UUID.fromString("372dc1e6-30b3-4201-a5e8-69f690483bae"))
-        `when`(player.name).thenReturn("hankake80")
         Database.getPlayerOption(player) {
             println(autoResourcePackDownload)
         }
     }
     @Test
     fun c() {
-        val player = mock(Player::class.java)
-        `when`(player.uniqueId).thenReturn(UUID.fromString("372dc1e6-30b3-4201-a5e8-69f690483bae"))
-        `when`(player.name).thenReturn("hankake80")
         Database.getPlayerZombieHeroStats(player) {
             println(coin)
         }
     }
     @Test
     fun humanKillZombieWithGun() {
-        val player = mock(Player::class.java)
-        `when`(player.uniqueId).thenReturn(UUID.fromString("372dc1e6-30b3-4201-a5e8-69f690483bae"))
-        `when`(player.name).thenReturn("hankake80")
         Database.killZombie(player, WeaponType.GUN)
     }
     @Test

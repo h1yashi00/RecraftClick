@@ -1,11 +1,12 @@
 package click.recraft.zombiehero.item.gun
 
+import click.recraft.share.protocol.TextureItem
 import click.recraft.zombiehero.ZombieHero
 import click.recraft.zombiehero.gun.api.*
 
 class Awp : Gun (
     "Awp",
-    customModeValue = 3,
+    textureItem = TextureItem.GUN_AWP,
     shootManager = ZombieHero.plugin.shootManager,
     reload = Reload (
         7,
@@ -19,7 +20,7 @@ class Awp : Gun (
         Accuracy(30,0),
         Tick.sec(0.0),
     ),
-    -30,
+    walkSpeed = -30,
     shotSound = GameSound(GameSound.Type.MOSIN_SHOT, 1F, 0.7F),
     reloadSound = GameSound(GameSound.Type.MOSIN_RELOAD,1F,0.7F),
     reloadFinishSound = GameSound(GameSound.Type.MOSIN_RELOAD_FINISH,1F,0.7F),

@@ -1,6 +1,7 @@
 package click.recraft.zombiehero.item.gun
 
 import click.recraft.share.item
+import click.recraft.share.protocol.TextureItem
 import click.recraft.zombiehero.ZombieHero
 import click.recraft.zombiehero.gun.api.GameSound
 import click.recraft.zombiehero.gun.api.Reload
@@ -9,7 +10,6 @@ import click.recraft.zombiehero.gun.api.Shot
 import click.recraft.zombiehero.item.CustomItem
 import click.recraft.zombiehero.player.WalkSpeed
 import org.bukkit.ChatColor
-import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.ClickType
 import org.bukkit.event.player.PlayerInteractEvent
@@ -20,10 +20,10 @@ import java.util.*
 
 open class Gun (
     name: String,
-    customModeValue: Int,
     private val shootManager: ShootManager,
     private val reload: Reload,
     private val shot: Shot,
+    textureItem: TextureItem,
     override val walkSpeed: Int,
     val reloadSound: GameSound,
     val reloadFinishSound: GameSound,
@@ -32,10 +32,10 @@ open class Gun (
     val recoilY: Float,
 ) : WalkSpeed, CustomItem(
     item (
-        material = Material.BLACK_DYE,
+        material = textureItem.material,
         localizedName = UUID.randomUUID().toString(),
         displayName = "${ChatColor.GOLD}$name",
-        customModelData = customModeValue,
+        customModelData = textureItem.customModelData,
         lore = listOf(
             "${ChatColor.AQUA}弾数: ${reload.armo}",
             "${ChatColor.AQUA}リロード時間: ${reload.reloadTime.getMilliseconds() / 1000}秒",
