@@ -1,5 +1,6 @@
 package click.recraft.lobby
 
+import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -8,7 +9,9 @@ import org.bukkit.event.block.BlockFromToEvent
 import org.bukkit.event.entity.CreatureSpawnEvent
 import org.bukkit.event.entity.EntityChangeBlockEvent
 import org.bukkit.event.entity.EntityDamageByEntityEvent
+import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.EntityExplodeEvent
+import org.bukkit.event.player.PlayerInteractAtEntityEvent
 
 class Protect: Listener {
     @EventHandler
@@ -48,5 +51,28 @@ class Protect: Listener {
     @EventHandler
     fun waterFlow(event: BlockFromToEvent) {
         event.isCancelled = true
+    }
+    @EventHandler
+    fun damage(event: EntityDamageEvent) {
+        val player = if (event.entity is Player) {event.entity as Player}  else return
+        if (event.cause == EntityDamageEvent.DamageCause.VOID) {
+            event.isCancelled = true
+            player.teleport(player.world.spawnLocation)
+        }
+        if (event.cause == EntityDamageEvent.DamageCause.FALL) {
+            event.isCancelled = true
+        }
+    }
+
+    @EventHandler
+    fun click(event: PlayerInteractAtEntityEvent) {
+        val player = event.player
+        if (player.isOp) {
+            return
+        }
+        val entity = event.rightClicked
+        if (entity.type == EntityType.ARMOR_STAND) {
+            event.isCancelled = true
+        }
     }
 }
