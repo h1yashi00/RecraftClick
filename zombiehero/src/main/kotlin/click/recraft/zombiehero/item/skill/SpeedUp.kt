@@ -34,14 +34,8 @@ class SpeedUp: SkillItem (
         player.world.playSound(player.location, Sound.ENTITY_WITHER_SHOOT, 2f, 2f)
         player.inventory.removeItem(createItemStack())
         player.setSkillSpeed(speedUp)
-        // HeadShotのロゴがが優先される｡
-        if (containsPassenger(player)) {
-            return
-        }
-        createPassenger(player)
         // 走ったとの息切れ
         val shotBreath = Util.createTask {
-            removePassenger(player)
             player.passengers.clear()
             player.setSkillSpeed(speedDown)
             val effect = PotionEffect(PotionEffectType.JUMP, 20 * 8, 238, false, false, false)

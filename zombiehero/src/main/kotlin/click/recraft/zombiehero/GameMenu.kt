@@ -13,6 +13,8 @@ import click.recraft.zombiehero.player.PlayerData.setSubGunType
 import click.recraft.zombiehero.player.PlayerData.setMelee
 import click.recraft.zombiehero.player.PlayerData.subGunType
 import click.recraft.zombiehero.player.PlayerData.melee
+import click.recraft.zombiehero.player.PlayerData.setSkill
+import click.recraft.zombiehero.player.PlayerData.skill
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.Sound
@@ -80,6 +82,18 @@ object GameMenu {
     ) {
         player.openInventory(grenadeMenu.createInv(player))
     }
+    private val skill = ZombieHero.plugin.interactItem(
+        item(
+            Material.PAPER,
+            displayName = "${ChatColor.WHITE}Skill",
+            customModelData = 120
+        ),
+        rightClick = true,
+        leftClick = false,
+    ) {
+        player.openInventory(skillMenu.createInv(player))
+    }
+
     private val factory = ZombieHero.plugin.customItemFactory
     private val mainGunMenu = ZombieHero.plugin.menu ("${ChatColor.GOLD}メイン武器", true) {
         MainGunType.values().forEachIndexed { i, gunType ->
@@ -161,6 +175,22 @@ object GameMenu {
             }
         }
     }
+    private val skillMenu = ZombieHero.plugin.menu("${ChatColor.WHITE}スキルメニュー", true) {
+        SkillType.values().forEachIndexed { i, skillType ->
+            slot(0, i, factory.createSkillItem(skillType).createItemStack()) {}
+            slot(1, i, item(Material.EMERALD)) {
+                onClick {
+                    player.setSkill(skillType)
+                    player.closeInventory()
+                    player.playSound(player, Sound.BLOCK_NOTE_BLOCK_HARP, 2f,2f)
+                    player.sendMessage("スキル: ${skillType.name}を選択しました")
+                }
+                onRender {
+                    selectedColoredGreenDye(skillType == player.skill())
+                }
+            }
+        }
+    }
 
     fun join(player: Player) {
         player.inventory.addItem(
@@ -168,7 +198,8 @@ object GameMenu {
             subGunSelect.getItem(),
             zombieSelect.getItem(),
             melee.getItem(),
-            grenade.getItem()
+            grenade.getItem(),
+            skill.getItem()
         )
     }
 }

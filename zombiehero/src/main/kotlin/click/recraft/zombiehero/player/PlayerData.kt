@@ -1,6 +1,8 @@
 package click.recraft.zombiehero.player
 
+import click.recraft.zombiehero.ZombieHero
 import click.recraft.zombiehero.item.CustomItemFactory
+import click.recraft.zombiehero.item.gun.Gun
 import click.recraft.zombiehero.monster.api.MonsterType
 import org.bukkit.entity.Player
 import java.util.*
@@ -12,6 +14,7 @@ object PlayerData {
     private val subGunData: HashMap<UUID, CustomItemFactory.SubGunType> = hashMapOf()
     private val meleeData : HashMap<UUID, CustomItemFactory.MeleeType> = hashMapOf()
     private val grenadeData : HashMap<UUID, CustomItemFactory.GrenadeType> = hashMapOf()
+    private val skillData: HashMap<UUID, CustomItemFactory.SkillType> = hashMapOf()
     private val playerSkillSpeed = HashMap<UUID, Int>()
     private val playerSKillHeadShot: MutableSet<UUID> = mutableSetOf()
 
@@ -71,5 +74,22 @@ object PlayerData {
     }
     fun Player.grenade(): CustomItemFactory.GrenadeType {
         return grenadeData[uniqueId] ?: CustomItemFactory.GrenadeType.NormalGrenade
+    }
+    fun Player.setSkill(skill: CustomItemFactory.SkillType) {
+        skillData[uniqueId] = skill
+    }
+    fun Player.skill() : CustomItemFactory.SkillType {
+        return skillData[uniqueId] ?: CustomItemFactory.SkillType.SPEED_UP
+    }
+    fun Player.usingGun(): Gun? {
+        val item = inventory.getItem(0)!!
+        val customItem = ZombieHero.plugin.customItemFactory.getItem(item)
+        if (customItem !is Gun) return null
+        return customItem
+    }
+    fun Player.addAmmo(ammoNum: Int) {
+        val gun = usingGun()!!
+        gun.stats.totalArmo += ammoNum
+        sendMessage("${org.bukkit.ChatColor.BOLD}メインウェポンの弾を${ammoNum}入手した")
     }
 }

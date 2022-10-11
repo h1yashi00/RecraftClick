@@ -28,9 +28,7 @@ class HeadShot: SkillItem (
         player.world.playSound(player.location, Sound.ENTITY_WITHER_SHOOT, 2f, 2f)
         player.inventory.remove(createItemStack())
         player.setPlayerSkillHeadShot()
-        createPassenger(player)
         val task = Util.createTask {
-            removePassenger(player)
             player.removePlayerSkillHeadShot()
         }
         Bukkit.getScheduler().runTaskLater(ZombieHero.plugin, task, 20 * 5)

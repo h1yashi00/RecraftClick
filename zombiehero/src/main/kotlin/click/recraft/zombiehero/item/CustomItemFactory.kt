@@ -9,6 +9,7 @@ import click.recraft.zombiehero.item.grenade.NormalGrenade
 import click.recraft.zombiehero.item.grenade.ZombieGrenadeTouch
 import click.recraft.zombiehero.item.gun.*
 import click.recraft.zombiehero.item.melee.Melee
+import click.recraft.zombiehero.item.skill.AmmoBox
 import click.recraft.zombiehero.item.skill.HeadShot
 import click.recraft.zombiehero.item.skill.SpeedUp
 import java.util.*
@@ -44,7 +45,8 @@ class CustomItemFactory : CustomItemManager {
 
     enum class SkillType {
         SPEED_UP,
-        HEADSHOT
+        HEADSHOT,
+        AMMO_BOX,
     }
 
     fun createMainGun (
@@ -99,6 +101,7 @@ class CustomItemFactory : CustomItemManager {
         val skill = when (skillType) {
             SkillType.SPEED_UP -> SpeedUp()
             SkillType.HEADSHOT -> HeadShot()
+            SkillType.AMMO_BOX -> AmmoBox()
         }
         register(skill.unique, skill)
         return skill

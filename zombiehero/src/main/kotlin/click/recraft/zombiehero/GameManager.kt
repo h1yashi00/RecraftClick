@@ -5,7 +5,6 @@ import click.recraft.share.TeleportServer
 import click.recraft.share.item
 import click.recraft.share.protocol.ChannelMessage
 import click.recraft.share.protocol.MessageType
-import click.recraft.zombiehero.item.CustomItemFactory
 import click.recraft.zombiehero.monster.api.MonsterManager
 import click.recraft.zombiehero.player.HealthManager
 import click.recraft.zombiehero.player.PlayerData
@@ -13,6 +12,7 @@ import click.recraft.zombiehero.player.PlayerData.grenade
 import click.recraft.zombiehero.player.PlayerData.mainGunType
 import click.recraft.zombiehero.player.PlayerData.subGunType
 import click.recraft.zombiehero.player.PlayerData.melee
+import click.recraft.zombiehero.player.PlayerData.skill
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.GameMode
@@ -175,14 +175,14 @@ class GameManager {
             val subGun = customItemFactory.createSubGun(player.subGunType())
             val melee = customItemFactory.createMelee(player.melee())
             val grenade = customItemFactory.createGrenade(player.grenade())
+            val skill = customItemFactory.createSkillItem(player.skill())
             player.inventory.setItem(0, mainGun.createItemStack())
             player.inventory.setItem(1, subGun.createItemStack())
             player.inventory.setItem(2, melee.createItemStack())
             player.inventory.setItem(3, grenade.createItemStack())
             player.inventory.setItem(4, item(Material.DIAMOND_PICKAXE))
             player.inventory.setItem(31, item(Material.DIAMOND_AXE))
-            player.inventory.setItem(5, customItemFactory.createSkillItem(CustomItemFactory.SkillType.SPEED_UP).createItemStack())
-            player.inventory.setItem(6, customItemFactory.createSkillItem(CustomItemFactory.SkillType.HEADSHOT).createItemStack())
+            player.inventory.setItem(5, skill.createItemStack())
         }
     }
 
