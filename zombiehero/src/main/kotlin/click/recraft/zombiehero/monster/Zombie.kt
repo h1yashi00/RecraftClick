@@ -38,7 +38,7 @@ class Zombie(playerUUID: UUID) : Monster(
                 return
             }
             val player = Bukkit.getPlayer(monster.playerUUID) ?: return
-            player.healPluginHealth(monster.maxHealth)
+            player.healPluginHealth(1000)
             player.world.playSound(player.location, Sound.ENTITY_PLAYER_BURP, 1f,2f)
             player.world.spawnParticle(Particle.HEART, player.location, 10, 1.5,1.5,1.5)
             coolDown = coolDownTime
@@ -61,7 +61,7 @@ class Zombie(playerUUID: UUID) : Monster(
                 player.inventory.chestplate = monster.chestPlate
                 active = false
             }
-            Bukkit.getScheduler().runTaskLater(ZombieHero.plugin, task, 20 * 20)
+            Bukkit.getScheduler().runTaskLater(ZombieHero.plugin, task, 20 * 5)
             coolDown = coolDownTime
         }
     }
