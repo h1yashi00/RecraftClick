@@ -1,4 +1,4 @@
-package click.recraft.zombiehero.item.grenade
+package click.recraft.zombiehero.item.skill.grenade
 
 import click.recraft.zombiehero.ZombieHero
 import click.recraft.zombiehero.event.GrenadeExplodeEvent

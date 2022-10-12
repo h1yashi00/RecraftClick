@@ -1,10 +1,9 @@
-package click.recraft.zombiehero.item.grenade
+package click.recraft.zombiehero.item.skill.grenade
 
-import click.recraft.share.item
 import click.recraft.zombiehero.Util
 import click.recraft.zombiehero.ZombieHero
 import click.recraft.zombiehero.gun.api.Tick
-import click.recraft.zombiehero.item.CustomItem
+import click.recraft.zombiehero.item.skill.SkillItem
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Location
@@ -13,7 +12,6 @@ import org.bukkit.entity.Item
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.ClickType
 import org.bukkit.event.player.PlayerInteractEvent
-import java.util.*
 
 abstract class Grenade (
     val name: String,
@@ -23,13 +21,11 @@ abstract class Grenade (
     private val pickUpDelay: Int,
     val damageMultiplier: Int
 )
-: CustomItem(
-    item(
-        Material.ORANGE_DYE,
-        displayName = "${ChatColor.GOLD}$name",
-        customModelData = customModelData,
-        localizedName = UUID.randomUUID().toString(),
-    ),
+: SkillItem (
+    Material.ORANGE_DYE,
+    description = arrayListOf(),
+    displayName = "${ChatColor.GOLD}$name",
+    customModelData = customModelData,
 ) {
     private var useDelay = ZombieHero.plugin.getTime()
     abstract fun pickUp(player: Player, item: Item)

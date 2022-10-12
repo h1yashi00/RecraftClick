@@ -1,4 +1,4 @@
-package click.recraft.zombiehero.item.grenade
+package click.recraft.zombiehero.item.skill.grenade
 
 import click.recraft.zombiehero.gun.api.Tick
 import org.bukkit.Location
@@ -11,7 +11,7 @@ abstract class TouchGrenade (
     customModelData: Int,
     useDelayTick: Tick,
     pickUpDelay: Int,
-): Grenade (
+): Grenade(
     name,
     explosionDelay,
     customModelData = customModelData,

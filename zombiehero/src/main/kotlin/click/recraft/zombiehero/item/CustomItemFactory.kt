@@ -3,15 +3,15 @@ package click.recraft.zombiehero.item
 import click.recraft.share.protocol.TextureItem
 import click.recraft.zombiehero.gun.api.GameSound
 import click.recraft.zombiehero.gun.api.Tick
-import click.recraft.zombiehero.item.grenade.ZombieBomb
-import click.recraft.zombiehero.item.grenade.HitGrenade
-import click.recraft.zombiehero.item.grenade.NormalGrenade
-import click.recraft.zombiehero.item.grenade.ZombieGrenadeTouch
 import click.recraft.zombiehero.item.gun.*
 import click.recraft.zombiehero.item.melee.Melee
 import click.recraft.zombiehero.item.skill.AmmoBox
 import click.recraft.zombiehero.item.skill.HeadShot
 import click.recraft.zombiehero.item.skill.SpeedUp
+import click.recraft.zombiehero.item.skill.grenade.HitGrenade
+import click.recraft.zombiehero.item.skill.grenade.NormalGrenade
+import click.recraft.zombiehero.item.skill.grenade.ZombieBomb
+import click.recraft.zombiehero.item.skill.grenade.ZombieGrenadeTouch
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -30,14 +30,6 @@ class CustomItemFactory : CustomItemManager {
         DesertEagle,
         Glock,
     }
-    enum class GrenadeType {
-        HITGrenade,
-        NormalGrenade
-    }
-    enum class ZombieItem {
-        ZombieGrenadeTouch,
-        ZombieBomb,
-    }
     enum class MeleeType {
         NATA,
         Hammer,
@@ -47,6 +39,10 @@ class CustomItemFactory : CustomItemManager {
         SPEED_UP,
         HEADSHOT,
         AMMO_BOX,
+        ZombieGrenadeTouch,
+        ZombieBomb,
+        HITGrenade,
+        NormalGrenade
     }
 
     fun createMainGun (
@@ -102,24 +98,12 @@ class CustomItemFactory : CustomItemManager {
             SkillType.SPEED_UP -> SpeedUp()
             SkillType.HEADSHOT -> HeadShot()
             SkillType.AMMO_BOX -> AmmoBox()
+            SkillType.ZombieGrenadeTouch -> ZombieGrenadeTouch()
+            SkillType.ZombieBomb -> ZombieBomb()
+            SkillType.HITGrenade -> HitGrenade("hitGrenade")
+            SkillType.NormalGrenade -> NormalGrenade()
         }
         register(skill.unique, skill)
         return skill
-    }
-    fun createGrenade(grenadeType: GrenadeType): CustomItem {
-        val grenade = when(grenadeType) {
-            GrenadeType.HITGrenade   -> HitGrenade("hitGrenade")
-            GrenadeType.NormalGrenade -> NormalGrenade()
-        }
-        register(grenade.unique, grenade)
-        return grenade
-    }
-    fun createZombieItem(zombieItem: ZombieItem): CustomItem {
-        val grenade = when(zombieItem) {
-            ZombieItem.ZombieGrenadeTouch -> ZombieGrenadeTouch()
-            ZombieItem.ZombieBomb -> ZombieBomb()
-        }
-        register(grenade.unique, grenade)
-        return grenade
     }
 }

@@ -5,7 +5,7 @@ import click.recraft.zombiehero.ZombieHero
 import click.recraft.zombiehero.event.PlayerDeadPluginHealthEvent
 import click.recraft.zombiehero.event.PluginHealthDamageEvent
 import click.recraft.zombiehero.item.CustomItem
-import click.recraft.zombiehero.item.grenade.Grenade
+import click.recraft.zombiehero.item.skill.grenade.Grenade
 import click.recraft.zombiehero.item.gun.Gun
 import click.recraft.zombiehero.item.melee.Melee
 import click.recraft.zombiehero.monster.api.MonsterManager

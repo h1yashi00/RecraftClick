@@ -8,12 +8,14 @@ import java.util.*
 abstract class SkillItem(
     material: Material,
     description: ArrayList<String>,
-    displayName: String
+    displayName: String,
+    customModelData: Int = 0
 ): CustomItem(
     item(
         material,
         localizedName = UUID.randomUUID().toString(),
         lore = description,
-        displayName = displayName
+        displayName = displayName,
+        customModelData = customModelData
     )
 )

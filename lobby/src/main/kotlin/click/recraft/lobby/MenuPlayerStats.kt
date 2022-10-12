@@ -19,7 +19,23 @@ object MenuPlayerStats {
         "ステータス",
         true
     ) {
-        slot(0,0, item(Material.PAPER, displayName = "ステータス")) {
+        slot(0,0, item(Material.IRON_SWORD, displayName = "ゲームステータス")) {
+            onClick {
+            }
+            onRender {
+                Database.getPlayerZombieHeroStats(player) {
+                    setLore(listOf (
+                        "${ChatColor.WHITE}コイン: $coin",
+                        "${ChatColor.WHITE}プレイした: $timesPlayed",
+                        "${ChatColor.WHITE}モンスターを倒した: $monsterKills",
+                        "${ChatColor.WHITE}銃で倒した: $gunKills",
+                        "${ChatColor.WHITE}近接武器で倒した: $meleeKills",
+                        "${ChatColor.WHITE}感染させた: $humanKills",
+                    ))
+                }
+            }
+        }
+        slot(0,7, item(Material.PAPER, displayName = "サーバステータス")) {
             onRender {
                 Database.getPlayerDataSync(player) {
                     setLore(
@@ -33,7 +49,7 @@ object MenuPlayerStats {
                 }
             }
         }
-        slot(0,1, item(Material.LIME_DYE, displayName = "リソースパックを読み込む")) {
+        slot(0,8, item(Material.LIME_DYE, displayName = "リソースパックを読み込む")) {
             onClick {
                 Database.changeAutoLoadResourcePack(player)
                 player.closeInventory()

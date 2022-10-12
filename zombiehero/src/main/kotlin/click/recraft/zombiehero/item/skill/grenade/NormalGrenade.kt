@@ -1,4 +1,4 @@
-package click.recraft.zombiehero.item.grenade
+package click.recraft.zombiehero.item.skill.grenade
 
 import click.recraft.zombiehero.gun.api.Tick
 import org.bukkit.Location

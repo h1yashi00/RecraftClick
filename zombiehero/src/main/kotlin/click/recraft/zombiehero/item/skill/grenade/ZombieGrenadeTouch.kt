@@ -1,4 +1,4 @@
-package click.recraft.zombiehero.item.grenade
+package click.recraft.zombiehero.item.skill.grenade
 
 import click.recraft.zombiehero.Util
 import click.recraft.zombiehero.gun.api.GameSound
@@ -8,7 +8,7 @@ import org.bukkit.Sound
 import org.bukkit.entity.Item
 import org.bukkit.event.player.PlayerItemHeldEvent
 
-class ZombieGrenadeTouch: TouchGrenade (
+class ZombieGrenadeTouch: TouchGrenade(
     "ZombieGrenadeTouch",
     explosionDelay = Tick.sec(3.0),
     201,

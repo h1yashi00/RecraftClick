@@ -1,6 +1,6 @@
 package click.recraft.zombiehero.event
 
-import click.recraft.zombiehero.item.grenade.Grenade
+import click.recraft.zombiehero.item.skill.grenade.Grenade
 import org.bukkit.block.Block
 import org.bukkit.entity.Player
 import org.bukkit.event.Cancellable

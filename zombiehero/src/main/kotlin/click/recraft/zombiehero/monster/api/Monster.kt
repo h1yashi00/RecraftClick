@@ -1,8 +1,6 @@
 package click.recraft.zombiehero.monster.api
 
 import click.recraft.share.item
-import click.recraft.zombiehero.ZombieHero
-import click.recraft.zombiehero.item.CustomItemFactory
 import click.recraft.zombiehero.player.HealthManager.setPluginHealth
 import org.bukkit.Material
 import org.bukkit.Sound
@@ -25,10 +23,10 @@ abstract class Monster(
     abstract val skill2: Skill
     val head = type.head
     var isDead = false
-    private fun getDefaultItem(): ItemStack {
-        val factory = ZombieHero.plugin.customItemFactory
-        return factory.createZombieItem(CustomItemFactory.ZombieItem.ZombieGrenadeTouch).createItemStack()
-    }
+//    private fun getDefaultItem(): ItemStack {
+//        val factory = ZombieHero.plugin.customItemFactory
+//        return factory.createZombieItem(CustomItemFactory.ZombieItem.ZombieGrenadeTouch).createItemStack()
+//    }
     val uniqueId: UUID = UUID.randomUUID()
 
     fun initialize(player: Player) {
@@ -36,7 +34,7 @@ abstract class Monster(
         inv.clear()
         inv.helmet = head
         inv.chestplate = chestPlate
-        inv.addItem(getDefaultItem())
+//        inv.addItem(getDefaultItem())
         inv.addItem(item(Material.GLASS,1))
         inv.setItem(skill1.index, skill1.item)
         inv.setItem(skill2.index, skill2.item)
