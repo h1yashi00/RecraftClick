@@ -19,11 +19,12 @@ abstract class Grenade (
     customModelData: Int,
     private val useDelayTick: Tick,
     private val pickUpDelay: Int,
-    val damageMultiplier: Int
+    val damageMultiplier: Int,
+    description: ArrayList<String>
 )
 : SkillItem (
     Material.ORANGE_DYE,
-    description = arrayListOf(),
+    description = description,
     displayName = "${ChatColor.GOLD}$name",
     customModelData = customModelData,
 ) {

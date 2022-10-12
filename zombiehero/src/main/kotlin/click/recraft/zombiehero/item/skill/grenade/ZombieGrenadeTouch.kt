@@ -3,6 +3,7 @@ package click.recraft.zombiehero.item.skill.grenade
 import click.recraft.zombiehero.Util
 import click.recraft.zombiehero.gun.api.GameSound
 import click.recraft.zombiehero.gun.api.Tick
+import org.bukkit.ChatColor
 import org.bukkit.Location
 import org.bukkit.Sound
 import org.bukkit.entity.Item
@@ -13,7 +14,10 @@ class ZombieGrenadeTouch: TouchGrenade(
     explosionDelay = Tick.sec(3.0),
     201,
     useDelayTick = Tick.sec(1.0),
-    pickUpDelay = 20 * 1
+    pickUpDelay = 20 * 1,
+    arrayListOf(
+        "${ChatColor.WHITE}接触型のゾンビグレネード｡当たった瞬間に爆発する｡周囲のモブをふっとばす｡"
+    )
 ) {
 
     override fun currentItem(event: PlayerItemHeldEvent) {

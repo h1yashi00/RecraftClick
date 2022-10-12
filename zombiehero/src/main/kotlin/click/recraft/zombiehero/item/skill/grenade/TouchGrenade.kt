@@ -11,13 +11,15 @@ abstract class TouchGrenade (
     customModelData: Int,
     useDelayTick: Tick,
     pickUpDelay: Int,
+    description: ArrayList<String>
 ): Grenade(
     name,
     explosionDelay,
     customModelData = customModelData,
     useDelayTick = useDelayTick,
     pickUpDelay,
-    10
+    10,
+    description
 ) {
     var touched = false
     override fun pickUp(player: Player, item: Item) {

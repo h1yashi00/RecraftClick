@@ -3,6 +3,7 @@ package click.recraft.zombiehero.item.skill.grenade
 import click.recraft.zombiehero.Util
 import click.recraft.zombiehero.gun.api.GameSound
 import click.recraft.zombiehero.gun.api.Tick
+import org.bukkit.ChatColor
 import org.bukkit.Location
 import org.bukkit.Sound
 import org.bukkit.entity.Item
@@ -15,7 +16,10 @@ class ZombieBomb: Grenade(
     200,
     Tick.sec(30.0),
     999999,
-    0
+    0,
+    arrayListOf(
+        "${ChatColor.WHITE}一定時間で爆発し､ふっとばすことができる"
+    )
 ) {
     override fun pickUp(player: Player, item: Item) {
     }
