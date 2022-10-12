@@ -22,6 +22,11 @@ class PlayerJoin: Listener {
     @EventHandler
     fun joinPlayer(event: PlayerJoinEvent) {
         val player = event.player
+        Database.getPlayerOption(player) {
+            if (autoResourcePackDownload) {
+                player.setResourcePack("https://www.dropbox.com/s/u5o5pydskkjohc3/Archive.zip?dl=1")
+            }
+        }
         // プレイヤーのゲームのプレイ回数を記録
         if (!playerHaveJoined.contains(player.uniqueId)) {
             playerHaveJoined.add(player.uniqueId)
