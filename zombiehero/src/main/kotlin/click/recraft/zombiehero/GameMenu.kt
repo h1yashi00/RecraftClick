@@ -27,7 +27,7 @@ object GameMenu {
     // loadが呼び出されないとshop.getItem()を呼んだときに初期化されてしまうので､ここを呼び出す
     fun load() {
     }
-    private val mainGunSelect = ZombieHero.plugin.interactItem(
+    private val main = ZombieHero.plugin.interactItem(
         item(Material.DIAMOND_SWORD,
             displayName = "${ChatColor.GOLD}MainGunSelect",
             customModelData = 1000
@@ -35,50 +35,49 @@ object GameMenu {
         rightClick = true,
         leftClick  = false
     ) {
-        player.openInventory(mainGunMenu.createInv(player))
+        player.openInventory(mainMenu.createInv(player))
     }
-    private val subGunSelect = ZombieHero.plugin.interactItem(
-        item(Material.WOODEN_SWORD,
-            displayName = "${ChatColor.GOLD}SubGunSelect",
-            customModelData = 300
-        ),
-        rightClick = true,
-        leftClick  = false
-    ) {
-        player.openInventory(subGunMenu.createInv(player))
-    }
-    private val zombieSelect = ZombieHero.plugin.interactItem(
-        item(
-            Material.ZOMBIE_HEAD,
-            displayName = "${ChatColor.GOLD}ZombieSelect",
-            customModelData = 200
-        ),
-        rightClick = true,
-        leftClick  = false
-    ) {
-        player.openInventory(monsterMenu.createInv(player))
-    }
-    private val melee = ZombieHero.plugin.interactItem(
-        item(
-            Material.IRON_SWORD,
-            displayName = "${ChatColor.GOLD}Melee",
-            customModelData = 100
-        ),
-        rightClick = true,
-        leftClick = false
-    ) {
-        player.openInventory(meleeMenu.createInv(player))
-    }
-    private val skill = ZombieHero.plugin.interactItem(
-        item(
-            Material.PAPER,
-            displayName = "${ChatColor.WHITE}Skill",
-            customModelData = 120
-        ),
-        rightClick = true,
-        leftClick = false,
-    ) {
-        player.openInventory(skillMenu.createInv(player))
+    private val mainMenu = ZombieHero.plugin.menu("${ChatColor.GOLD}メイン武器", true) {
+        slot(0,1,item(Material.BLACK_DYE)) {
+            onClick {
+                player.openInventory(mainGunMenu.createInv(player))
+            }
+            onRender {
+                setItem(factory.createMainGun(player.mainGunType()).createItemStack())
+            }
+        }
+        slot(0,2,item(Material.PINK_DYE)) {
+            onClick {
+                player.openInventory(subGunMenu.createInv(player))
+            }
+            onRender {
+                setItem(factory.createSubGun(player.subGunType()).createItemStack())
+            }
+        }
+        slot(0,3, item(Material.GRAY_DYE)) {
+            onClick {
+                player.openInventory(meleeMenu.createInv(player))
+            }
+            onRender {
+                setItem(factory.createMelee(player.melee()).createItemStack())
+            }
+        }
+        slot(0,4, item(Material.GRAY_DYE)) {
+            onClick {
+                player.openInventory(skillMenu.createInv(player))
+            }
+            onRender {
+                setItem(factory.createSkillItem(player.skill()).createItemStack())
+            }
+        }
+        slot(0, 7, item(Material.ZOMBIE_HEAD)) {
+            onClick {
+                player.openInventory(monsterMenu.createInv(player))
+            }
+            onRender {
+                setItem(player.monsterType().head)
+            }
+        }
     }
 
     private val factory = ZombieHero.plugin.customItemFactory
@@ -166,11 +165,7 @@ object GameMenu {
 
     fun join(player: Player) {
         player.inventory.addItem(
-            mainGunSelect.getItem(),
-            subGunSelect.getItem(),
-            zombieSelect.getItem(),
-            melee.getItem(),
-            skill.getItem()
+            main.getItem()
         )
     }
 }

@@ -44,6 +44,7 @@ class ShowingDSL(private val itemStack: ItemStack) {
     private val lore = arrayListOf<String>()
     var isChoose = false
     var selectedColoredGreenDye: Boolean? = null
+    var newItem: ItemStack? = null
     fun setLore(lores: List<String>) {
         lore.addAll(lores)
     }
@@ -54,10 +55,14 @@ class ShowingDSL(private val itemStack: ItemStack) {
     fun chose() {
         isChoose = true
     }
+    fun setItem(item: ItemStack) {
+        newItem = item
+    }
     fun selectedColoredGreenDye(boolean: Boolean) {
         selectedColoredGreenDye = boolean
     }
     fun getITem(): ItemStack {
+        if (newItem != null) return newItem!!
         val item = itemStack.clone()
         if (selectedColoredGreenDye != null) {
             return if (selectedColoredGreenDye!!) {
