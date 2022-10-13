@@ -2,6 +2,7 @@ package click.recraft.share.protocol
 
 import click.recraft.share.Util
 import org.bukkit.Bukkit
+import org.bukkit.ChatColor
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 import java.sql.Connection
@@ -47,21 +48,21 @@ data class PlayerZombieHeroStats (
     var meleeKills: Int = 0
 )
 
-enum class ItemType {
-    AK47,
-    MP5,
-    M870,
-    SAIGA,
-    MOSIN,
-    AWP,
-    GLOCK,
-    DESERT_EAGLE,
-    NATA,
-    HAMMER,
-    AMMO_DUMP,
-    GRENADE,
-    ZOMBIE_GRENADE,
-    ZOMBIE_HIT_GRENADE;
+enum class ItemType(val price: Int) {
+    AK47(100),
+    MP5(3000),
+    M870(3000),
+    SAIGA(8000),
+    MOSIN(12000),
+    AWP(30000),
+    GLOCK(1500),
+    DESERT_EAGLE(200),
+    NATA(3000),
+    HAMMER(3000),
+    AMMO_DUMP(3000),
+    GRENADE(3000),
+    ZOMBIE_GRENADE(300),
+    ZOMBIE_HIT_GRENADE(300);
 
     override fun toString(): String {
         return name.lowercase()
@@ -363,14 +364,20 @@ object Database {
         }
         return savePlayerZombieHeroItem[player.uniqueId]!!
     }
-    fun unlockItem(player: Player, type: ItemType): Boolean {
+    fun unlockItem(player: Player, type: ItemType): String {
         val items = getPlayerZombieHeroItem(player)
         if (items.contains(type)) {
-            return false
+            return "${ChatColor.RED}${type}はすでに開放しています"
         }
+        val stats = getPlayerZombieHeroStats(player)
+        if (stats.coin < type.price) {
+            return "${ChatColor.RED}コインが足りません｡(現在コイン: ${stats.coin} ${type}の値段: ${type.price})"
+        }
+        stats.apply {coin -= type.price}
+        updatePlayerZombieHeroStats(stats)
         items.add(type)
         updatePlayerZombieHeroItem(player, items)
-        return true
+        return "${ChatColor.GREEN}${type}を開放しました"
     }
     fun getPlayerZombieHeroItem(player: Player, function: MutableSet<ItemType>.() -> Unit ) {
         if (savePlayerZombieHeroItem.contains(player.uniqueId)) {

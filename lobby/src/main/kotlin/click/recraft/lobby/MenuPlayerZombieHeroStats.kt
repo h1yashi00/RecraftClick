@@ -42,17 +42,19 @@ object MenuPlayerZombieHeroStats {
                             }
                         }
                     }
+                    slot (1, item= item(Material.GOLD_INGOT)) {
+                        onRender {
+                            Database.getPlayerZombieHeroStats(player) {
+                                setItem(item(Material.GOLD_INGOT, displayName = "${ChatColor.GOLD}所有コイン: $coin"))
+                            }
+                        }
+                    }
 
-                    slot(1, item = item(Material.GREEN_WOOL, displayName = "${ChatColor.GREEN}購入する")) {
+                    slot(2, item = item(Material.GREEN_WOOL, displayName = "${ChatColor.GREEN}購入する")) {
                         onClick {
-                            val msg = if (Database.unlockItem(player, textureItem.itemType)) {
-                                "${ChatColor.GREEN}${textureItem.itemType}を開放しました"
-                            }
-                            else {
-                                "${ChatColor.RED}${textureItem.itemType}すでに開放しています"
-                            }
+                            player.closeInventory()
+                            val msg = Database.unlockItem(player, textureItem.itemType)
                             player.sendMessage(msg)
-
                         }
                     }
 

@@ -91,4 +91,12 @@ class DatabaseTest {
             Database.unlockItem(player, it)
         }
     }
+
+    @Test
+    fun playerBuyKit() {
+        val msg = Database.unlockItem(player, ItemType.MP5)
+        println(msg)
+        val msg2 = Database.unlockItem(player2, ItemType.MP5)
+        println(msg2)
+    }
 }
