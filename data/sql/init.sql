@@ -82,3 +82,22 @@ create table if not exists player_option (
     auto_load_resource_pack boolean default true,
     primary key (player_uuid)
 );
+
+create table if not exists player_zombiehero_item (
+    player_uuid uuid,
+    ak47 boolean default true,
+    mp5 boolean  default false,
+    mosin boolean default false,
+    awp boolean default false,
+    m870 boolean default false,
+    saiga boolean default false,
+    glock boolean default false,
+    desert_eagle boolean default true,
+    nata boolean default false,
+    hammer boolean default false,
+    ammo_dump boolean default true,
+    grenade boolean default false,
+    zombie_grenade boolean default false,
+    zombie_hit_grenade boolean default false,
+    primary key (player_uuid)
+);

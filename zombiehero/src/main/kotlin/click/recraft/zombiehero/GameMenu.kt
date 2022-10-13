@@ -24,7 +24,7 @@ object GameMenu {
     // 拡張関数はそのクラスの内容を使用することができる
     // 拡張関数は任意のタイミングで実行させるようにすることができる
 
-    // loadが呼び出されないとshop.getItem()を呼んだときに初期化されてしまうので､ここを呼び出す
+    // loadが呼び出されないとgetItem()を呼んだときに初期化されてしまうので､ここを呼び出す
     fun load() {
     }
     private val main = ZombieHero.plugin.interactItem(

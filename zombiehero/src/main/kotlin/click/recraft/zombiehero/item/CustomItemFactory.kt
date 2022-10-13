@@ -20,7 +20,7 @@ class CustomItemFactory : CustomItemManager {
 
     enum class MainGunType {
         AK47,
-        SHOTGUN,
+        M870,
         AWP,
         MP5,
         MOSIN,
@@ -50,7 +50,7 @@ class CustomItemFactory : CustomItemManager {
     ): Gun {
         val gun = when(type) {
             MainGunType.AK47 -> AK47()
-            MainGunType.SHOTGUN -> M870()
+            MainGunType.M870 -> M870()
             MainGunType.AWP  -> Awp()
             MainGunType.MP5 -> Mp5()
             MainGunType.MOSIN -> Mosin()

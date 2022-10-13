@@ -47,12 +47,35 @@ data class PlayerZombieHeroStats (
     var meleeKills: Int = 0
 )
 
+enum class ItemType {
+    AK47,
+    MP5,
+    M870,
+    SAIGA,
+    MOSIN,
+    AWP,
+    GLOCK,
+    DESERT_EAGLE,
+    NATA,
+    HAMMER,
+    AMMO_DUMP,
+    GRENADE,
+    ZOMBIE_GRENADE,
+    ZOMBIE_HIT_GRENADE;
+
+    override fun toString(): String {
+        return name.lowercase()
+    }
+}
+
+
 object Database {
     private lateinit var con: Connection
     private var plugin: JavaPlugin? = null
     private val savePlayerData: HashMap<UUID, PlayerData> = hashMapOf()
     private val savePlayerOptoin: HashMap<UUID, PlayerOption> = hashMapOf()
     private val savePlayerZombieHeroStats: HashMap<UUID, PlayerZombieHeroStats> = hashMapOf()
+    private val savePlayerZombieHeroItem: HashMap<UUID, MutableSet<ItemType>> = hashMapOf()
 
     fun initialize(plugin: JavaPlugin?, url: String = "jdbc:mysql://db/recraft") {
         Class.forName("com.mysql.jdbc.Driver")
@@ -294,6 +317,72 @@ object Database {
             Bukkit.getScheduler().runTaskAsynchronously(plugin!!, async)
         }
     }
+    private fun insertPlayerZombieHeroItem(player: Player) {
+        val sql = "insert into player_zombiehero_item set player_uuid = ?"
+        val stat = con.prepareStatement(sql)
+        stat.setString(1, player.uniqueId.toString())
+        stat.executeUpdate()
+        savePlayerZombieHeroItem[player.uniqueId] = mutableSetOf(ItemType.AK47, ItemType.DESERT_EAGLE, ItemType.AMMO_DUMP)
+    }
+    private fun updatePlayerZombieHeroItem(player: Player, items: Set<ItemType>) {
+        val sql = "update player_zombiehero_item set mp5 = ?, mosin = ?, awp = ?, m870 = ?, saiga = ?, glock = ?, nata = ?, hammer = ?, ammo_dump = ?, grenade =?, zombie_grenade = ?, zombie_hit_grenade = ? where player_uuid = ?"
+        val stat = con.prepareStatement(sql)
+        stat.setBoolean(1, items.contains(ItemType.MP5))
+        stat.setBoolean(2, items.contains(ItemType.MOSIN))
+        stat.setBoolean(3, items.contains(ItemType.AWP))
+        stat.setBoolean(4, items.contains(ItemType.M870))
+        stat.setBoolean(5, items.contains(ItemType.SAIGA))
+        stat.setBoolean(6, items.contains(ItemType.GLOCK))
+        stat.setBoolean(7, items.contains(ItemType.NATA))
+        stat.setBoolean(8, items.contains(ItemType.HAMMER))
+        stat.setBoolean(9, items.contains(ItemType.AMMO_DUMP))
+        stat.setBoolean(10,items.contains(ItemType.GRENADE))
+        stat.setBoolean(11,items.contains(ItemType.ZOMBIE_GRENADE))
+        stat.setBoolean(12,items.contains(ItemType.ZOMBIE_HIT_GRENADE))
+        stat.setString(13, player.uniqueId.toString())
+        stat.executeUpdate()
+        savePlayerZombieHeroItem[player.uniqueId] = items.toMutableSet()
+    }
+
+    private fun getPlayerZombieHeroItem(player: Player): MutableSet<ItemType> {
+        val sql = "select * from player_zombiehero_item"
+        val stat = con.prepareStatement(sql)
+        val result = stat.executeQuery()
+        if (!result.next()) {
+            insertPlayerZombieHeroItem(player)
+        }
+        else {
+            val items = mutableSetOf<ItemType>()
+            ItemType.values().forEach {
+                if (result.getBoolean(it.toString())) {
+                    items.add(it)
+                }
+            }
+            savePlayerZombieHeroItem[player.uniqueId] = items
+        }
+        return savePlayerZombieHeroItem[player.uniqueId]!!
+    }
+    fun unlockItem(player: Player, type: ItemType) {
+        val items = getPlayerZombieHeroItem(player)
+        items.add(type)
+        updatePlayerZombieHeroItem(player, items)
+    }
+    fun getPlayerZombieHeroItem(player: Player, function: MutableSet<ItemType>.() -> Unit ) {
+        if (savePlayerZombieHeroItem.contains(player.uniqueId)) {
+            return function.invoke(savePlayerZombieHeroItem[player.uniqueId]!!)
+        }
+        if (plugin == null) {
+            return function.invoke(getPlayerZombieHeroItem(player))
+        }
+        val async = Util.createTask {
+            val item = getPlayerZombieHeroItem(player)
+            val sync = Util.createTask {
+                function.invoke(item)
+            }
+            Bukkit.getScheduler().runTask(plugin!!, sync)
+        }
+        Bukkit.getScheduler().runTaskAsynchronously(plugin!!, async)
+    }
     fun killZombie(killer: Player, weaponType: WeaponType) {
         val killerStats = getPlayerZombieHeroStats(killer)
         killerStats.monsterKills += 1
@@ -319,6 +408,7 @@ object Database {
         savePlayerOptoin.remove(player.uniqueId)
         savePlayerData.remove(player.uniqueId)
         savePlayerZombieHeroStats.remove(player.uniqueId)
+        savePlayerZombieHeroItem.remove(player.uniqueId)
     }
 }
 enum class WeaponType {

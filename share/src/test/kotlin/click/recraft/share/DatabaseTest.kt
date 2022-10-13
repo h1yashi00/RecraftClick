@@ -1,6 +1,7 @@
 package click.recraft.share
 
 import click.recraft.share.protocol.Database
+import click.recraft.share.protocol.ItemType
 import click.recraft.share.protocol.WeaponType
 import org.junit.jupiter.api.Test
 import org.bukkit.entity.Player
@@ -72,11 +73,15 @@ class DatabaseTest {
         Database.playGame(player)
     }
     @Test
-    fun gainCoin() {
-        Database.coin(player, 50)
+    fun item() {
+        Database.getPlayerZombieHeroItem(player) {
+            println(this)
+        }
     }
     @Test
-    fun subtractCoin() {
-        Database.coin(player, -50)
+    fun unlock() {
+        ItemType.values().forEach {
+            Database.unlockItem(player, it)
+        }
     }
 }
