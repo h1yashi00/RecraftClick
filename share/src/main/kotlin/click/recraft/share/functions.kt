@@ -125,18 +125,23 @@ class MenuDSL(
         pm.registerEvents(listener, plugin)
     }
     fun createInv(player: Player): Inventory {
+        println("maxsize: $maxSize")
+        // indexは0から始まるが､
+        // createInventoryは9の倍数にする必要があるので-1をしたものをベースに作成している｡
         val size = when {
-            maxSize <= 9 -> 9
-            maxSize <= 9 * 2 -> 9 * 2
-            maxSize <= 9 * 3 -> 9 * 3
-            maxSize <= 9 * 4 -> 9 * 4
-            maxSize <= 9 * 5 -> 9 * 5
-            maxSize <= 9 * 6 -> 9 * 6
+            maxSize <= 9 * 1 - 1 -> 9
+            maxSize <= 9 * 2 - 1 -> 9 * 2
+            maxSize <= 9 * 3 - 1 -> 9 * 3
+            maxSize <= 9 * 4 - 1 -> 9 * 4
+            maxSize <= 9 * 5 - 1 -> 9 * 5
+            maxSize <= 9 * 6 - 1 -> 9 * 6
             else -> {9}
         }
+        println("size $size")
         return Bukkit.createInventory(null, size, title)
             .apply {
                 slotDSLs.forEach { (index, slotDsl) ->
+                    println("index: $index")
                     if (!onRender.contains(index)) {
                         setItem(index, slotDsl.item)
                         return@forEach
@@ -159,6 +164,19 @@ fun MenuDSL.slot(
     action: SlotDSL.() -> Unit
 ) {
     val index = (line * 9) + slot
+    val slotDSL = SlotDSL(this, index, item)
+    slotDSLs[index] = slotDSL
+    if (maxSize <= index) {
+        maxSize = index
+    }
+    action.invoke(slotDSL)
+}
+
+fun MenuDSL.slot(
+    index: Int,
+    item: ItemStack,
+    action: SlotDSL.() -> Unit
+) {
     val slotDSL = SlotDSL(this, index, item)
     slotDSLs[index] = slotDSL
     if (maxSize <= index) {
