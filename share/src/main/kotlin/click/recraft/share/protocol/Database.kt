@@ -345,8 +345,9 @@ object Database {
     }
 
     private fun getPlayerZombieHeroItem(player: Player): MutableSet<ItemType> {
-        val sql = "select * from player_zombiehero_item"
+        val sql = "select * from player_zombiehero_item where player_uuid = ?"
         val stat = con.prepareStatement(sql)
+        stat.setString(1, player.uniqueId.toString())
         val result = stat.executeQuery()
         if (!result.next()) {
             insertPlayerZombieHeroItem(player)
@@ -362,10 +363,14 @@ object Database {
         }
         return savePlayerZombieHeroItem[player.uniqueId]!!
     }
-    fun unlockItem(player: Player, type: ItemType) {
+    fun unlockItem(player: Player, type: ItemType): Boolean {
         val items = getPlayerZombieHeroItem(player)
+        if (items.contains(type)) {
+            return false
+        }
         items.add(type)
         updatePlayerZombieHeroItem(player, items)
+        return true
     }
     fun getPlayerZombieHeroItem(player: Player, function: MutableSet<ItemType>.() -> Unit ) {
         if (savePlayerZombieHeroItem.contains(player.uniqueId)) {

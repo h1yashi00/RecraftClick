@@ -16,6 +16,10 @@ class DatabaseTest {
         `when`(uniqueId).thenReturn(UUID.fromString("372dc1e6-30b3-4201-a5e8-69f690483bae"))
         `when`(name).thenReturn("hankake80")
     }
+    private val player2 = mock(Player::class.java) .apply {
+        `when`(uniqueId).thenReturn(UUID.fromString("14687d5d-0399-49db-b302-3cce4f47bc86"))
+        `when`(name).thenReturn("Narikake")
+    }
     @BeforeEach
     fun startUp() {
         Database.initialize(null, "jdbc:mysql://localhost/recraft")
@@ -75,6 +79,9 @@ class DatabaseTest {
     @Test
     fun item() {
         Database.getPlayerZombieHeroItem(player) {
+            println(this)
+        }
+        Database.getPlayerZombieHeroItem(player2) {
             println(this)
         }
     }
