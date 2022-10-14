@@ -125,7 +125,6 @@ class MenuDSL(
         pm.registerEvents(listener, plugin)
     }
     fun createInv(player: Player): Inventory {
-        println("maxsize: $maxSize")
         // indexは0から始まるが､
         // createInventoryは9の倍数にする必要があるので-1をしたものをベースに作成している｡
         val size = when {
@@ -137,11 +136,9 @@ class MenuDSL(
             maxSize <= 9 * 6 - 1 -> 9 * 6
             else -> {9}
         }
-        println("size $size")
         return Bukkit.createInventory(null, size, title)
             .apply {
                 slotDSLs.forEach { (index, slotDsl) ->
-                    println("index: $index")
                     if (!onRender.contains(index)) {
                         setItem(index, slotDsl.item)
                         return@forEach
