@@ -95,6 +95,7 @@ create table if not exists player_zombiehero_item (
     desert_eagle boolean default true,
     nata boolean default false,
     hammer boolean default false,
+
     ammo_dump boolean default true,
     grenade boolean default false,
     zombie_grenade boolean default false,

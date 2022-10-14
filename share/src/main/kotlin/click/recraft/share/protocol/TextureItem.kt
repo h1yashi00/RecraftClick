@@ -15,11 +15,33 @@ enum class TextureItem(val material: Material, val customModelData: Int, val ite
     GUN_DESERT_EAGLE(Material.BLACK_DYE, customModelData = 13, ItemType.DESERT_EAGLE),
     GUN_GLOCK(Material.BLACK_DYE, customModelData = 15, ItemType.GLOCK),
     MELEE_NATA(Material.PINK_DYE, customModelData = 1, ItemType.NATA),
-    MELEE_HAMMER(Material.PINK_DYE, customModelData = 2, ItemType.HAMMER);
+    MELEE_HAMMER(Material.PINK_DYE, customModelData = 2, ItemType.HAMMER),
+    SKILL_AMMO_DUMP(Material.COAL, customModelData= 1, ItemType.AMMO_DUMP),
+    SKILL_GRENADE(Material.PINK_DYE, customModelData = 1, ItemType.GRENADE),
+    SKILL_ZOMBIE_GRENADE(Material.PINK_DYE, customModelData = 1, ItemType.ZOMBIE_GRENADE),
+    SKILL_ZOMBIE_GRENADE_TOUCH(Material.PINK_DYE, customModelData = 2, ItemType.ZOMBIE_HIT_GRENADE);
+
+    companion object {
+        fun getGuns(): List<TextureItem> {
+            return values().filter {
+                it.name.startsWith("GUN_", ignoreCase = true)
+            }
+        }
+        fun getMelee(): List<TextureItem> {
+            return values().filter {
+                it.name.startsWith("MELEE_", ignoreCase = true)
+            }
+        }
+        fun getSkill(): List<TextureItem> {
+            return values().filter {
+                it.name.startsWith("SKILL_", ignoreCase = true)
+            }
+        }
+    }
     fun getItem(): ItemStack {
         return item(material, customModelData = customModelData)
     }
-    fun getItem(displayName: String, lore : ArrayList<String>): ItemStack {
+    fun getItem(displayName: String, lore : ArrayList<String> = arrayListOf()): ItemStack {
         return item(material, customModelData = customModelData, displayName = displayName, lore = lore)
     }
     fun getItemWithPriceUnlock(itemTypes: MutableSet<ItemType>): ItemStack {
