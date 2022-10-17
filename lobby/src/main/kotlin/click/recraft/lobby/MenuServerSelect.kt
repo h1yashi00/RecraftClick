@@ -1,6 +1,8 @@
 package click.recraft.lobby
 
 import click.recraft.share.*
+import click.recraft.share.extension.runTaskAsync
+import click.recraft.share.extension.runTaskSync
 import click.recraft.share.protocol.ChannelMessage
 import click.recraft.share.protocol.MessageType
 import click.recraft.share.protocol.ServerInfo
@@ -39,16 +41,13 @@ object MenuServerSelect: Listener {
         rightClick = true,
         leftClick = false
     ) {
-        val task = Util.createTask {
+        runTaskAsync {
             updateServers()
-            if (servers.size == 0) return@createTask
-
-            val syncTask = Util.createTask {
+            if (servers.size == 0) return@runTaskAsync
+            runTaskSync {
                 player.openInventory(dynamicInv())
             }
-            Bukkit.getScheduler().runTask(Main.plugin, syncTask)
         }
-        Bukkit.getScheduler().runTaskAsynchronously(Main.plugin, task)
     }
     @EventHandler
     fun playerClickMenuEvent(event: InventoryClickEvent) {
