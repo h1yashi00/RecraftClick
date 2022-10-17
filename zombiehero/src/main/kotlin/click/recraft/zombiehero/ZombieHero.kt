@@ -38,7 +38,7 @@ class ZombieHero: KotlinPlugin() {
     var info: ServerInfo = ServerInfo("",0,0,0, 0)
     override fun onEnable() {
         plugin = this
-        TaskGenerator.plugin = plugin
+        TaskGenerator.plugin = this
         PlayerManager.initialize("db", "recraft")
         server.messenger.registerOutgoingPluginChannel(this, "BungeeCord")
         val containerID = System.getenv("SERVER_NAME")
