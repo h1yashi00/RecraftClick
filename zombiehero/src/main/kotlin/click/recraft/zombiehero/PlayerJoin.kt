@@ -1,6 +1,6 @@
 package click.recraft.zombiehero
 
-import click.recraft.share.protocol.Database
+import click.recraft.share.database.PlayerManager
 import click.recraft.zombiehero.monster.api.MonsterManager
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
@@ -13,7 +13,7 @@ import org.bukkit.event.player.PlayerJoinEvent
 import java.util.*
 
 class PlayerJoin: Listener {
-    val playerHaveJoined = mutableSetOf<UUID>()
+    private val playerHaveJoined = mutableSetOf<UUID>()
     @EventHandler
     fun playerInteract(event: PlayerInteractAtEntityEvent) {
         if (event.rightClicked.type != EntityType.ARMOR_STAND) return
@@ -22,15 +22,11 @@ class PlayerJoin: Listener {
     @EventHandler
     fun joinPlayer(event: PlayerJoinEvent) {
         val player = event.player
-        Database.getPlayerOption(player) {
-            if (autoResourcePackDownload) {
-                player.setResourcePack("https://www.dropbox.com/s/u5o5pydskkjohc3/Archive.zip?dl=1")
-            }
-        }
+        PlayerManager.login(player)
         // プレイヤーのゲームのプレイ回数を記録
         if (!playerHaveJoined.contains(player.uniqueId)) {
             playerHaveJoined.add(player.uniqueId)
-            Database.playGame(player)
+            PlayerManager.playGame(player)
         }
         player.gameMode = GameMode.SURVIVAL
         player.foodLevel = 20

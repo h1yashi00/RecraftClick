@@ -1,8 +1,7 @@
 package click.recraft.zombiehero.player
 
+import click.recraft.share.database.PlayerManager
 import click.recraft.share.item
-import click.recraft.share.protocol.Database
-import click.recraft.share.protocol.WeaponType
 import click.recraft.zombiehero.*
 import click.recraft.zombiehero.chat.ZombieHeroChatIcon
 import click.recraft.zombiehero.event.*
@@ -77,7 +76,7 @@ class PlayerListener: Listener {
 
 
         if (victimIsHuman) {
-            Database.zombieKillHuman(attacker)
+            PlayerManager.killHuman(attacker)
             // 人間が感染させられた
             monster = MonsterManager.register(victim)
             world.playSound(victim.location, "minecraft:stab_knife_body", 1f,0.7f)
@@ -88,12 +87,12 @@ class PlayerListener: Listener {
             // ゾンビが死んだ
             if (monster == null) return
             val type = when (event.customItem) {
-                is Melee -> WeaponType.MELEE
-                is Gun   -> WeaponType.GUN
-                else -> WeaponType.MELEE
+                is Melee -> PlayerManager.WeaponType.MELEE
+                is Gun   -> PlayerManager.WeaponType.GUN
+                else -> PlayerManager.WeaponType.MELEE
             }
 
-            Database.killZombie(attacker, type)
+            PlayerManager.killZombie(attacker, type)
 
             world.playSound(location, monster.deathSound, 2f,0.1f)
             event.reviveHp = monster.maxHealth

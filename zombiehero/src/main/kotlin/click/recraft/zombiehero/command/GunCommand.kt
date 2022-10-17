@@ -1,7 +1,7 @@
 package click.recraft.zombiehero.command
 
+import click.recraft.share.database.Item
 import click.recraft.zombiehero.ZombieHero
-import click.recraft.zombiehero.item.CustomItemFactory
 import click.recraft.zombiehero.monster.api.MonsterManager
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
@@ -19,9 +19,9 @@ class GunCommand: CommandExecutor {
         if (!player.isOp) return false
         player.inventory.clear()
         MonsterManager.remove(player)
-        CustomItemFactory.MainGunType.values().forEach {
+        Item.getMain().forEach {
             player.inventory.addItem(
-                ZombieHero.plugin.customItemFactory.createMainGun(it).createItemStack()
+                ZombieHero.plugin.customItemFactory.create(it).createItemStack()
             )
         }
         return true

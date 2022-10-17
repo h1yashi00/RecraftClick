@@ -1,7 +1,7 @@
 package click.recraft.zombiehero
 
 import click.recraft.share.*
-import click.recraft.share.protocol.Database
+import click.recraft.share.database.PlayerManager
 import click.recraft.share.protocol.ServerInfo
 import click.recraft.zombiehero.command.GunCommand
 import click.recraft.zombiehero.command.MonsterCommand
@@ -37,7 +37,7 @@ class ZombieHero: KotlinPlugin() {
     var info: ServerInfo = ServerInfo("",0,0,0, 0)
     override fun onEnable() {
         plugin = this
-        Database.initialize(this)
+        PlayerManager.initialize("db", "recraft")
         server.messenger.registerOutgoingPluginChannel(this, "BungeeCord")
         val containerID = System.getenv("SERVER_NAME")
         info = if (containerID == "debug") {

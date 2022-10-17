@@ -2,7 +2,7 @@ package click.recraft.lobby
 
 import click.recraft.share.KotlinPlugin
 import click.recraft.share.RedisManager
-import click.recraft.share.protocol.Database
+import click.recraft.share.database.PlayerManager
 import org.bukkit.Bukkit
 import org.bukkit.event.Listener
 import redis.clients.jedis.JedisPool
@@ -27,7 +27,7 @@ class Main: KotlinPlugin() {
         MenuServerSelect.load()
         MenuPlayerStats.load()
         MenuPlayerZombieHeroStats.load()
-        Database.initialize(this)
+        PlayerManager.initialize("db", "recraft")
         super.onEnable()
         listeners.forEach {server.pluginManager.registerEvents(it, this)}
     }

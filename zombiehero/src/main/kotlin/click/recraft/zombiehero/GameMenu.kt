@@ -1,18 +1,11 @@
 package click.recraft.zombiehero
 
 import click.recraft.share.*
-import click.recraft.zombiehero.item.CustomItemFactory.*
+import click.recraft.share.database.Item
+import click.recraft.share.database.PlayerManager
 import click.recraft.zombiehero.monster.api.MonsterType
-import click.recraft.zombiehero.player.PlayerData.mainGunType
 import click.recraft.zombiehero.player.PlayerData.monsterType
-import click.recraft.zombiehero.player.PlayerData.setMainGunType
 import click.recraft.zombiehero.player.PlayerData.setMonsterType
-import click.recraft.zombiehero.player.PlayerData.setSubGunType
-import click.recraft.zombiehero.player.PlayerData.setMelee
-import click.recraft.zombiehero.player.PlayerData.subGunType
-import click.recraft.zombiehero.player.PlayerData.melee
-import click.recraft.zombiehero.player.PlayerData.setSkill
-import click.recraft.zombiehero.player.PlayerData.skill
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.Sound
@@ -43,7 +36,9 @@ object GameMenu {
                 player.openInventory(mainGunMenu.createInv(player))
             }
             onRender {
-                setItem(factory.createMainGun(player.mainGunType()).createItemStack())
+                PlayerManager.get(player).apply {
+                    setItem(factory.create(Item.getMainById(option)).createItemStack())
+                }
             }
         }
         slot(0,2,item(Material.PINK_DYE)) {
@@ -51,7 +46,9 @@ object GameMenu {
                 player.openInventory(subGunMenu.createInv(player))
             }
             onRender {
-                setItem(factory.createSubGun(player.subGunType()).createItemStack())
+                PlayerManager.get(player).apply {
+                    setItem(factory.create(Item.getSubById(option)).createItemStack())
+                }
             }
         }
         slot(0,3, item(Material.GRAY_DYE)) {
@@ -59,7 +56,9 @@ object GameMenu {
                 player.openInventory(meleeMenu.createInv(player))
             }
             onRender {
-                setItem(factory.createMelee(player.melee()).createItemStack())
+                PlayerManager.get(player).apply {
+                    setItem(factory.create(Item.getMeleeById(option)).createItemStack())
+                }
             }
         }
         slot(0,4, item(Material.GRAY_DYE)) {
@@ -67,7 +66,9 @@ object GameMenu {
                 player.openInventory(skillMenu.createInv(player))
             }
             onRender {
-                setItem(factory.createSkillItem(player.skill()).createItemStack())
+                PlayerManager.get(player).apply {
+                    setItem(factory.create(Item.getSkillById(option)).createItemStack())
+                }
             }
         }
         slot(0, 7, item(Material.ZOMBIE_HEAD)) {
@@ -82,33 +83,37 @@ object GameMenu {
 
     private val factory = ZombieHero.plugin.customItemFactory
     private val mainGunMenu = ZombieHero.plugin.menu ("${ChatColor.GOLD}メイン武器", true) {
-        MainGunType.values().forEachIndexed { i, gunType ->
-            slot(0, i, factory.createMainGun(gunType).createItemStack()) {}
+        Item.getMain().forEachIndexed { i, gunType ->
+            slot(0, i, factory.create(gunType).createItemStack()) {}
             slot (1, i, item(Material.GREEN_DYE)) {
                 onClick {
-                    player.setMainGunType(gunType)
+                    PlayerManager.changeMain(player, gunType)
                     player.closeInventory()
                     player.playSound(player, Sound.BLOCK_NOTE_BLOCK_HARP, 2f,2f)
                     player.sendMessage("メインウェポン: ${gunType.name}を選択しました")
                 }
                 onRender {
-                    selectedColoredGreenDye(gunType == player.mainGunType())
+                    PlayerManager.get(player).apply {
+                        selectedColoredGreenDye(gunType == Item.getMainById(option))
+                    }
                 }
             }
         }
     }
     private val subGunMenu = ZombieHero.plugin.menu ("${ChatColor.GOLD}サブ武器", true) {
-        SubGunType.values().forEachIndexed { i, gunType ->
-            slot(0, i, factory.createSubGun(gunType).createItemStack()) {}
+        Item.getSub().forEachIndexed { i, sub ->
+            slot(0, i, factory.create(sub).createItemStack()) {}
             slot (1, i, item(Material.GREEN_DYE)) {
                 onClick {
-                    player.setSubGunType(gunType)
+                    PlayerManager.changeSub(player, sub)
                     player.closeInventory()
                     player.playSound(player, Sound.BLOCK_NOTE_BLOCK_HARP, 2f,2f)
-                    player.sendMessage("サブウェポン: ${gunType.name}を選択しました")
+                    player.sendMessage("サブウェポン: ${sub.name}を選択しました")
                 }
                 onRender {
-                    selectedColoredGreenDye(gunType == player.subGunType())
+                    PlayerManager.get(player).apply {
+                        selectedColoredGreenDye(sub == Item.getSubById(option))
+                    }
                 }
             }
         }
@@ -130,34 +135,38 @@ object GameMenu {
         }
     }
     private val meleeMenu = ZombieHero.plugin.menu ("${ChatColor.WHITE}近接武器メニュー", true) {
-        MeleeType.values().forEachIndexed { i, meleeType ->
-            slot(0, i, factory.createMelee(meleeType).createItemStack()) {}
+        Item.getMelee().forEachIndexed { i, meleeType ->
+            slot(0, i, factory.create(meleeType).createItemStack()) {}
             slot(1, i, item(Material.EMERALD)) {
                 onClick {
-                    player.setMelee(meleeType)
+                    PlayerManager.changeMelee(player, meleeType)
                     player.closeInventory()
                     player.playSound(player, Sound.BLOCK_NOTE_BLOCK_HARP, 2f,2f)
                     player.sendMessage("剣: ${meleeType.name}を選択しました")
                 }
                 onRender {
-                    selectedColoredGreenDye(meleeType == player.melee())
+                    PlayerManager.get(player).apply {
+                        selectedColoredGreenDye(meleeType == Item.getMeleeById(option))
+                    }
                 }
             }
         }
     }
 
     private val skillMenu = ZombieHero.plugin.menu("${ChatColor.WHITE}スキルメニュー", true) {
-        SkillType.values().forEachIndexed { i, skillType ->
-            slot(0, i, factory.createSkillItem(skillType).createItemStack()) {}
+        Item.getSkill().forEachIndexed { i, skillType ->
+            slot(0, i, factory.create(skillType).createItemStack()) {}
             slot(1, i, item(Material.EMERALD)) {
                 onClick {
-                    player.setSkill(skillType)
+                    PlayerManager.changeSkill(player, skillType)
                     player.closeInventory()
                     player.playSound(player, Sound.BLOCK_NOTE_BLOCK_HARP, 2f,2f)
                     player.sendMessage("スキル: ${skillType.name}を選択しました")
                 }
                 onRender {
-                    selectedColoredGreenDye(skillType == player.skill())
+                    PlayerManager.get(player).apply {
+                        selectedColoredGreenDye(skillType == Item.getSkillById(option))
+                    }
                 }
             }
         }

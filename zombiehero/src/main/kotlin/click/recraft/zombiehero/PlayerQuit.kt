@@ -1,6 +1,6 @@
 package click.recraft.zombiehero
 
-import click.recraft.share.protocol.Database
+import click.recraft.share.database.PlayerManager
 import click.recraft.zombiehero.monster.api.MonsterManager
 import org.bukkit.ChatColor
 import org.bukkit.event.EventHandler
@@ -11,7 +11,7 @@ class PlayerQuit: Listener {
     @EventHandler
     fun quit(event: PlayerQuitEvent) {
         val player = event.player
-        Database.removeCache(player)
+        PlayerManager.logout(player)
         event.quitMessage = "${ChatColor.YELLOW}${player.name}が退出しました｡"
         val gameManager = ZombieHero.plugin.gameManager
         // ゲームが人数に達していない場合は､特別な処理を行わない｡

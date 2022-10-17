@@ -1,10 +1,10 @@
 package click.recraft.share
 
-import click.recraft.share.protocol.Database
-import click.recraft.share.protocol.ItemType
-import click.recraft.share.protocol.WeaponType
+import click.recraft.share.database.Item
+import click.recraft.share.database.PlayerManager
 import org.junit.jupiter.api.Test
 import org.bukkit.entity.Player
+import org.jetbrains.exposed.sql.transactions.transaction
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.mockito.Mockito.mock
@@ -22,81 +22,55 @@ class DatabaseTest {
     }
     @BeforeEach
     fun startUp() {
-        Database.initialize(null, "jdbc:mysql://localhost/recraft")
+        PlayerManager.initialize("localhost", "exposed_sample")
     }
     @AfterEach
     fun fin() {
-        Database.close()
     }
     @Test
-    fun a() {
-        Database.getPlayerDataSync (player) {
-            println(firstJoin)
-            println(lastJoin)
-            println(uuid)
+    fun user() {
+        transaction {
+            PlayerManager.login(player)
+            PlayerManager.login(player2)
+
+            PlayerManager.unlock(player, Item.MAIN_AK47)
+            PlayerManager.playGame(player)
+            PlayerManager.killHuman(player)
+            PlayerManager.killZombie(player, PlayerManager.WeaponType.GUN)
+            PlayerManager.killZombie(player, PlayerManager.WeaponType.MELEE)
+
+            PlayerManager.logout(player)
+            PlayerManager.logout(player2)
         }
     }
     @Test
-    fun join() {
-        Database.joinUpdate(player)
-    }
-    @Test
-    fun quit() {
-        Database.quitUpdate(player)
-    }
-    @Test
-    fun changeNameJoin() {
-        Database.joinUpdate(player)
+    fun a() {
+        var buf = Item.getMain()
+        println(buf)
+        buf = Item.getSub()
+        println(buf)
+        buf = Item.getMelee()
+        println(buf)
+        buf = Item.getSkill()
+        println(buf)
     }
     @Test
     fun b() {
-        Database.getPlayerOption(player) {
-            println(autoResourcePackDownload)
+        PlayerManager.login(player)
+        PlayerManager.changeMain(player, Item.MAIN_AWP)
+        PlayerManager.changeSub (player, Item.SUB_GLOCK)
+        PlayerManager.changeMelee(player, Item.MELEE_NATA)
+        PlayerManager.changeSkill(player, Item.SKILL_GRENADE)
+        PlayerManager.get(player).apply {
+            println(Item.getSkillById(option))
+            println(Item.getMainById(option))
+            println(Item.getSubById(option))
+            println(Item.getMeleeById(option))
         }
     }
     @Test
     fun c() {
-        Database.getPlayerZombieHeroStats(player) {
-            println(coin)
-        }
-    }
-    @Test
-    fun humanKillZombieWithGun() {
-        Database.killZombie(player, WeaponType.GUN)
-    }
-    @Test
-    fun humanKillZombieWithMelee() {
-        Database.killZombie(player, WeaponType.MELEE)
-    }
-    @Test
-    fun humanWasKilledByZombie() {
-        Database.zombieKillHuman(player)
-    }
-    @Test
-    fun playerPlayCount() {
-        Database.playGame(player)
-    }
-    @Test
-    fun item() {
-        Database.getPlayerZombieHeroItem(player) {
-            println(this)
-        }
-        Database.getPlayerZombieHeroItem(player2) {
-            println(this)
-        }
-    }
-    @Test
-    fun unlock() {
-        ItemType.values().forEach {
-            Database.unlockItem(player, it)
-        }
-    }
-
-    @Test
-    fun playerBuyKit() {
-        val msg = Database.unlockItem(player, ItemType.MP5)
-        println(msg)
-        val msg2 = Database.unlockItem(player2, ItemType.MP5)
-        println(msg2)
+        PlayerManager.login(player)
+        PlayerManager.get(player).apply {println(user.coin)}
     }
 }

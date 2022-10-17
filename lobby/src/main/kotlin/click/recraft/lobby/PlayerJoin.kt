@@ -1,6 +1,6 @@
 package click.recraft.lobby
 
-import click.recraft.share.protocol.Database
+import click.recraft.share.database.PlayerManager
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.GameMode
@@ -22,13 +22,6 @@ class PlayerJoin : Listener {
         val world = Bukkit.getWorld("world")!!
         event.joinMessage = "${ChatColor.YELLOW}${player.name}が参加しました"
         player.teleport(world.spawnLocation)
-        Database.getPlayerZombieHeroStats(player) {}
-        Database.getPlayerZombieHeroItem(player) {}
-        Database.getPlayerOption(player) {
-            if (autoResourcePackDownload) {
-                player.setResourcePack("https://www.dropbox.com/s/u5o5pydskkjohc3/Archive.zip?dl=1")
-            }
-        }
-        Database.joinUpdate(player)
+        PlayerManager.login(player)
     }
 }

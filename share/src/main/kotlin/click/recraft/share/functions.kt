@@ -83,6 +83,12 @@ class ShowingDSL(private val itemStack: ItemStack) {
 }
 class OnClickDSL {
     lateinit var player: Player
+    fun openInv(menuDSL: MenuDSL) {
+        player.openInventory(menuDSL.createInv(player))
+    }
+    fun closeInv() {
+        player.closeInventory()
+    }
 }
 
 class SlotDSL(val menuDSL: MenuDSL, val index: Int, val item: ItemStack) {

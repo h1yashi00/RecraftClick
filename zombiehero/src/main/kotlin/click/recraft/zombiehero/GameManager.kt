@@ -2,20 +2,16 @@ package click.recraft.zombiehero
 
 import click.recraft.share.RedisManager
 import click.recraft.share.TeleportServer
-import click.recraft.share.item
+import click.recraft.share.database.Item
+import click.recraft.share.database.PlayerManager
 import click.recraft.share.protocol.ChannelMessage
 import click.recraft.share.protocol.MessageType
 import click.recraft.zombiehero.monster.api.MonsterManager
 import click.recraft.zombiehero.player.HealthManager
 import click.recraft.zombiehero.player.PlayerData
-import click.recraft.zombiehero.player.PlayerData.mainGunType
-import click.recraft.zombiehero.player.PlayerData.subGunType
-import click.recraft.zombiehero.player.PlayerData.melee
-import click.recraft.zombiehero.player.PlayerData.skill
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.GameMode
-import org.bukkit.Material
 import org.bukkit.boss.BarColor
 import org.bukkit.boss.BarFlag
 import org.bukkit.boss.BarStyle
@@ -24,7 +20,6 @@ import org.bukkit.entity.Player
 class GameManager {
     val requiredPlayerNum: Int = 2
     var startFlag = false
-    private val customItemFactory = ZombieHero.plugin.customItemFactory
     val world = GameWorld(Bukkit.getWorld("world")!!)
     val bar = Bukkit.createBossBar("${ChatColor.BOLD}Recraft.Click Monster Hunt ${currentPhase()}", BarColor.YELLOW, BarStyle.SEGMENTED_20, BarFlag.CREATE_FOG)
     private var humanSurvived = false
@@ -170,16 +165,12 @@ class GameManager {
             if (MonsterManager.contains(player)) return@forEach
             player.inventory.clear()
             player.foodLevel = 20
-            val mainGun = customItemFactory.createMainGun(player.mainGunType())
-            val subGun = customItemFactory.createSubGun(player.subGunType())
-            val melee = customItemFactory.createMelee(player.melee())
-            val skill = customItemFactory.createSkillItem(player.skill())
-            player.inventory.setItem(0, mainGun.createItemStack())
-            player.inventory.setItem(1, subGun.createItemStack())
-            player.inventory.setItem(2, melee.createItemStack())
-            player.inventory.setItem(4, item(Material.DIAMOND_PICKAXE))
-            player.inventory.setItem(31, item(Material.DIAMOND_AXE))
-            player.inventory.setItem(5, skill.createItemStack())
+            val factory = ZombieHero.plugin.customItemFactory
+            PlayerManager.get(player).apply {
+                player.inventory.addItem (
+                    factory.create(Item.getMainById(option)).createItemStack(),
+                )
+            }
         }
     }
 

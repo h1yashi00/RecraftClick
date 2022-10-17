@@ -83,22 +83,55 @@ create table if not exists player_option (
     primary key (player_uuid)
 );
 
-create table if not exists player_zombiehero_item (
-    player_uuid uuid,
-    ak47 boolean default true,
-    mp5 boolean  default false,
-    mosin boolean default false,
-    awp boolean default false,
-    m870 boolean default false,
-    saiga boolean default false,
-    glock boolean default false,
-    desert_eagle boolean default true,
-    nata boolean default false,
-    hammer boolean default false,
 
-    ammo_dump boolean default true,
-    grenade boolean default false,
-    zombie_grenade boolean default false,
-    zombie_hit_grenade boolean default false,
+create table if not exists item_type (
+    item_type_id smallint not null auto_increment,
+    name varchar(20) not null,
+    primary key (item_type_id)
+);
+
+insert into item_type(name) values
+    ('main'),
+    ('sub'),
+    ('melee'),
+    ('skill');
+
+
+create table if not exists zombie_hero_item (
+    zombie_hero_item_id smallint not null auto_increment,
+    item_type_id smallint not null,
+    name varchar(20) not null,
+    foreign key (item_type_id) references item_type(item_type_id),
+    primary key (zombie_hero_item_id)
+);
+
+insert into zombie_hero_item(item_type_id, name) values
+    (1, 'ak47'),
+    (1, 'mp5'),
+    (1, 'mosin'),
+    (1, 'awp'),
+    (1, 'm870'),
+    (1, 'saiga'),
+    (2, 'glock'),
+    (2, 'desert_eagle'),
+    (3, 'nata'),
+    (3, 'hammer'),
+    (4, 'ammo_dump'),
+    (4, 'grenade'),
+    (4, 'zombie_grenade'),
+    (4, 'zombie_hit_grenade');
+
+create table if not exists player_zombiehero_unlocked_item (
+    player_uuid uuid,
+    item_type_id smallint not null,
+    foreign key (item_type_id) references item_type(item_type_id),
     primary key (player_uuid)
+);
+
+create table if not exists player_zombiehero_choose (
+    player_uuid uuid primary key,
+    item_main_id smallint not null check((select item_type_id from zombie_hero_item where zombie_hero_item_id = item_main_id) = 1) references item_type(item_type_id)
+--    item_gun_sub_id  smallint not null references item_type(item_type_id),
+--    item_melee_id smallint not null references item_type_id(item_type_id),
+--    item_skill_id smallint not null references item_type_id(item_type_id)
 );

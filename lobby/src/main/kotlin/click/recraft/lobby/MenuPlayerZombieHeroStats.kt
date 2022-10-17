@@ -1,17 +1,18 @@
 package click.recraft.lobby
 
 import click.recraft.share.*
-import click.recraft.share.protocol.Database
+import click.recraft.share.database.PlayerManager
 import click.recraft.share.protocol.TextureItem
 import org.bukkit.ChatColor
 import org.bukkit.Material
+
 object MenuPlayerZombieHeroStats {
     fun load(){}
     val item = Main.plugin.interactItem(item(Material.GOLD_INGOT, displayName = "${ChatColor.GOLD}Shop"),
         rightClick = true,
         leftClick = false
     ) {
-        player.openInventory(menu.createInv(player))
+        openMenu(menu)
     }
     private val menu = Main.plugin.menu("Shop Menu", true) {
         slot(0, item= TextureItem.GUN_AK47.getItem(displayName = "${ChatColor.WHITE}銃を買う")) {
@@ -34,14 +35,12 @@ object MenuPlayerZombieHeroStats {
         TextureItem.getGuns().forEachIndexed { i, textureItem ->
             slot(i, item = textureItem.getItem()) {
                 onClick {
-                    val menu = itemMenus[textureItem]!!.createInv(player)
-                    player.openInventory(menu)
+                    openInv(itemMenus[textureItem]!!)
                 }
                 onRender {
-                    Database.getPlayerZombieHeroItem(player) {
-                        val item = textureItem.getItemWithPriceUnlock(this).clone()
-                        setItem(item)
-                    }
+                    val entity = PlayerManager.get(player)
+                    val item = textureItem.getItemWithPriceUnlock(entity).clone()
+                    setItem(item)
                 }
             }
         }
@@ -50,14 +49,12 @@ object MenuPlayerZombieHeroStats {
         TextureItem.getMelee().forEachIndexed { i, textureItem ->
             slot(i, item = textureItem.getItem()) {
                 onClick {
-                    val menu = itemMenus[textureItem]!!.createInv(player)
-                    player.openInventory(menu)
+                    openInv(itemMenus[textureItem]!!)
                 }
                 onRender {
-                    Database.getPlayerZombieHeroItem(player) {
-                        val item = textureItem.getItemWithPriceUnlock(this).clone()
-                        setItem(item)
-                    }
+                    val entity = PlayerManager.get(player)
+                    val item = textureItem.getItemWithPriceUnlock(entity).clone()
+                    setItem(item)
                 }
             }
         }
@@ -66,14 +63,12 @@ object MenuPlayerZombieHeroStats {
         TextureItem.getSkill().forEachIndexed { i, textureItem ->
             slot(i, item = textureItem.getItem()) {
                 onClick {
-                    val menu = itemMenus[textureItem]!!.createInv(player)
-                    player.openInventory(menu)
+                    openInv(itemMenus[textureItem]!!)
                 }
                 onRender {
-                    Database.getPlayerZombieHeroItem(player) {
-                        val item = textureItem.getItemWithPriceUnlock(this).clone()
-                        setItem(item)
-                    }
+                    val entity = PlayerManager.get(player)
+                    val item = textureItem.getItemWithPriceUnlock(entity).clone()
+                    setItem(item)
                 }
             }
         }
@@ -86,32 +81,32 @@ object MenuPlayerZombieHeroStats {
                 Main.plugin.menu("Shop ${textureItem.itemType}", true) {
                     slot (0, item = textureItem.getItem()) {
                         onRender {
-                            Database.getPlayerZombieHeroItem(player) {
-                                setItem(textureItem.getItemWithPriceUnlock(this).clone())
-                            }
+                            val entity = PlayerManager.get(player)
+                            val item = textureItem.getItemWithPriceUnlock(entity).clone()
+                            setItem(item)
                         }
                     }
 
                     slot (1, item= item(Material.GOLD_INGOT)) {
                         onRender {
-                            Database.getPlayerZombieHeroStats(player) {
-                                setItem(item(Material.GOLD_INGOT, displayName = "${ChatColor.GOLD}所有コイン: $coin"))
-                            }
+                            val entity = PlayerManager.get(player)
+                            setItem(item(Material.GOLD_INGOT, displayName = "${ChatColor.GOLD}所有コイン: ${entity.user.coin}"))
+                            val item = textureItem.getItemWithPriceUnlock(entity).clone()
+                            setItem(item)
                         }
                     }
 
                     slot(2, item = item(Material.GREEN_WOOL, displayName = "${ChatColor.GREEN}購入する")) {
                         onClick {
                             player.closeInventory()
-                            val msg = Database.unlockItem(player, textureItem.itemType)
-                            player.sendMessage(msg)
+                            PlayerManager.unlock(player, textureItem.itemType)
+                            player.sendMessage("fajsdlfjalsdjkf")
                         }
                     }
 
                     slot(5, item(Material.RED_WOOL, displayName = "${ChatColor.RED}キャンセル")) {
                         onClick {
                             player.closeInventory()
-                            player.openInventory(menu.createInv(player))
                         }
                     }
                 }

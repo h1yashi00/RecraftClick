@@ -8,9 +8,10 @@ import org.bukkit.event.player.PlayerDropItemEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.ItemStack
 
-data class PlayerInterceptAction(val player: Player)
-
-fun PlayerInterceptAction.action() {
+data class PlayerInterceptAction(val player: Player) {
+    fun openMenu(menu: MenuDSL) {
+        player.openInventory(menu.createInv(player))
+    }
 }
 
 fun KotlinPlugin.interactItem(

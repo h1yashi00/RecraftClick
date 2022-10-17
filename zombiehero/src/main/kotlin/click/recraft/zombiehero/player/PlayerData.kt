@@ -1,7 +1,6 @@
 package click.recraft.zombiehero.player
 
 import click.recraft.zombiehero.ZombieHero
-import click.recraft.zombiehero.item.CustomItemFactory
 import click.recraft.zombiehero.item.gun.Gun
 import click.recraft.zombiehero.monster.api.MonsterType
 import org.bukkit.entity.Player
@@ -10,10 +9,6 @@ import kotlin.collections.HashMap
 
 object PlayerData {
     private val monsterData: HashMap<UUID, MonsterType> = hashMapOf()
-    private val mainGunData: HashMap<UUID, CustomItemFactory.MainGunType> = hashMapOf()
-    private val subGunData: HashMap<UUID, CustomItemFactory.SubGunType> = hashMapOf()
-    private val meleeData : HashMap<UUID, CustomItemFactory.MeleeType> = hashMapOf()
-    private val skillData: HashMap<UUID, CustomItemFactory.SkillType> = hashMapOf()
     private val playerSkillSpeed = HashMap<UUID, Int>()
     private val playerSKillHeadShot: MutableSet<UUID> = mutableSetOf()
 
@@ -49,30 +44,6 @@ object PlayerData {
     }
     fun Player.monsterType(): MonsterType {
         return monsterData[uniqueId] ?: MonsterType.ZOMBIE
-    }
-    fun Player.mainGunType(): CustomItemFactory.MainGunType {
-        return mainGunData[uniqueId] ?: CustomItemFactory.MainGunType.AK47
-    }
-    fun Player.setMainGunType(mainGunType: CustomItemFactory.MainGunType) {
-        mainGunData[uniqueId] = mainGunType
-    }
-    fun Player.subGunType(): CustomItemFactory.SubGunType {
-        return subGunData[uniqueId] ?: CustomItemFactory.SubGunType.DesertEagle
-    }
-    fun Player.setSubGunType(subGunType: CustomItemFactory.SubGunType) {
-        subGunData[uniqueId] = subGunType
-    }
-    fun Player.setMelee(melee: CustomItemFactory.MeleeType) {
-        meleeData[uniqueId] = melee
-    }
-    fun Player.melee(): CustomItemFactory.MeleeType {
-        return meleeData[uniqueId] ?: CustomItemFactory.MeleeType.NATA
-    }
-    fun Player.setSkill(skill: CustomItemFactory.SkillType) {
-        skillData[uniqueId] = skill
-    }
-    fun Player.skill() : CustomItemFactory.SkillType {
-        return skillData[uniqueId] ?: CustomItemFactory.SkillType.SPEED_UP
     }
     fun Player.usingGun(): Gun? {
         val item = inventory.getItem(0)!!
