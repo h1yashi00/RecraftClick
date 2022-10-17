@@ -4,7 +4,6 @@ import click.recraft.share.database.Item
 import click.recraft.share.database.PlayerManager
 import org.junit.jupiter.api.Test
 import org.bukkit.entity.Player
-import org.jetbrains.exposed.sql.transactions.transaction
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.mockito.Mockito.mock
@@ -29,19 +28,17 @@ class DatabaseTest {
     }
     @Test
     fun user() {
-        transaction {
-            PlayerManager.login(player)
-            PlayerManager.login(player2)
+        PlayerManager.login(player)
+        PlayerManager.login(player2)
 
-            PlayerManager.unlock(player, Item.MAIN_AK47)
-            PlayerManager.playGame(player)
-            PlayerManager.killHuman(player)
-            PlayerManager.killZombie(player, PlayerManager.WeaponType.GUN)
-            PlayerManager.killZombie(player, PlayerManager.WeaponType.MELEE)
+        PlayerManager.unlock(player, Item.MAIN_AK47)
+        PlayerManager.playGame(player)
+        PlayerManager.killHuman(player)
+        PlayerManager.killZombie(player, PlayerManager.WeaponType.GUN)
+        PlayerManager.killZombie(player, PlayerManager.WeaponType.MELEE)
 
-            PlayerManager.logout(player)
-            PlayerManager.logout(player2)
-        }
+        PlayerManager.logout(player)
+        PlayerManager.logout(player2)
     }
     @Test
     fun a() {

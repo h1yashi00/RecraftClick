@@ -3,6 +3,7 @@ package click.recraft.lobby
 import click.recraft.share.KotlinPlugin
 import click.recraft.share.RedisManager
 import click.recraft.share.database.PlayerManager
+import click.recraft.share.extension.TaskGenerator
 import org.bukkit.Bukkit
 import org.bukkit.event.Listener
 import redis.clients.jedis.JedisPool
@@ -20,6 +21,7 @@ class Main: KotlinPlugin() {
         lateinit var plugin: KotlinPlugin
     }
     override fun onEnable() {
+        TaskGenerator.plugin = plugin
         this.server.messenger.registerOutgoingPluginChannel(this, "BungeeCord")
         Bukkit.getWorld("world")!!.isAutoSave = false
         plugin = this

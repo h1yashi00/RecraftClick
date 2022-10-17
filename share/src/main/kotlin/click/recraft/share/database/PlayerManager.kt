@@ -45,12 +45,12 @@ object PlayerManager {
     fun login(player: Player) {
         runTaskAsync {
             transaction {
-                users[player.uniqueId] = UserEntity(player.uniqueId, player.name).apply {
-                    user.online = true
-                    runTaskSync {
-                        if (option.autoLoadResourcePack) {
-                            player.setResourcePack("https://www.dropbox.com/s/u5o5pydskkjohc3/Archive.zip?dl=1")
-                        }
+                val entity = UserEntity(player.uniqueId, player.name)
+                entity.user.online = true
+                runTaskSync {
+                    users[player.uniqueId] = entity
+                    if (entity.option.autoLoadResourcePack) {
+                        player.setResourcePack("https://www.dropbox.com/s/u5o5pydskkjohc3/Archive.zip?dl=1")
                     }
                 }
             }
