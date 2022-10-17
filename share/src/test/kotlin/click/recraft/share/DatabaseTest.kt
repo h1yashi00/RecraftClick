@@ -73,4 +73,10 @@ class DatabaseTest {
         PlayerManager.login(player)
         PlayerManager.get(player).apply {println(user.coin)}
     }
+    @Test
+    fun d() {
+        PlayerManager.login(player)
+        PlayerManager.changeAutoLoadResourcePack(player)
+        PlayerManager.logout(player)
+    }
 }

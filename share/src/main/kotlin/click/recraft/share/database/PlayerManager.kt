@@ -54,7 +54,8 @@ object PlayerManager {
     fun changeAutoLoadResourcePack(player: Player) {
         val entity = get(player)
         transaction {
-            entity.option.autoLoadResourcePack = true
+            val boolean = !entity.option.autoLoadResourcePack
+            entity.option.autoLoadResourcePack = boolean
         }
     }
 
