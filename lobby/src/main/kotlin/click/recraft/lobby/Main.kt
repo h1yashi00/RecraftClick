@@ -21,7 +21,7 @@ class Main: KotlinPlugin() {
         lateinit var plugin: KotlinPlugin
     }
     override fun onEnable() {
-        TaskGenerator.plugin = plugin
+        TaskGenerator.plugin = this
         this.server.messenger.registerOutgoingPluginChannel(this, "BungeeCord")
         Bukkit.getWorld("world")!!.isAutoSave = false
         plugin = this
