@@ -100,7 +100,6 @@ services:
       - TZ=Asia/Tokyo
       - MYSQL_ROOT_PASSWORD=narikakeisgod
     volumes:
-      - ./data/sql:/docker-entrypoint-initdb.d
       - ./db-data:/var/lib/mysql
       - ./docker/mysql:/etc/mysql/conf.d
     deploy:
