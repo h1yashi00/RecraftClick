@@ -10,10 +10,8 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerInteractAtEntityEvent
 import org.bukkit.event.player.PlayerJoinEvent
-import java.util.*
 
 class PlayerJoin: Listener {
-    private val playerHaveJoined = mutableSetOf<UUID>()
     @EventHandler
     fun playerInteract(event: PlayerInteractAtEntityEvent) {
         if (event.rightClicked.type != EntityType.ARMOR_STAND) return
@@ -23,11 +21,6 @@ class PlayerJoin: Listener {
     fun joinPlayer(event: PlayerJoinEvent) {
         val player = event.player
         PlayerManager.login(player)
-        // プレイヤーのゲームのプレイ回数を記録
-        if (!playerHaveJoined.contains(player.uniqueId)) {
-            playerHaveJoined.add(player.uniqueId)
-            PlayerManager.playGame(player)
-        }
         player.gameMode = GameMode.SURVIVAL
         player.foodLevel = 20
         player.inventory.clear()

@@ -16,6 +16,7 @@ import org.bukkit.boss.BarColor
 import org.bukkit.boss.BarFlag
 import org.bukkit.boss.BarStyle
 import org.bukkit.entity.Player
+import java.util.*
 
 class GameManager {
     val requiredPlayerNum: Int = 2
@@ -65,7 +66,9 @@ class GameManager {
         Bukkit.getScheduler().runTaskTimer(ZombieHero.plugin, task, 0, 20)
     }
 
+    private val playerHaveJoined = mutableSetOf<UUID>()
     fun start() {
+        // プレイヤーのゲームのプレイ回数を記録
         startFlag = true
         countdown = true
         humanSurvived = false
@@ -74,7 +77,13 @@ class GameManager {
             bar.progress = 1.0
             bar.setTitle("${ChatColor.GREEN}${ChatColor.BOLD}ゾンビ${ChatColor.BOLD}を選出しています...(残り${countDownTime}秒)")
             if (countDownTime == 10) {
-                Bukkit.getOnlinePlayers().forEach { it.playSound(it.location, "minecraft:countdown", 1f,1f) }
+                Bukkit.getOnlinePlayers().forEach { player ->
+                    player.playSound(player.location, "minecraft:countdown", 1f,1f)
+                    if (!playerHaveJoined.contains(player.uniqueId)) {
+                        playerHaveJoined.add(player.uniqueId)
+                        PlayerManager.playGame(player)
+                    }
+                }
             }
             countDownTime -= 1
             if (countDownTime < 0) {
