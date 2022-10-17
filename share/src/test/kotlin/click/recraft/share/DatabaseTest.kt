@@ -22,7 +22,7 @@ class DatabaseTest {
     }
     @BeforeEach
     fun startUp() {
-        PlayerManager.initialize("localhost", "exposed_sample")
+        PlayerManager.initialize("localhost", "recraft")
     }
     @AfterEach
     fun fin() {
