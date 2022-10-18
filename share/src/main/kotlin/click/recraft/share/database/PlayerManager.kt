@@ -3,6 +3,7 @@ package click.recraft.share.database
 import click.recraft.share.database.dao.User
 import click.recraft.share.database.dao.UserItem
 import click.recraft.share.database.dao.UserOption
+import click.recraft.share.database.player.Default
 import click.recraft.share.database.table.TableItem
 import click.recraft.share.database.table.TableUser
 import click.recraft.share.database.table.TableUserItem
@@ -140,7 +141,13 @@ object PlayerManager {
     ) {
         val user = User.findById(player.uniqueId) ?: User.new(player.uniqueId) { name = player.name}
         val userItem = UserItem.findById(player.uniqueId) ?: UserItem.new(player.uniqueId){}
-        val userOption = UserOption.findById(player.uniqueId) ?: UserOption.new(player.uniqueId) {}
+        private val daoItem = click.recraft.share.database.dao.Item
+        val userOption = UserOption.findById(player.uniqueId) ?: UserOption.new(player.uniqueId) {
+            itemMain = daoItem.findById(Default.itemMain.id)?.id ?: daoItem.new(Default.itemMain.id) {}.id
+            itemSub  = daoItem.findById(Default.itemSub.id) ?.id  ?: daoItem.new(Default.itemSub.id) {}.id
+            itemMelee = daoItem.findById(Default.itemMelee.id) ?.id ?: daoItem.new(Default.itemMelee.id) {}.id
+            itemSkill = daoItem.findById(Default.itemSkill.id) ?. id ?: daoItem.new(Default.itemSkill.id) {}.id
+        }
     }
 
     private val playerDatas: HashMap<UUID, PlayerData> = hashMapOf()
