@@ -8,5 +8,4 @@ import org.jetbrains.exposed.dao.id.EntityID
 class Item(id: EntityID<Int>): IntEntity(id) {
     companion object : EntityClass<Int, Item>(TableItem)
     var name by TableItem.name
-    var price by TableItem.price
 }

@@ -29,7 +29,6 @@ object PlayerManager {
                 if (dbItem != null) return@forEach
                 daoItem.new(item.id) {
                     name = item.name
-                    price = item.price
                 }
             }
         }
@@ -118,12 +117,13 @@ object PlayerManager {
     fun changeMain(player: Player, item: Item): Boolean {
         val daoItem = click.recraft.share.database.dao.Item
         val entity = get(player)
+        player.sendMessage("${entity.isUnlocked(item)}")
         if (!entity.isUnlocked(item)) {
             return false
         }
         runTaskAsync {
             transaction {
-                val dbItem = daoItem.findById(item.id) ?: daoItem.new (item.id) { name = item.name ; price = item.price }
+                val dbItem = daoItem.findById(item.id) ?: daoItem.new (item.id) { name = item.name }
                 entity.option.itemMain = dbItem.id
             }
         }
@@ -137,7 +137,7 @@ object PlayerManager {
         }
         runTaskAsync {
             transaction {
-                val dbItem = daoItem.findById(item.id) ?: daoItem.new (item.id) { name = item.name ; price = item.price }
+                val dbItem = daoItem.findById(item.id) ?: daoItem.new (item.id) { name = item.name ;}
                 entity.option.itemSub = dbItem.id
             }
         }
@@ -151,7 +151,7 @@ object PlayerManager {
         }
         runTaskAsync {
             transaction {
-                val dbItem = daoItem.findById(item.id) ?: daoItem.new (item.id) { name = item.name ; price = item.price }
+                val dbItem = daoItem.findById(item.id) ?: daoItem.new (item.id) { name = item.name }
                 entity.option.itemMelee = dbItem.id
             }
         }
@@ -165,7 +165,7 @@ object PlayerManager {
         }
         runTaskAsync {
             transaction {
-                val dbItem = daoItem.findById(item.id) ?: daoItem.new (item.id) { name = item.name ; price = item.price }
+                val dbItem = daoItem.findById(item.id) ?: daoItem.new (item.id) { name = item.name }
                 entity.option.itemSkill = dbItem.id
             }
         }
