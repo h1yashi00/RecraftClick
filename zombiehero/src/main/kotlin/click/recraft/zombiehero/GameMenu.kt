@@ -87,7 +87,7 @@ object GameMenu {
             slot(0, i, factory.create(gunType).createItemStack()) {}
             slot (1, i, item(Material.GREEN_DYE)) {
                 onClick {
-                    if (PlayerManager.changeMain(player, gunType)) {
+                    if (!PlayerManager.changeMain(player, gunType)) {
                         player.sendMessage("${ChatColor.RED}開放していません")
                         return@onClick
                     }
@@ -108,7 +108,7 @@ object GameMenu {
             slot(0, i, factory.create(sub).createItemStack()) {}
             slot (1, i, item(Material.GREEN_DYE)) {
                 onClick {
-                    if (PlayerManager.changeSub(player, sub)) {
+                    if (!PlayerManager.changeSub(player, sub)) {
                         player.sendMessage("${ChatColor.RED}開放していません")
                         return@onClick
                     }
@@ -145,7 +145,7 @@ object GameMenu {
             slot(0, i, factory.create(meleeType).createItemStack()) {}
             slot(1, i, item(Material.EMERALD)) {
                 onClick {
-                    if (PlayerManager.changeMelee(player, meleeType) ) {
+                    if (!PlayerManager.changeMelee(player, meleeType) ) {
                         player.sendMessage("${ChatColor.RED}開放していません")
                         return@onClick
                     }
@@ -167,7 +167,7 @@ object GameMenu {
             slot(0, i, factory.create(skillType).createItemStack()) {}
             slot(1, i, item(Material.EMERALD)) {
                 onClick {
-                    if (PlayerManager.changeSkill(player, skillType)) {
+                    if (!PlayerManager.changeSkill(player, skillType)) {
                         player.sendMessage("${ChatColor.RED}開放していません")
                         return@onClick
                     }

@@ -154,7 +154,7 @@ object PlayerManager {
     fun initialize(ip: String, database: String) {
         Database.connect("jdbc:mysql://$ip/$database", driver = "com.mysql.jdbc.Driver", user = "root", password = "narikakeisgod")
         transaction {
-            SchemaUtils.create(TableUser, TableUserOption, TableUserItem, TableItem)
+            SchemaUtils.create(TableItem)
             val daoItem = click.recraft.share.database.dao.Item
             Item.values().forEach { item ->
                 val dbItem = daoItem.findById(item.id)
@@ -163,6 +163,7 @@ object PlayerManager {
                     name = item.name
                 }
             }
+            SchemaUtils.create(TableUser, TableUserOption, TableUserItem)
         }
     }
 
@@ -176,8 +177,9 @@ object PlayerManager {
     fun login(player: Player) {
         runTaskAsync {
             transaction {
+                val dao = DaoPlayer(player)
                 val data = PlayerData(
-                    DaoPlayer(player)
+                    dao
                 )
                 data.update()
                 runTaskSync {
