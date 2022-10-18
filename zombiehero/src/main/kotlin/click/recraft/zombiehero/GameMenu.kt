@@ -87,7 +87,10 @@ object GameMenu {
             slot(0, i, factory.create(gunType).createItemStack()) {}
             slot (1, i, item(Material.GREEN_DYE)) {
                 onClick {
-                    PlayerManager.changeMain(player, gunType)
+                    if (PlayerManager.changeMain(player, gunType)) {
+                        player.sendMessage("${ChatColor.RED}開放していません")
+                        return@onClick
+                    }
                     player.closeInventory()
                     player.playSound(player, Sound.BLOCK_NOTE_BLOCK_HARP, 2f,2f)
                     player.sendMessage("メインウェポン: ${gunType.name}を選択しました")
@@ -105,7 +108,10 @@ object GameMenu {
             slot(0, i, factory.create(sub).createItemStack()) {}
             slot (1, i, item(Material.GREEN_DYE)) {
                 onClick {
-                    PlayerManager.changeSub(player, sub)
+                    if (PlayerManager.changeSub(player, sub)) {
+                        player.sendMessage("${ChatColor.RED}開放していません")
+                        return@onClick
+                    }
                     player.closeInventory()
                     player.playSound(player, Sound.BLOCK_NOTE_BLOCK_HARP, 2f,2f)
                     player.sendMessage("サブウェポン: ${sub.name}を選択しました")
@@ -139,7 +145,10 @@ object GameMenu {
             slot(0, i, factory.create(meleeType).createItemStack()) {}
             slot(1, i, item(Material.EMERALD)) {
                 onClick {
-                    PlayerManager.changeMelee(player, meleeType)
+                    if (PlayerManager.changeMelee(player, meleeType) ) {
+                        player.sendMessage("${ChatColor.RED}開放していません")
+                        return@onClick
+                    }
                     player.closeInventory()
                     player.playSound(player, Sound.BLOCK_NOTE_BLOCK_HARP, 2f,2f)
                     player.sendMessage("剣: ${meleeType.name}を選択しました")
@@ -158,7 +167,10 @@ object GameMenu {
             slot(0, i, factory.create(skillType).createItemStack()) {}
             slot(1, i, item(Material.EMERALD)) {
                 onClick {
-                    PlayerManager.changeSkill(player, skillType)
+                    if (PlayerManager.changeSkill(player, skillType)) {
+                        player.sendMessage("${ChatColor.RED}開放していません")
+                        return@onClick
+                    }
                     player.closeInventory()
                     player.playSound(player, Sound.BLOCK_NOTE_BLOCK_HARP, 2f,2f)
                     player.sendMessage("スキル: ${skillType.name}を選択しました")
