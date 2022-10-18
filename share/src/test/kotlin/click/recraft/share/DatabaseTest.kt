@@ -58,22 +58,21 @@ class DatabaseTest {
         PlayerManager.changeSub (player, Item.SUB_GLOCK)
         PlayerManager.changeMelee(player, Item.MELEE_NATA)
         PlayerManager.changeSkill(player, Item.SKILL_GRENADE)
-        PlayerManager.get(player).apply {
-            println(Item.getSkillById(option))
-            println(Item.getMainById(option))
-            println(Item.getSubById(option))
-            println(Item.getMeleeById(option))
-        }
-    }
-    @Test
-    fun c() {
-        PlayerManager.login(player)
-        PlayerManager.get(player).apply {println(user.coin)}
     }
     @Test
     fun d() {
         PlayerManager.login(player)
         PlayerManager.changeAutoLoadResourcePack(player)
         PlayerManager.logout(player)
+    }
+    @Test
+    fun e() {
+        PlayerManager.login(player)
+        PlayerManager.unlock(player, Item.MAIN_AK47)
+    }
+    @Test
+    fun g() {
+        PlayerManager.login(player)
+        PlayerManager.changeAutoLoadResourcePack(player)
     }
 }

@@ -9,7 +9,7 @@ import java.util.*
 class User(id: EntityID<UUID>): Entity<UUID>(id) {
     companion object : EntityClass<UUID, User>(TableUser)
     var name by TableUser.name
-    var firstLogin by TableUser.firstLogin
+    val firstLogin by TableUser.firstLogin
     var lastLogin  by TableUser.lastLogin
     var lastLogout by TableUser.lastLogout
     var coin: Int by TableUser.coin

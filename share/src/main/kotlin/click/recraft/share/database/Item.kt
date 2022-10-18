@@ -1,7 +1,5 @@
 package click.recraft.share.database
 
-import click.recraft.share.database.dao.UserOption
-
 enum class Item(val id: Int, val price: Int) {
     MAIN_AK47    (1, 1000),
     MAIN_AWP     (2, 1000),
@@ -30,17 +28,17 @@ enum class Item(val id: Int, val price: Int) {
         fun getSkill(): List<Item> {
             return values().filter { it.name.startsWith("SKILL_") }
         }
-        fun getMainById(option: UserOption): Item {
-            return getMain().firstOrNull { it.id == option.itemMain.value } ?: MAIN_AK47
+        fun getMainById(id: Int): Item {
+            return getMain().firstOrNull { it.id == id } ?: MAIN_AK47
         }
-        fun getSubById(option: UserOption): Item {
-            return getSub().firstOrNull {it.id == option.itemSub.value} ?: SUB_DESERT_EAGLE
+        fun getSubById(id: Int): Item {
+            return getSub().firstOrNull {it.id == id} ?: SUB_DESERT_EAGLE
         }
-        fun getMeleeById(option: UserOption): Item {
-            return getMelee().firstOrNull{it.id == option.itemMelee.value} ?: MELEE_NATA
+        fun getMeleeById(id: Int): Item {
+            return getMelee().firstOrNull{it.id == id} ?: MELEE_NATA
         }
-        fun getSkillById(option: UserOption): Item {
-            return getSkill().firstOrNull {it.id == option.itemSkill.value} ?: SKILL_AMMO_DUMP
+        fun getSkillById(id: Int): Item {
+            return getSkill().firstOrNull {it.id == id} ?: SKILL_AMMO_DUMP
         }
     }
 }

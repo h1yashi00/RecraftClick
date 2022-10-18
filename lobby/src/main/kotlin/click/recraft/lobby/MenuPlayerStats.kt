@@ -25,12 +25,12 @@ object MenuPlayerStats {
             onRender {
                 PlayerManager.get(player).apply {
                     setLore(listOf (
-                        "${ChatColor.WHITE}コイン: ${user.coin}",
-                        "${ChatColor.WHITE}プレイした: ${user.timesPlayed}",
-                        "${ChatColor.WHITE}モンスターを倒した: ${user.monsterKills}",
-                        "${ChatColor.WHITE}銃で倒した: ${user.gunKills}",
-                        "${ChatColor.WHITE}近接武器で倒した: ${user.meleeKills}",
-                        "${ChatColor.WHITE}感染させた: ${user.humanKills}",
+                        "${ChatColor.WHITE}コイン: $coin",
+                        "${ChatColor.WHITE}プレイした: $timesPlayed",
+                        "${ChatColor.WHITE}モンスターを倒した: $monsterKills",
+                        "${ChatColor.WHITE}銃で倒した: $gunKills",
+                        "${ChatColor.WHITE}近接武器で倒した: $meleeKills",
+                        "${ChatColor.WHITE}感染させた: $humanKills",
                     ))
                 }
             }
@@ -40,10 +40,10 @@ object MenuPlayerStats {
                 PlayerManager.get(player).apply {
                     setLore(
                         listOf(
-                            "${ChatColor.WHITE}現在の名前: ${user.name}",
-                            "${ChatColor.WHITE}初参加: ${user.firstLogin}",
-                            "${ChatColor.WHITE}最後に参加した : ${user.lastLogin}",
-                            "${ChatColor.WHITE}最後に退出した:  ${user.lastLogout}",
+                            "${ChatColor.WHITE}現在の名前: $name",
+                            "${ChatColor.WHITE}初参加: $firstLogin",
+                            "${ChatColor.WHITE}最後に参加した : $lastLogin",
+                            "${ChatColor.WHITE}最後に退出した:  $lastLogout",
                         )
                     )
                 }
@@ -56,7 +56,7 @@ object MenuPlayerStats {
             }
             onRender {
                 PlayerManager.get(player).apply {
-                    selectedColoredGreenDye(option.autoLoadResourcePack)
+                    selectedColoredGreenDye(autoLoadResourcePack)
                 }
             }
         }

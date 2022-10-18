@@ -38,8 +38,8 @@ object MenuPlayerZombieHeroStats {
                     openInv(itemMenus[textureItem]!!)
                 }
                 onRender {
-                    val entity = PlayerManager.get(player)
-                    val item = textureItem.getItemWithPriceUnlock(entity).clone()
+                    val data = PlayerManager.get(player)
+                    val item = textureItem.getItemWithPriceUnlock(data).clone()
                     setItem(item)
                 }
             }
@@ -89,10 +89,8 @@ object MenuPlayerZombieHeroStats {
 
                     slot (1, item= item(Material.GOLD_INGOT)) {
                         onRender {
-                            val entity = PlayerManager.get(player)
-                            setItem(item(Material.GOLD_INGOT, displayName = "${ChatColor.GOLD}所有コイン: ${entity.user.coin}"))
-                            val item = textureItem.getItemWithPriceUnlock(entity).clone()
-                            setItem(item)
+                            val data = PlayerManager.get(player)
+                            setItem(item(Material.GOLD_INGOT, displayName = "${ChatColor.GOLD}所有コイン: ${data.coin}"))
                         }
                     }
 
@@ -100,7 +98,6 @@ object MenuPlayerZombieHeroStats {
                         onClick {
                             player.closeInventory()
                             PlayerManager.unlock(player, textureItem.itemType)
-                            player.sendMessage("fajsdlfjalsdjkf")
                         }
                     }
 

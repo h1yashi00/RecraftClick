@@ -2,7 +2,6 @@ package click.recraft.zombiehero
 
 import click.recraft.share.RedisManager
 import click.recraft.share.TeleportServer
-import click.recraft.share.database.Item
 import click.recraft.share.database.PlayerManager
 import click.recraft.share.extension.runTaskLater
 import click.recraft.share.extension.runTaskTimer
@@ -174,7 +173,7 @@ class GameManager {
             val factory = ZombieHero.plugin.customItemFactory
             PlayerManager.get(player).apply {
                 player.inventory.addItem (
-                    factory.create(Item.getMainById(option)).createItemStack(),
+                    factory.create(itemMain).createItemStack(),
                 )
             }
         }

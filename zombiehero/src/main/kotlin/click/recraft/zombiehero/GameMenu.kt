@@ -37,7 +37,7 @@ object GameMenu {
             }
             onRender {
                 PlayerManager.get(player).apply {
-                    setItem(factory.create(Item.getMainById(option)).createItemStack())
+                    setItem(factory.create(itemMain).createItemStack())
                 }
             }
         }
@@ -47,7 +47,7 @@ object GameMenu {
             }
             onRender {
                 PlayerManager.get(player).apply {
-                    setItem(factory.create(Item.getSubById(option)).createItemStack())
+                    setItem(factory.create(itemSub).createItemStack())
                 }
             }
         }
@@ -57,7 +57,7 @@ object GameMenu {
             }
             onRender {
                 PlayerManager.get(player).apply {
-                    setItem(factory.create(Item.getMeleeById(option)).createItemStack())
+                    setItem(factory.create(itemMelee).createItemStack())
                 }
             }
         }
@@ -67,7 +67,7 @@ object GameMenu {
             }
             onRender {
                 PlayerManager.get(player).apply {
-                    setItem(factory.create(Item.getSkillById(option)).createItemStack())
+                    setItem(factory.create(itemSkill).createItemStack())
                 }
             }
         }
@@ -94,7 +94,7 @@ object GameMenu {
                 }
                 onRender {
                     PlayerManager.get(player).apply {
-                        selectedColoredGreenDye(gunType == Item.getMainById(option))
+                        selectedColoredGreenDye(gunType == itemMain)
                     }
                 }
             }
@@ -112,7 +112,7 @@ object GameMenu {
                 }
                 onRender {
                     PlayerManager.get(player).apply {
-                        selectedColoredGreenDye(sub == Item.getSubById(option))
+                        selectedColoredGreenDye(sub == itemSub)
                     }
                 }
             }
@@ -146,7 +146,7 @@ object GameMenu {
                 }
                 onRender {
                     PlayerManager.get(player).apply {
-                        selectedColoredGreenDye(meleeType == Item.getMeleeById(option))
+                        selectedColoredGreenDye(meleeType == itemMelee)
                     }
                 }
             }
@@ -165,7 +165,7 @@ object GameMenu {
                 }
                 onRender {
                     PlayerManager.get(player).apply {
-                        selectedColoredGreenDye(skillType == Item.getSkillById(option))
+                        selectedColoredGreenDye(skillType == itemSkill)
                     }
                 }
             }

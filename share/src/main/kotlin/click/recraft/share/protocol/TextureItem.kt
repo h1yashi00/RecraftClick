@@ -1,7 +1,7 @@
 package click.recraft.share.protocol
 
 import click.recraft.share.database.Item
-import click.recraft.share.database.UserEntity
+import click.recraft.share.database.PlayerManager
 import click.recraft.share.item
 import org.bukkit.ChatColor
 import org.bukkit.Material
@@ -46,8 +46,8 @@ enum class TextureItem(val material: Material, val customModelData: Int, val ite
     fun getItem(displayName: String, lore : ArrayList<String> = arrayListOf()): ItemStack {
         return item(material, customModelData = customModelData, displayName = displayName, lore = lore)
     }
-    fun getItemWithPriceUnlock(userEntity: UserEntity): ItemStack {
-        val boolean = userEntity.isUnlocked(itemType)
+    fun getItemWithPriceUnlock(data: PlayerManager.PlayerData): ItemStack {
+        val boolean = data.isItemUnlocked(itemType)
         val msg = if (boolean) {
             "${ChatColor.GREEN}${itemType}開放済み"
         }
