@@ -1,6 +1,7 @@
 package click.recraft.zombiehero.player
 
 import click.recraft.share.database.PlayerManager
+import click.recraft.share.extension.runTaskLater
 import click.recraft.share.item
 import click.recraft.zombiehero.*
 import click.recraft.zombiehero.chat.ZombieHeroChatIcon
@@ -25,12 +26,11 @@ class PlayerListener: Listener {
     private fun reviveMonster(monster: Monster) {
         val player = Bukkit.getPlayer(monster.playerUUID) ?: return
         player.gameMode = GameMode.SPECTATOR
-        val task = Util.createTask {
+        runTaskLater(20 * 10) {
             player.gameMode = GameMode.SURVIVAL
             Bukkit.getOnlinePlayers().forEach { it.playSound(it, Sound.ENTITY_WITHER_SPAWN, 1f,0.5f) }
             player.teleport(ZombieHero.plugin.gameManager.world.randomSpawn())
         }
-        Bukkit.getScheduler().runTaskLater(ZombieHero.plugin, task, 20 * 10)
     }
 
     private fun headShotLog(item: CustomItem?, isHeadShot: Boolean): String {

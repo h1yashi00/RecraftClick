@@ -1,7 +1,6 @@
 package click.recraft.zombiehero.monster
 
-import click.recraft.zombiehero.Util
-import click.recraft.zombiehero.ZombieHero
+import click.recraft.share.extension.runTaskLater
 import click.recraft.zombiehero.monster.api.Monster
 import click.recraft.zombiehero.monster.api.MonsterType
 import click.recraft.zombiehero.monster.api.Skill
@@ -57,11 +56,10 @@ class Zombie(playerUUID: UUID) : Monster(
             val player = Bukkit.getPlayer(monster.playerUUID) ?: return
             player.inventory.chestplate = (ItemStack(Material.NETHERITE_CHESTPLATE))
             active = true
-            val task = Util.createTask {
+            runTaskLater(20 * 5) {
                 player.inventory.chestplate = monster.chestPlate
                 active = false
             }
-            Bukkit.getScheduler().runTaskLater(ZombieHero.plugin, task, 20 * 5)
             coolDown = coolDownTime
         }
     }

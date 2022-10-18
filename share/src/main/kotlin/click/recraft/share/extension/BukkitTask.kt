@@ -32,25 +32,11 @@ fun runTaskSync(action: () -> Unit) {
     Bukkit.getScheduler().runTask(plugin, task)
 }
 
-fun runTaskLater(delay: Int, action: () -> Unit) {
+fun runTaskLater(delay: Int, task: BukkitTask.() -> Unit) {
     val plugin = TaskGenerator.plugin
-    if (plugin == null) {
-        action.invoke()
-        return
-    }
-    val task: BukkitTask.() -> Unit = {
-        action.invoke()
-    }
-    Bukkit.getScheduler().runTaskLater(plugin, task, delay.toLong())
+    Bukkit.getScheduler().runTaskLater(plugin!!, task, delay.toLong())
 }
-fun runTaskTimer(delay: Int, period: Int, action: () -> Unit) {
+fun runTaskTimer(delay: Int, period: Int, task: BukkitTask.() -> Unit) {
     val plugin = TaskGenerator.plugin
-    if (plugin == null) {
-        action.invoke()
-        return
-    }
-    val task: BukkitTask.() -> Unit = {
-        action.invoke()
-    }
-    Bukkit.getScheduler().runTaskTimer(plugin, task, delay.toLong(), period.toLong())
+    Bukkit.getScheduler().runTaskTimer(plugin!!, task, delay.toLong(), period.toLong())
 }

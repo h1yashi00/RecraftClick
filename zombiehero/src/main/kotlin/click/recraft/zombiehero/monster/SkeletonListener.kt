@@ -1,11 +1,10 @@
 package click.recraft.zombiehero.monster
 
-import click.recraft.zombiehero.Util
+import click.recraft.share.extension.runTaskLater
 import click.recraft.zombiehero.ZombieHero
 import click.recraft.zombiehero.monster.api.MonsterListener
 import click.recraft.zombiehero.player.HealthManager.damagePluginHealth
 import click.recraft.zombiehero.player.HealthManager.healPluginHealth
-import org.bukkit.Bukkit
 import org.bukkit.Particle
 import org.bukkit.Sound
 import org.bukkit.entity.LivingEntity
@@ -78,10 +77,9 @@ class SkeletonListener(
 
         monster.walkSpeed += 20
         player.healPluginHealth(50)
-        val task = Util.createTask {
+        runTaskLater(20 * 5) {
             monster.walkSpeed -= 20
         }
-        Bukkit.getScheduler().runTaskLater(ZombieHero.plugin, task, 20 * 5)
         save.remove(event.entity.uniqueId)
     }
 }

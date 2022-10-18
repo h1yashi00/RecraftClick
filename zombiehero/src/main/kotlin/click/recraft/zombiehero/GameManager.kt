@@ -4,6 +4,8 @@ import click.recraft.share.RedisManager
 import click.recraft.share.TeleportServer
 import click.recraft.share.database.Item
 import click.recraft.share.database.PlayerManager
+import click.recraft.share.extension.runTaskLater
+import click.recraft.share.extension.runTaskTimer
 import click.recraft.share.protocol.ChannelMessage
 import click.recraft.share.protocol.MessageType
 import click.recraft.zombiehero.monster.api.MonsterManager
@@ -53,7 +55,7 @@ class GameManager {
     private fun humanSurviveTime() {
         val threeMin = 60 * 3
         var countDownHumanSurvive = threeMin
-        val task = Util.createTask {
+        runTaskTimer(0, 20) {
             if (countDownHumanSurvive <= 0) {
                 humanSurvived = true
                 checkGameCondition()
@@ -63,7 +65,6 @@ class GameManager {
             bar.setTitle("${ChatColor.BOLD}人間生存まであと${timeFormat(countDownHumanSurvive)} ${currentPhase()}")
             countDownHumanSurvive += -1
         }
-        Bukkit.getScheduler().runTaskTimer(ZombieHero.plugin, task, 0, 20)
     }
 
     private val playerHaveJoined = mutableSetOf<UUID>()
@@ -73,7 +74,7 @@ class GameManager {
         countdown = true
         humanSurvived = false
         var countDownTime = 20
-        val task = Util.createTask {
+        runTaskTimer(0, 20) {
             bar.progress = 1.0
             bar.setTitle("${ChatColor.GREEN}${ChatColor.BOLD}ゾンビ${ChatColor.BOLD}を選出しています...(残り${countDownTime}秒)")
             if (countDownTime == 10) {
@@ -87,11 +88,11 @@ class GameManager {
             }
             countDownTime -= 1
             if (countDownTime < 0) {
-                val lateTask = Util.createTask {
+                runTaskLater( ( 20 * listOf(3,4,5).random())) {
                     if (Bukkit.getOnlinePlayers().size == 1) {
                         RedisManager.publishToBungee(ChannelMessage(MessageType.DELETE))
                         shutdownServer()
-                        return@createTask
+                        return@runTaskLater
                     }
                     Bukkit.getOnlinePlayers().forEach { player ->
                         player.playSound(player.location, "minecraft:man_shout", 1f,1f)
@@ -101,23 +102,19 @@ class GameManager {
                     humanSurviveTime()
                     countdown = false
                 }
-                Bukkit.getScheduler().runTaskLater(ZombieHero.plugin, lateTask, (20 * listOf(3,4,5).random()).toLong())
-
                 cancel()
             }
         }
-        Bukkit.getScheduler().runTaskTimer(ZombieHero.plugin, task, 0, 20)
     }
     private fun shutdownServer() {
         Util.broadcastTitle("Game finished !!!!!!!")
         bar.progress = 1.0
         bar.setTitle("${ChatColor.WHITE}FINISH")
-        val task = Util.createTask {
+        runTaskLater(20 * 3) {
             Bukkit.getOnlinePlayers().forEach { player ->
                 TeleportServer.send(player, "lobby", ZombieHero.plugin)
             }
         }
-        Bukkit.getScheduler().runTaskLater(ZombieHero.plugin, task, 20 * 3)
     }
     private fun finish() {
         Bukkit.getScheduler().pendingTasks.forEach {
@@ -187,18 +184,16 @@ class GameManager {
     private fun humanWin() {
         Util.broadcastTitle("${ChatColor.WHITE}Human Win", 20 , 20 * 3,20)
         Bukkit.getOnlinePlayers().forEach { it.playSound(it.location, "zombie_lose_dying", 0.5F ,1F) }
-        val task = Util.createTask {
+        runTaskLater(20 * 7) {
             finish()
         }
-        Bukkit.getScheduler().runTaskLater(ZombieHero.plugin, task, 20 * 7)
     }
     private fun zombieWin() {
         Util.broadcastTitle("${ChatColor.GREEN}Zombie Win", 20 , 20 * 3,20)
         Bukkit.getOnlinePlayers().forEach { it.playSound(it.location, "zombie_win_laugh", 0.5F ,1F) }
-        val task = Util.createTask {
+        runTaskLater(20 * 7) {
             finish()
         }
-        Bukkit.getScheduler().runTaskLater(ZombieHero.plugin, task, 20 * 7)
     }
     // ラウンドが終了の場合は､trueを返す
     fun checkGameCondition(): Boolean {

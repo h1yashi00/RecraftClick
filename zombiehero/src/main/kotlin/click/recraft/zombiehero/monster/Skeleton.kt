@@ -1,7 +1,6 @@
 package click.recraft.zombiehero.monster
 
-import click.recraft.zombiehero.Util
-import click.recraft.zombiehero.ZombieHero
+import click.recraft.share.extension.runTaskLater
 import click.recraft.zombiehero.monster.api.Monster
 import click.recraft.zombiehero.monster.api.MonsterManager
 import click.recraft.zombiehero.monster.api.MonsterType
@@ -60,10 +59,9 @@ class Skeleton(playerUUID: UUID) : Monster(
         override fun active() {
             val player = Bukkit.getPlayer(monster.playerUUID) ?: return
             player.inventory.setItem(30, ItemStack(Material.ARROW))
-            val task = Util.createTask {
+            runTaskLater(1) {
                 player.inventory.remove(ItemStack(Material.ARROW))
             }
-            Bukkit.getScheduler().runTaskLater(ZombieHero.plugin, task, 1)
         }
     }
     private class Skill2(override val monster: Monster): Skill {
@@ -91,13 +89,12 @@ class Skeleton(playerUUID: UUID) : Monster(
                 it.playSound(it, Sound.ENTITY_SKELETON_AMBIENT, 1F, 0.1F)
             }
             active = true
-            val task = Util.createTask {
+            runTaskLater(20 * 15) {
                 player.inventory.helmet     = monster.head
                 player.inventory.chestplate = monster.chestPlate
                 player.removePotionEffect(PotionEffectType.INVISIBILITY)
                 active = false
             }
-            Bukkit.getScheduler().runTaskLater(ZombieHero.plugin, task, 20 * 15)
             coolDown = coolDownTime
         }
     }

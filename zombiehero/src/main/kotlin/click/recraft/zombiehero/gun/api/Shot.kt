@@ -1,5 +1,6 @@
 package click.recraft.zombiehero.gun.api
 
+import click.recraft.share.extension.runTaskLater
 import click.recraft.zombiehero.UseNms
 import click.recraft.zombiehero.Util
 import click.recraft.zombiehero.ZombieHero
@@ -91,7 +92,7 @@ interface Shot {
                 }
                 else {
                     saveKnockBack[event.hitLivingEntity.uniqueId] = knockBack
-                    val lateTask = Util.createTask {
+                    runTaskLater(1) {
                         val accumulateKnockBack = saveKnockBack[event.hitLivingEntity.uniqueId]!!
                         event.hitLivingEntity.velocity = if (event.hitLivingEntity is Player) {
                             if ((event.hitLivingEntity as Player).gameMode == GameMode.SPECTATOR) {
@@ -106,7 +107,6 @@ interface Shot {
                         }
                         saveKnockBack.remove(event.hitLivingEntity.uniqueId)
                     }
-                    Bukkit.getScheduler().runTaskLater(ZombieHero.plugin, lateTask, 1)
                 }
                 return
             }

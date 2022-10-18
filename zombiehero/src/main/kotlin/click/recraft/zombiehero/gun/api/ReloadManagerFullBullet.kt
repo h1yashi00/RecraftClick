@@ -1,12 +1,12 @@
 package click.recraft.zombiehero.gun.api
 
-import click.recraft.zombiehero.Util
+import click.recraft.share.extension.runTaskTimer
 import click.recraft.zombiehero.ZombieHero
 import org.bukkit.Bukkit
 
 class ReloadManagerFullBullet: ReloadManager() {
     init {
-        val task = Util.createTask {
+        runTaskTimer(10, 1) {
             ZombieHero.plugin.importantTaskId.add(taskId)
             save.iterator().forEach {(uuid, data) ->
                 val player = Bukkit.getPlayer(data.uuid)
@@ -47,6 +47,5 @@ class ReloadManagerFullBullet: ReloadManager() {
                 data.tick += -1
             }
         }
-        Bukkit.getScheduler().runTaskTimer(ZombieHero.plugin, task, 10,1)
     }
 }

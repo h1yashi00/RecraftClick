@@ -1,11 +1,9 @@
 package click.recraft.zombiehero.gun.api
 
-import click.recraft.zombiehero.Util
-import click.recraft.zombiehero.ZombieHero
+import click.recraft.share.extension.runTaskLater
 import click.recraft.zombiehero.item.CustomItemListener
 import click.recraft.zombiehero.item.CustomItemManager
 import click.recraft.zombiehero.item.gun.Gun
-import org.bukkit.Bukkit
 import org.bukkit.event.EventHandler
 import org.bukkit.event.player.PlayerDropItemEvent
 import org.bukkit.event.player.PlayerItemHeldEvent
@@ -49,9 +47,8 @@ open class GunListener(
         }
         item.isQDrop()
         // run task laterをしないと､playerのItemInMainHandのアイテムを検知できなくなるため､動作がおかしくなる｡
-        val task = Util.createTask {
+        runTaskLater(1) {
             item.reload(player)
         }
-        Bukkit.getScheduler().runTaskLater(ZombieHero.plugin, task,1)
     }
 }

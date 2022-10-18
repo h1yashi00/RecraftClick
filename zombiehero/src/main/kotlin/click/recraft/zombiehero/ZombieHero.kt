@@ -3,6 +3,7 @@ package click.recraft.zombiehero
 import click.recraft.share.*
 import click.recraft.share.database.PlayerManager
 import click.recraft.share.extension.TaskGenerator
+import click.recraft.share.extension.runTaskTimer
 import click.recraft.share.protocol.ServerInfo
 import click.recraft.zombiehero.command.GunCommand
 import click.recraft.zombiehero.command.MonsterCommand
@@ -16,7 +17,6 @@ import click.recraft.zombiehero.item.skill.grenade.HitGrenadeListener
 import click.recraft.zombiehero.monster.SkeletonListener
 import click.recraft.zombiehero.monster.ZombieListener
 import click.recraft.zombiehero.player.*
-import org.bukkit.Bukkit
 import redis.clients.jedis.JedisPool
 
 class ZombieHero: KotlinPlugin() {
@@ -50,20 +50,18 @@ class ZombieHero: KotlinPlugin() {
             RedisManager.serverIsReady() ?: throw IllegalStateException("Cannot find $containerID server info !!!!!!!")
         }
         GameMenu.load()
-        val fiveTickTask = Util.createTask {
+        runTaskTimer(10,5) {
             importantTaskId.add(taskId)
             // playerのaction barに対して､playerのHealthを送る
             HealthManager.loopEveryOneTick()
         }
-        val oneTickTask = Util.createTask {
+        runTaskTimer(10, 1) {
             importantTaskId.add(taskId)
             time += 1
             WalkSpeedManager.loopEveryOneTick()
             MapObjectManager.loopEveryOneTick()
             MeleeManager.loopEveryOneTick()
         }
-        Bukkit.getScheduler().runTaskTimer(this, fiveTickTask, 10, 5)
-        Bukkit.getScheduler().runTaskTimer(this, oneTickTask, 10, 1)
         server.pluginManager.registerEvents(PlayerJoin(), this)
         server.pluginManager.registerEvents(PlayerQuit(), this)
         server.pluginManager.registerEvents(PlayerHealthListener(), this)

@@ -1,6 +1,7 @@
 package click.recraft.zombiehero
 
 import click.recraft.share.database.PlayerManager
+import click.recraft.share.extension.runTaskLater
 import click.recraft.zombiehero.monster.api.MonsterManager
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
@@ -26,10 +27,9 @@ class PlayerJoin: Listener {
         player.inventory.clear()
         val playerNum = Bukkit.getOnlinePlayers().size
         player.teleport(ZombieHero.plugin.gameManager.world.randomSpawn())
-        val task = Util.createTask {
+        runTaskLater(1) {
             GameMenu.join(player)
         }
-        Bukkit.getScheduler().runTaskLater(ZombieHero.plugin, task, 1)
         ZombieHero.plugin.gameManager.bar.addPlayer(player)
         val game=  ZombieHero.plugin.gameManager
         if (game.isStart()) {

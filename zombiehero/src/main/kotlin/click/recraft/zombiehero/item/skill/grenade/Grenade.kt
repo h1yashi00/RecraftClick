@@ -1,10 +1,9 @@
 package click.recraft.zombiehero.item.skill.grenade
 
-import click.recraft.zombiehero.Util
+import click.recraft.share.extension.runTaskLater
 import click.recraft.zombiehero.ZombieHero
 import click.recraft.zombiehero.gun.api.Tick
 import click.recraft.zombiehero.item.skill.SkillItem
-import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Location
 import org.bukkit.Material
@@ -48,11 +47,10 @@ abstract class Grenade (
         entity.owner = player.uniqueId
         entity.velocity = dir.multiply(1)
         entity.pickupDelay = pickUpDelay
-        val task = Util.createTask {
+        runTaskLater(explosionDelay.tick) {
             explosion(entity, location)
             entity.remove()
         }
-        Bukkit.getScheduler().runTaskLater(ZombieHero.plugin, task, explosionDelay.tick.toLong())
     }
 
     override fun inInvItemClick(clickType: ClickType, player: Player) {

@@ -1,10 +1,8 @@
 package click.recraft.zombiehero.item.skill
 
-import click.recraft.zombiehero.Util
-import click.recraft.zombiehero.ZombieHero
+import click.recraft.share.extension.runTaskLater
 import click.recraft.zombiehero.player.PlayerData.removePlayerSkillHeadShot
 import click.recraft.zombiehero.player.PlayerData.setPlayerSkillHeadShot
-import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.Sound
@@ -28,10 +26,9 @@ class HeadShot: SkillItem (
         player.world.playSound(player.location, Sound.ENTITY_WITHER_SHOOT, 2f, 2f)
         player.inventory.remove(createItemStack())
         player.setPlayerSkillHeadShot()
-        val task = Util.createTask {
+        runTaskLater(20 * 5) {
             player.removePlayerSkillHeadShot()
         }
-        Bukkit.getScheduler().runTaskLater(ZombieHero.plugin, task, 20 * 5)
     }
 
     override fun leftClick(event: PlayerInteractEvent) {

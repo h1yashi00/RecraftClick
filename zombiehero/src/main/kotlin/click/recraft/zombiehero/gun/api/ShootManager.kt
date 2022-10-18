@@ -1,6 +1,6 @@
 package click.recraft.zombiehero.gun.api
 
-import click.recraft.zombiehero.Util
+import click.recraft.share.extension.runTaskTimer
 import click.recraft.zombiehero.ZombieHero
 import click.recraft.zombiehero.item.gun.Gun
 import org.bukkit.Bukkit
@@ -12,9 +12,9 @@ class ShootManager {
     private val manager: HashMap<UUID, Data> = hashMapOf()
     private data class Data(val playerUUID: UUID, val gun: Gun, var passedTick: Int = 5, val time: Int = ZombieHero.plugin.getTime())
     init {
-        val task = Util.createTask {
-                // 処理をすることろ
-                // GunSatsの影響で球が打てなかった場合に､タスクをなくすうようにする
+        runTaskTimer(0, 1) {
+            // 処理をすることろ
+            // GunSatsの影響で球が打てなかった場合に､タスクをなくすうようにする
             ZombieHero.plugin.importantTaskId.add(taskId)
             manager.iterator().forEach {
                 val data = it.value
@@ -34,7 +34,6 @@ class ShootManager {
                 data.passedTick += -1
             }
         }
-        Bukkit.getScheduler().runTaskTimer(ZombieHero.plugin, task, 0,1)
     }
     fun register(player: Player, gun: Gun) {
         val data = manager[gun.unique]

@@ -1,6 +1,6 @@
 package click.recraft.zombiehero.monster.api
 
-import click.recraft.zombiehero.Util
+import click.recraft.share.extension.runTaskTimer
 import click.recraft.zombiehero.ZombieHero
 import click.recraft.zombiehero.monster.Skeleton
 import click.recraft.zombiehero.monster.Zombie
@@ -13,13 +13,12 @@ import java.util.*
 object MonsterManager {
     private val save: HashMap<UUID, Monster> = hashMapOf()
     init {
-        val task = Util.createTask {
+        runTaskTimer(20 * 5, 20) {
             ZombieHero.plugin.importantTaskId.add(taskId)
             save.values.iterator().forEach { monster ->
                 monster.passOneSec()
             }
         }
-        Bukkit.getScheduler().runTaskTimer(ZombieHero.plugin, task,20 * 5, 20)
     }
     fun remove(player: Player) {
         save.remove(player.uniqueId)
