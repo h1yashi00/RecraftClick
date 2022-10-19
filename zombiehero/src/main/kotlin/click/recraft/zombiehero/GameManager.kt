@@ -174,6 +174,9 @@ class GameManager {
             PlayerManager.get(player).apply {
                 player.inventory.addItem (
                     factory.create(itemMain).createItemStack(),
+                    factory.create(itemSub).createItemStack(),
+                    factory.create(itemMelee).createItemStack(),
+                    factory.create(itemSkill).createItemStack()
                 )
             }
         }
