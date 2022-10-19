@@ -16,10 +16,31 @@ class GunCommand: CommandExecutor {
         args: Array<out String>
     ): Boolean {
         val player = if (sender is Player) sender else return false
-        if (!player.isOp) return false
+        // デバッグの場合はopである必要がない｡
+        if (System.getenv("SERVER_NAME") != "debug") {
+            if (!player.isOp) return false
+        }
+        if (args.size != 1) {
+            player.sendMessage("need args [main,sub,skill,melee]")
+            return false
+        }
+        val type = args[0]
         player.inventory.clear()
         MonsterManager.remove(player)
-        Item.getMain().forEach {
+        val items = when (type) {
+            "main" ->
+                Item.getMain()
+            "sub" ->
+                Item.getSub()
+            "skill" ->
+                Item.getSkill()
+            "melee" ->
+                Item.getMelee()
+            else -> {
+                arrayListOf()
+            }
+        }
+        items.forEach {
             player.inventory.addItem(
                 ZombieHero.plugin.customItemFactory.create(it).createItemStack()
             )
