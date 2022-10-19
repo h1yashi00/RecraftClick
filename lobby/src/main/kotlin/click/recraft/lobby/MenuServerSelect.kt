@@ -28,7 +28,9 @@ object MenuServerSelect: Listener {
         }
         lastChecked = now
         servers = RedisManager.getServers().values.toMutableList()
+        Bukkit.getOnlinePlayers().forEach { if (it.isOp) {it.sendMessage("servers: $servers")} }
         if (servers.size == 0) {
+            Bukkit.broadcastMessage("${ChatColor.GRAY}Creating Server...")
             val msg = ChannelMessage(
                 MessageType.CREATE
             )
