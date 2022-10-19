@@ -15,24 +15,43 @@ object MenuPlayerZombieHeroStats {
         openMenu(menu)
     }
     private val menu = Main.plugin.menu("Shop Menu", true) {
-        slot(0, item= TextureItem.GUN_AK47.getItem(displayName = "${ChatColor.WHITE}銃を買う")) {
+        slot(0, item= TextureItem.MAIN_AK47.getItem(displayName = "${ChatColor.WHITE}メインウェポンを買う")) {
             onClick {
-                player.openInventory(gunMenu.createInv(player))
+                player.openInventory(menuMain.createInv(player))
             }
         }
-        slot(1, item = TextureItem.MELEE_NATA.getItem(displayName = "${ChatColor.WHITE}近接武器を買う")) {
+        slot(1, item = TextureItem.SUB_DESERT_EAGLE.getItem(displayName = "${ChatColor.WHITE}サブウェポンを買う")) {
+            onClick {
+                player.openInventory(menuSub.createInv(player))
+            }
+        }
+        slot(2, item = TextureItem.MELEE_NATA.getItem(displayName = "${ChatColor.WHITE}近接武器を買う")) {
             onClick {
                 player.openInventory(meleeMenu.createInv(player))
             }
         }
-        slot(2, item = TextureItem.SKILL_AMMO_DUMP.getItem(displayName = "${ChatColor.WHITE}Skillを買う")) {
+        slot(3, item = TextureItem.SKILL_AMMO_DUMP.getItem(displayName = "${ChatColor.WHITE}Skillを買う")) {
             onClick {
                 player.openInventory(skillMenu.createInv(player))
             }
         }
     }
-    private val gunMenu = Main.plugin.menu("Shop Guns", true) {
-        TextureItem.getGuns().forEachIndexed { i, textureItem ->
+    private val menuMain = Main.plugin.menu("Shop Main", true) {
+        TextureItem.getMain().forEachIndexed { i, textureItem ->
+            slot(i, item = textureItem.getItem()) {
+                onClick {
+                    openInv(itemMenus[textureItem]!!)
+                }
+                onRender {
+                    val data = PlayerManager.get(player)
+                    val item = textureItem.getItemWithPriceUnlock(data).clone()
+                    setItem(item)
+                }
+            }
+        }
+    }
+    private val menuSub = Main.plugin.menu("Shop Sub", true) {
+        TextureItem.getSub().forEachIndexed { i, textureItem ->
             slot(i, item = textureItem.getItem()) {
                 onClick {
                     openInv(itemMenus[textureItem]!!)

@@ -6,7 +6,7 @@ import click.recraft.zombiehero.gun.api.*
 
 class DesertEagle: Gun(
     name = "DesertEagle",
-    textureItem = TextureItem.GUN_DESERT_EAGLE,
+    textureItem = TextureItem.SUB_DESERT_EAGLE,
     shootManager = ZombieHero.plugin.shootManager,
     reload = Reload (
         7,

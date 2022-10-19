@@ -5,7 +5,7 @@ import click.recraft.zombiehero.ZombieHero
 import click.recraft.zombiehero.gun.api.*
 
 class Glock : Gun(
-    textureItem = TextureItem.GUN_GLOCK,
+    textureItem = TextureItem.SUB_GLOCK,
     shootManager = ZombieHero.plugin.shootManager,
     reload = Reload (
         15,

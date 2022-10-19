@@ -6,7 +6,7 @@ import click.recraft.zombiehero.gun.api.*
 
 class Saiga: Gun(
     name = "Saiga",
-    textureItem = TextureItem.GUN_SAIGA,
+    textureItem = TextureItem.MAIN_SAIGA,
     shootManager = ZombieHero.plugin.shootManager,
     reload = Reload (
         8,

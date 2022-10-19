@@ -6,7 +6,7 @@ import click.recraft.zombiehero.gun.api.*
 
 class M870: Gun(
     name = "M870",
-    textureItem = TextureItem.GUN_M870,
+    textureItem = TextureItem.MAIN_M870,
     shootManager = ZombieHero.plugin.shootManager,
     reload = Reload (
         8,

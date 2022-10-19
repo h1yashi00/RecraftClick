@@ -6,7 +6,7 @@ import click.recraft.zombiehero.gun.api.*
 
 class AK47: Gun(
     name = "AK-47",
-    textureItem = TextureItem.GUN_AK47,
+    textureItem = TextureItem.MAIN_AK47,
     shootManager = ZombieHero.plugin.shootManager,
     reload = Reload (
         30,

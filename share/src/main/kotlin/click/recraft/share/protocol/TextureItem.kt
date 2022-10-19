@@ -8,14 +8,14 @@ import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 
 enum class TextureItem(val material: Material, val customModelData: Int, val itemType: Item) {
-    GUN_AK47(Material.BLACK_DYE, customModelData = 1,   Item.MAIN_AK47),
-    GUN_AWP(Material.BLACK_DYE, customModelData = 3,    Item.MAIN_AWP),
-    GUN_SAIGA(Material.BLACK_DYE, customModelData = 5,  Item.MAIN_SAIGA),
-    GUN_M870(Material.BLACK_DYE, customModelData = 7,   Item.MAIN_M870),
-    GUN_MP5(Material.BLACK_DYE, customModelData = 9,    Item.MAIN_MP5),
-    GUN_MOSIN(Material.BLACK_DYE, customModelData = 11, Item.MAIN_MOSIN),
-    GUN_DESERT_EAGLE(Material.BLACK_DYE, customModelData = 13, Item.SUB_DESERT_EAGLE),
-    GUN_GLOCK(Material.BLACK_DYE, customModelData = 15,     Item.SUB_GLOCK),
+    MAIN_AK47(Material.BLACK_DYE, customModelData = 1,   Item.MAIN_AK47),
+    MAIN_AWP(Material.BLACK_DYE, customModelData = 3,    Item.MAIN_AWP),
+    MAIN_SAIGA(Material.BLACK_DYE, customModelData = 5,  Item.MAIN_SAIGA),
+    MAIN_M870(Material.BLACK_DYE, customModelData = 7,   Item.MAIN_M870),
+    MAIN_MP5(Material.BLACK_DYE, customModelData = 9,    Item.MAIN_MP5),
+    MAIN_MOSIN(Material.BLACK_DYE, customModelData = 11, Item.MAIN_MOSIN),
+    SUB_DESERT_EAGLE(Material.BLACK_DYE, customModelData = 13, Item.SUB_DESERT_EAGLE),
+    SUB_GLOCK(Material.BLACK_DYE, customModelData = 15,     Item.SUB_GLOCK),
     MELEE_NATA(Material.PINK_DYE, customModelData = 1,      Item.MELEE_NATA),
     MELEE_HAMMER(Material.PINK_DYE, customModelData = 2,    Item.MELEE_HAMMER),
     SKILL_AMMO_DUMP(Material.COAL, customModelData= 1,      Item.SKILL_AMMO_DUMP),
@@ -24,9 +24,14 @@ enum class TextureItem(val material: Material, val customModelData: Int, val ite
     SKILL_ZOMBIE_GRENADE_TOUCH(Material.PINK_DYE, customModelData = 2, Item.SKILL_ZOMBIE_GRENADE_TOUCH);
 
     companion object {
-        fun getGuns(): List<TextureItem> {
+        fun getMain(): List<TextureItem> {
             return values().filter {
-                it.name.startsWith("GUN_", ignoreCase = true)
+                it.name.startsWith("MAIN_", ignoreCase = true)
+            }
+        }
+        fun getSub(): List<TextureItem> {
+            return values().filter {
+                it.name.startsWith("SUB_", ignoreCase = true)
             }
         }
         fun getMelee(): List<TextureItem> {

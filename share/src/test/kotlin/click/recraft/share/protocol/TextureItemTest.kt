@@ -5,8 +5,8 @@ import org.junit.jupiter.api.Test
 internal class TextureItemTest {
     @Test
     fun a() {
-        val swords = TextureItem.getGuns()
-        check(swords.isNotEmpty())
+        val gun = TextureItem.getMain()
+        check(gun.isNotEmpty())
     }
     @Test
     fun b() {

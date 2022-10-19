@@ -6,7 +6,7 @@ import click.recraft.zombiehero.gun.api.*
 
 class Awp : Gun (
     "Awp",
-    textureItem = TextureItem.GUN_AWP,
+    textureItem = TextureItem.MAIN_AWP,
     shootManager = ZombieHero.plugin.shootManager,
     reload = Reload (
         7,

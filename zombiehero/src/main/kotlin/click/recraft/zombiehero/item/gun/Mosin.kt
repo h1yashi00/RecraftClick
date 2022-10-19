@@ -5,7 +5,7 @@ import click.recraft.zombiehero.ZombieHero
 import click.recraft.zombiehero.gun.api.*
 
 class Mosin : Gun(
-    textureItem = TextureItem.GUN_MOSIN,
+    textureItem = TextureItem.MAIN_MOSIN,
     shootManager = ZombieHero.plugin.shootManager,
     reload = Reload (
         7,

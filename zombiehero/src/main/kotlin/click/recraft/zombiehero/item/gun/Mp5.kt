@@ -6,7 +6,7 @@ import click.recraft.zombiehero.gun.api.*
 
 class Mp5: Gun(
     name = "Mp5",
-    textureItem = TextureItem.GUN_MP5,
+    textureItem = TextureItem.MAIN_MP5,
     shootManager = ZombieHero.plugin.shootManager,
     reload = Reload (
         30,
