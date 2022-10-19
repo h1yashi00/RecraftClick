@@ -289,6 +289,7 @@ object PlayerManager {
     fun killZombie(player: Player, type: WeaponType) {
         val data = get(player)
         data.monsterKills += 1
+        data.coin += 5
         player.sendMessage("${ChatColor.GOLD}+5 coinを獲得した")
         when (type) {
             WeaponType.MELEE -> data.meleeKills += 1
@@ -303,8 +304,8 @@ object PlayerManager {
     fun killHuman(player: Player) {
         val data = get(player)
         data.humanKills += 1
+        data.coin += 15
         player.sendMessage("${ChatColor.GOLD}+15 coinを獲得した")
-        data.coin += 5
         runTaskAsync {
             transaction {
                 data.update()
