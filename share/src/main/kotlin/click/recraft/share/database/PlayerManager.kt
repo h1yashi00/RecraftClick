@@ -20,7 +20,7 @@ object PlayerManager {
         MELEE,
         GUN
     }
-    data class PlayerData(val dao: DaoPlayer) {
+    data class PlayerData(private val dao: DaoPlayer) {
         var coin: Int               = dao.user.coin
         var name: String            = dao.user.name
         var firstLogin: LocalDateTime = dao.user.firstLogin
@@ -107,6 +107,7 @@ object PlayerManager {
         fun unlockItem(item: Item) {
             unlockedItems.add(item)
         }
+        // daoのクラスのフィールドに値の変更をかけると､updateQueryが流れるので､ここ以外ではdaoを利用しないようにする｡(PlayerDataを作成する際のデータ取得は例外)
         fun update() {
             if (dao.user.coin != coin) {
                 dao.user.coin = coin
