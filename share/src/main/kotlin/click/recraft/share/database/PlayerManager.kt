@@ -1,13 +1,8 @@
 package click.recraft.share.database
 
-import click.recraft.share.database.dao.User
-import click.recraft.share.database.dao.UserItem
-import click.recraft.share.database.dao.UserOption
+import click.recraft.share.database.dao.*
 import click.recraft.share.database.player.Default
-import click.recraft.share.database.table.TableItem
-import click.recraft.share.database.table.TableUser
-import click.recraft.share.database.table.TableUserItem
-import click.recraft.share.database.table.TableUserOption
+import click.recraft.share.database.table.*
 import click.recraft.share.extension.runTaskAsync
 import click.recraft.share.extension.runTaskSync
 import org.bukkit.ChatColor
@@ -17,6 +12,7 @@ import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.time.LocalDateTime
 import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
 object PlayerManager {
@@ -41,6 +37,45 @@ object PlayerManager {
         var itemSub: Item           = Item.getSubById(dao.userOption.itemSub.value)
         var itemMelee: Item         = Item.getMeleeById(dao.userOption.itemMelee.value)
         var itemSkill: Item         = Item.getSkillById(dao.userOption.itemSkill.value)
+        var dailyQuest1Counter  = dao.userDailyQuest.dailyQuestCounter1
+        var dailyQuest2Counter  = dao.userDailyQuest.dailyQuestCounter2
+        var dailyQuest3Counter  = dao.userDailyQuest.dailyQuestCounter3
+        var dailyQuestReceived1       = dao.userDailyQuest.dailyQuestReceived1
+        var dailyQuestReceived2       = dao.userDailyQuest.dailyQuestReceived2
+        var dailyQuestReceived3       = dao.userDailyQuest.dailyQuestReceived3
+        var dailyQuestFinished1 = dao.userDailyQuest.dailyQuestFinished1
+        var dailyQuestFinished2 = dao.userDailyQuest.dailyQuestFinished2
+        var dailyQuestFinished3 = dao.userDailyQuest.dailyQuestFinished3
+        private fun extractDailyQuest(userDailyQuest: UserDailyQuest): ArrayList<Pair<Int, Quest>> {
+            val buf = arrayListOf<Pair<Int, Quest>>()
+            buf.add(Pair(1, Quest.getById(userDailyQuest.dailyQuest1.value)!!))
+            buf.add(Pair(2, Quest.getById(userDailyQuest.dailyQuest2.value)!!))
+            buf.add(Pair(3, Quest.getById(userDailyQuest.dailyQuest3.value)!!))
+            return buf
+        }
+        private val dailyQuests = extractDailyQuest(dao.userDailyQuest)
+        fun changeDailyQuestValue(quest: Quest) {
+            dailyQuests.forEach { pair ->
+                if (pair.second == quest) {
+                    when (pair.first) {
+                        1 -> if (dailyQuestReceived1) dailyQuest1Counter += 1
+                        2 -> if (dailyQuestReceived2) dailyQuest2Counter += 1
+                        3 -> if (dailyQuestReceived3) dailyQuest3Counter += 1
+                    }
+                }
+            }
+        }
+        fun changeDailyQuestFinished(quest: Quest) {
+            dailyQuests.forEach { pair ->
+                if (pair.second == quest) {
+                    when (pair.first) {
+                        1 -> if (dailyQuestReceived1) if (dailyQuest1Counter >= quest.finishNum) {dailyQuestFinished1 = true}
+                        2 -> if (dailyQuestReceived2) if (dailyQuest2Counter >= quest.finishNum) {dailyQuestFinished2 = true}
+                        3 -> if (dailyQuestReceived3) if (dailyQuest3Counter >= quest.finishNum) {dailyQuestFinished3 = true}
+                    }
+                }
+            }
+        }
         private fun extractItem(userItem: UserItem): MutableSet<Item> {
             val buf = mutableSetOf<Item>()
             Item.values().forEach { item ->
@@ -115,6 +150,33 @@ object PlayerManager {
             if (dao.userOption.itemSkill.value != itemSkill.id) {
                 dao.userOption.itemSkill = click.recraft.share.database.dao.Item.findById(itemSkill.id)!!.id
             }
+            if (dao.userDailyQuest.dailyQuestCounter1 != dailyQuest1Counter) {
+                dao.userDailyQuest.dailyQuestCounter1 = dailyQuest1Counter
+            }
+            if (dao.userDailyQuest.dailyQuestCounter2 != dailyQuest2Counter) {
+                dao.userDailyQuest.dailyQuestCounter2 = dailyQuest2Counter
+            }
+            if (dao.userDailyQuest.dailyQuestCounter3 != dailyQuest3Counter) {
+                dao.userDailyQuest.dailyQuestCounter3 = dailyQuest3Counter
+            }
+            if (dao.userDailyQuest.dailyQuestReceived1 != dailyQuestReceived1) {
+                dao.userDailyQuest.dailyQuestReceived1 = dailyQuestReceived1
+            }
+            if (dao.userDailyQuest.dailyQuestReceived2 != dailyQuestReceived2) {
+                dao.userDailyQuest.dailyQuestReceived2 = dailyQuestReceived2
+            }
+            if (dao.userDailyQuest.dailyQuestReceived3 != dailyQuestReceived3) {
+                dao.userDailyQuest.dailyQuestReceived3 = dailyQuestReceived3
+            }
+            if (dao.userDailyQuest.dailyQuestFinished1 != dailyQuestFinished1) {
+                dao.userDailyQuest.dailyQuestFinished1 = dailyQuestFinished1
+            }
+            if (dao.userDailyQuest.dailyQuestFinished2 != dailyQuestFinished2) {
+                dao.userDailyQuest.dailyQuestFinished2 = dailyQuestFinished2
+            }
+            if (dao.userDailyQuest.dailyQuestFinished3 != dailyQuestFinished3) {
+                dao.userDailyQuest.dailyQuestFinished3 = dailyQuestFinished3
+            }
             unlockedItems.forEach { item ->
                 val userItem = dao.userItem
                 when (item) {
@@ -148,13 +210,14 @@ object PlayerManager {
             itemMelee = daoItem.findById(Default.itemMelee.id) ?.id ?: daoItem.new(Default.itemMelee.id) {}.id
             itemSkill = daoItem.findById(Default.itemSkill.id) ?. id ?: daoItem.new(Default.itemSkill.id) {}.id
         }
+        val userDailyQuest = UserDailyQuest.findById(player.uniqueId) ?: UserDailyQuest.new(player.uniqueId) {}
     }
 
     private val playerDatas: HashMap<UUID, PlayerData> = hashMapOf()
     fun initialize(ip: String, database: String) {
         Database.connect("jdbc:mysql://$ip/$database", driver = "com.mysql.jdbc.Driver", user = "root", password = "narikakeisgod")
         transaction {
-            SchemaUtils.create(TableItem)
+            SchemaUtils.create(TableItem, TableDailyQuest)
             val daoItem = click.recraft.share.database.dao.Item
             Item.values().forEach { item ->
                 val dbItem = daoItem.findById(item.id)
@@ -163,7 +226,11 @@ object PlayerManager {
                     name = item.name
                 }
             }
-            SchemaUtils.create(TableUser, TableUserOption, TableUserItem)
+            Quest.values().forEach {
+                DailyQuest.findById(it.id) ?: DailyQuest.new(it.id) {name = it.name}
+            }
+            SchemaUtils.create(TableUser, TableUserOption, TableUserItem, TableUserDailyQuest)
+            SchemaUtils.create(TableUserDailyQuest)
         }
     }
 
@@ -290,6 +357,7 @@ object PlayerManager {
         val data = get(player)
         data.monsterKills += 1
         data.coin += 5
+        data.changeDailyQuestValue(Quest.KILL_ZOMBIE)
         player.sendMessage("${ChatColor.GOLD}+5 coinを獲得した")
         when (type) {
             WeaponType.MELEE -> data.meleeKills += 1
@@ -306,6 +374,20 @@ object PlayerManager {
         data.humanKills += 1
         data.coin += 15
         player.sendMessage("${ChatColor.GOLD}+15 coinを獲得した")
+        data.changeDailyQuestValue(Quest.KILL_HUMAN)
+        runTaskAsync {
+            transaction {
+                data.update()
+            }
+        }
+    }
+    fun receivedQuest(player: Player, quest: Quest) {
+        val data = get(player)
+        when (quest) {
+            Quest.KILL_ZOMBIE -> data.dailyQuestReceived1 = true
+            Quest.KILL_HUMAN -> data.dailyQuestReceived2  = true
+            Quest.PLAY_TIMES -> data.dailyQuestReceived3  = true
+        }
         runTaskAsync {
             transaction {
                 data.update()
@@ -315,6 +397,16 @@ object PlayerManager {
     fun playGame(player: Player) {
         val data = get(player)
         data.timesPlayed += 1
+        data.changeDailyQuestValue(Quest.PLAY_TIMES)
+        runTaskAsync {
+            transaction {
+                data.update()
+            }
+        }
+    }
+    fun dailyQuestFinish(player: Player, quest: Quest) {
+        val data = get(player)
+        data.changeDailyQuestFinished(quest)
         runTaskAsync {
             transaction {
                 data.update()

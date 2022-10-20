@@ -2,6 +2,7 @@ package click.recraft.share
 
 import click.recraft.share.database.Item
 import click.recraft.share.database.PlayerManager
+import click.recraft.share.database.Quest
 import org.junit.jupiter.api.Test
 import org.bukkit.entity.Player
 import org.junit.jupiter.api.AfterEach
@@ -73,6 +74,18 @@ class DatabaseTest {
     @Test
     fun g() {
         PlayerManager.login(player)
-        PlayerManager.changeAutoLoadResourcePack(player)
+        PlayerManager.receivedQuest(player, Quest.PLAY_TIMES)
+    }
+    @Test
+    fun f() {
+        PlayerManager.login(player)
+        (1..10).forEach {
+            PlayerManager.playGame(player)
+        }
+    }
+    @Test
+    fun finished() {
+        PlayerManager.login(player)
+        PlayerManager.dailyQuestFinish(player, Quest.PLAY_TIMES)
     }
 }
