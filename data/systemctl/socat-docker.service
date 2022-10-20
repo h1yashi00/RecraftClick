@@ -1,0 +1,19 @@
+# /etc/systemd/system/socat-docker.service
+# systemctl daemon-reload
+# systemctl enable socat-docker.service
+#
+# 1.のようにファイルを設置し､
+# 2.でsystemctlのデーモンを再起動して､
+# 3. サーバが落ちた時用の自動起動コマンドを実行する｡
+[Unit]
+After=network.target
+
+[Service]
+ExecStart=/bin/socat TCP-LISTEN:2375,reuseaddr,fork UNIX-CONNECT:/var/run/docker.sock
+Restart=always
+Type=simple
+PIDFile=path_to_pidfile
+
+
+[Install]
+WantedBy=default.target
