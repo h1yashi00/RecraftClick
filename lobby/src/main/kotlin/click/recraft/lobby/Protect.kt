@@ -44,6 +44,7 @@ class Protect: Listener {
     }
     @EventHandler
     fun spawn(event: CreatureSpawnEvent) {
+        if (event.entity.type == EntityType.ALLAY) return
         if (event.spawnReason == CreatureSpawnEvent.SpawnReason.NATURAL) {
             event.isCancelled = true
         }

@@ -14,7 +14,8 @@ class Main: KotlinPlugin() {
             PlayerJoin(),
             Protect(),
             MenuServerSelect,
-            PlayerQuit()
+            PlayerQuit(),
+            QuestMasterAllay()
         )
     }
     companion object {

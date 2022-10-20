@@ -20,7 +20,8 @@ fun item(
     displayName: String = "",
     @Nullable lore: List<String> = arrayListOf(),
     customModelData: Int = 0,
-    localizedName: String = ""
+    localizedName: String = "",
+    enchanted: Boolean = false
 ): ItemStack {
     val item = ItemStack(material, amount)
     val meta = item.itemMeta!!
@@ -35,6 +36,10 @@ fun item(
     }
     if (lore.isNotEmpty()) {
         meta.lore = lore
+    }
+    if (enchanted) {
+        meta.addEnchant(Enchantment.ARROW_DAMAGE, 1, false)
+        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS)
     }
     item.itemMeta = meta
     return item

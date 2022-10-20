@@ -46,6 +46,16 @@ object PlayerManager {
         var dailyQuestFinished1 = dao.userDailyQuest.dailyQuestFinished1
         var dailyQuestFinished2 = dao.userDailyQuest.dailyQuestFinished2
         var dailyQuestFinished3 = dao.userDailyQuest.dailyQuestFinished3
+        val dailyQuest1 = Quest.getById(dao.userDailyQuest.dailyQuest1.value)!!
+        val dailyQuest2 = Quest.getById(dao.userDailyQuest.dailyQuest2.value)!!
+        val dailyQuest3 = Quest.getById(dao.userDailyQuest.dailyQuest3.value)!!
+        fun receiveDailyQuest(quest: Quest) {
+            when (quest) {
+                Quest.KILL_ZOMBIE -> dailyQuestReceived1 = true
+                Quest.KILL_HUMAN -> dailyQuestReceived2  = true
+                Quest.PLAY_TIMES -> dailyQuestReceived3  = true
+            }
+        }
         private fun extractDailyQuest(userDailyQuest: UserDailyQuest): ArrayList<Pair<Int, Quest>> {
             val buf = arrayListOf<Pair<Int, Quest>>()
             buf.add(Pair(1, Quest.getById(userDailyQuest.dailyQuest1.value)!!))
@@ -53,6 +63,7 @@ object PlayerManager {
             buf.add(Pair(3, Quest.getById(userDailyQuest.dailyQuest3.value)!!))
             return buf
         }
+
         private val dailyQuests = extractDailyQuest(dao.userDailyQuest)
         fun changeDailyQuestValue(quest: Quest) {
             dailyQuests.forEach { pair ->
@@ -384,11 +395,7 @@ object PlayerManager {
     }
     fun receivedQuest(player: Player, quest: Quest) {
         val data = get(player)
-        when (quest) {
-            Quest.KILL_ZOMBIE -> data.dailyQuestReceived1 = true
-            Quest.KILL_HUMAN -> data.dailyQuestReceived2  = true
-            Quest.PLAY_TIMES -> data.dailyQuestReceived3  = true
-        }
+        data.receiveDailyQuest(quest)
         runTaskAsync {
             transaction {
                 data.update()
