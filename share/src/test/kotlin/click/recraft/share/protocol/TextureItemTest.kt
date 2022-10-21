@@ -1,5 +1,6 @@
 package click.recraft.share.protocol
 
+import click.recraft.share.database.Quest
 import org.junit.jupiter.api.Test
 
 internal class TextureItemTest {
@@ -23,6 +24,12 @@ internal class TextureItemTest {
     @Test
     fun d() {
         TextureItem.values().forEach {
+            println(it.displayName)
+        }
+    }
+    @Test
+    fun aaa() {
+        Quest.values().forEach {
             println(it.displayName)
         }
     }

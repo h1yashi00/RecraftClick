@@ -4,12 +4,14 @@ import click.recraft.share.*
 import click.recraft.share.database.PlayerManager
 import org.bukkit.ChatColor
 import org.bukkit.Material
+import org.bukkit.Sound
 
 object QuestMenu {
     fun load() {}
     val menu = Main.plugin.menu("デイリークエストメニュー", true) {
         slot(0, item(Material.PAPER)) {
             onClick {
+                player.playSound(player, Sound.ENTITY_ALLAY_AMBIENT_WITH_ITEM, 1F, 1F)
                 PlayerManager.get(player).apply {
                     receiveDailyQuest(dailyQuest1)
                 }
@@ -31,6 +33,7 @@ object QuestMenu {
         }
         slot(1, item(Material.PAPER)) {
             onClick {
+                player.playSound(player, Sound.ENTITY_ALLAY_AMBIENT_WITH_ITEM, 1F, 1F)
                 PlayerManager.get(player).apply {
                     receiveDailyQuest(dailyQuest2)
                 }
@@ -52,6 +55,7 @@ object QuestMenu {
         }
         slot(2, item(Material.PAPER)) {
             onClick {
+                player.playSound(player, Sound.ENTITY_ALLAY_AMBIENT_WITH_ITEM, 1F, 1F)
                 PlayerManager.get(player).apply {
                     receiveDailyQuest(dailyQuest3)
                 }
