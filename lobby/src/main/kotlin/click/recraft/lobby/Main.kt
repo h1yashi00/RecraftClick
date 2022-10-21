@@ -15,7 +15,7 @@ class Main: KotlinPlugin() {
             Protect(),
             MenuServerSelect,
             PlayerQuit(),
-            QuestMasterAllay()
+            QuestMenuAllay()
         )
     }
     companion object {
@@ -26,6 +26,7 @@ class Main: KotlinPlugin() {
         this.server.messenger.registerOutgoingPluginChannel(this, "BungeeCord")
         Bukkit.getWorld("world")!!.isAutoSave = false
         plugin = this
+        QuestMenu.load()
         RedisManager.load(JedisPool("redis", 6379))
         MenuServerSelect.load()
         MenuPlayerStats.load()

@@ -55,6 +55,11 @@ object PlayerManager {
                 Quest.KILL_HUMAN -> dailyQuestReceived2  = true
                 Quest.PLAY_TIMES -> dailyQuestReceived3  = true
             }
+            runTaskAsync {
+                transaction {
+                    update()
+                }
+            }
         }
         private fun extractDailyQuest(userDailyQuest: UserDailyQuest): ArrayList<Pair<Int, Quest>> {
             val buf = arrayListOf<Pair<Int, Quest>>()
