@@ -20,4 +20,10 @@ internal class TextureItemTest {
         check(skills.isNotEmpty())
         println(skills)
     }
+    @Test
+    fun d() {
+        TextureItem.values().forEach {
+            println(it.displayName)
+        }
+    }
 }

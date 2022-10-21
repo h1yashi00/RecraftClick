@@ -23,6 +23,12 @@ enum class TextureItem(val material: Material, val customModelData: Int, val ite
     SKILL_ZOMBIE_GRENADE(Material.PINK_DYE, customModelData = 1, Item.SKILL_ZOMBIE_GRENADE),
     SKILL_ZOMBIE_GRENADE_TOUCH(Material.PINK_DYE, customModelData = 2, Item.SKILL_ZOMBIE_GRENADE_TOUCH);
 
+    val displayName = name
+        .lowercase()
+        .split("_")
+        .filterIndexed { index, _ ->  index != 0}
+        .joinToString(separator = "") {it.replaceFirstChar { s -> s.uppercase() }}
+
     companion object {
         fun getMain(): List<TextureItem> {
             return values().filter {
@@ -55,11 +61,11 @@ enum class TextureItem(val material: Material, val customModelData: Int, val ite
         val boolean = data.isItemUnlocked(itemType)
         val lore : ArrayList<String> = arrayListOf()
         val msg = if (boolean) {
-            "${ChatColor.GREEN}${itemType}開放済み"
+            "${ChatColor.GREEN}${displayName}開放済み"
         }
         else {
             lore.add("${ChatColor.GOLD}値段: ${itemType.price}")
-            "${ChatColor.RED}${itemType}まだ開放していません"
+            "${ChatColor.RED}${displayName}まだ開放していません"
         }
         return getItem(displayName = msg, lore = lore)
     }
