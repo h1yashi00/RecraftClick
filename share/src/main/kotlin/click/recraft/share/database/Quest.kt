@@ -11,5 +11,5 @@ enum class Quest(val id: Int, val finishNum: Int, _displayName: String) {
             return values().firstOrNull { it.id == id }
         }
     }
-    val displayName = "${ChatColor.AQUA}デイリークエスト${_displayName}"
+    val displayName = "${ChatColor.WHITE}${ChatColor.BOLD}デイリークエスト ${ChatColor.AQUA}${_displayName}"
 }
