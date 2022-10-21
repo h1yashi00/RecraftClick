@@ -53,12 +53,14 @@ enum class TextureItem(val material: Material, val customModelData: Int, val ite
     }
     fun getItemWithPriceUnlock(data: PlayerManager.PlayerData): ItemStack {
         val boolean = data.isItemUnlocked(itemType)
+        val lore : ArrayList<String> = arrayListOf()
         val msg = if (boolean) {
             "${ChatColor.GREEN}${itemType}開放済み"
         }
         else {
+            lore.add("${ChatColor.GOLD}値段: ${itemType.price}")
             "${ChatColor.RED}${itemType}まだ開放していません"
         }
-        return getItem(displayName = msg, lore = arrayListOf("${ChatColor.GOLD}値段: ${itemType.price}"))
+        return getItem(displayName = msg, lore = lore)
     }
 }
