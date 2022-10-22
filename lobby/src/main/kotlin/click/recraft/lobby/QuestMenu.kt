@@ -11,17 +11,23 @@ object QuestMenu {
     val menu = Main.plugin.menu("デイリークエストメニュー", true) {
         slot(0, item(Material.PAPER)) {
             onClick {
-                player.playSound(player, Sound.ENTITY_ALLAY_AMBIENT_WITH_ITEM, 1F, 1F)
                 PlayerManager.get(player).apply {
+                    if (dailyQuestReceived1) {
+                        if (dailyQuestFinished1) {
+                            changeDailyQuestFinished(dailyQuest1)
+                            return@apply
+                        }
+                    }
                     receiveDailyQuest(dailyQuest1)
                 }
+                player.playSound(player, Sound.ENTITY_ALLAY_AMBIENT_WITH_ITEM, 1F, 1F)
                 closeInv()
             }
             onRender {
                 PlayerManager.get(player).apply {
                     setItem(
                         item(
-                            Material.PAPER,
+                            if (dailyQuestFinished1) {Material.FILLED_MAP} else {Material.PAPER},
                             displayName = dailyQuest1.displayName,
                             enchanted = dailyQuestReceived1,
                             lore = listOf(
