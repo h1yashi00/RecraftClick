@@ -43,7 +43,7 @@ object MenuPlayerZombieHeroStats {
                     openInv(itemMenus[textureItem]!!)
                 }
                 onRender {
-                    val data = PlayerManager.get(player)
+                    val data = PlayerManager.getClonedData(player)
                     val item = textureItem.getItemWithPriceUnlock(data).clone()
                     setItem(item)
                 }
@@ -57,7 +57,7 @@ object MenuPlayerZombieHeroStats {
                     openInv(itemMenus[textureItem]!!)
                 }
                 onRender {
-                    val data = PlayerManager.get(player)
+                    val data = PlayerManager.getClonedData(player)
                     val item = textureItem.getItemWithPriceUnlock(data).clone()
                     setItem(item)
                 }
@@ -71,7 +71,7 @@ object MenuPlayerZombieHeroStats {
                     openInv(itemMenus[textureItem]!!)
                 }
                 onRender {
-                    val entity = PlayerManager.get(player)
+                    val entity = PlayerManager.getClonedData(player)
                     val item = textureItem.getItemWithPriceUnlock(entity).clone()
                     setItem(item)
                 }
@@ -85,7 +85,7 @@ object MenuPlayerZombieHeroStats {
                     openInv(itemMenus[textureItem]!!)
                 }
                 onRender {
-                    val entity = PlayerManager.get(player)
+                    val entity = PlayerManager.getClonedData(player)
                     val item = textureItem.getItemWithPriceUnlock(entity).clone()
                     setItem(item)
                 }
@@ -100,7 +100,7 @@ object MenuPlayerZombieHeroStats {
                 Main.plugin.menu("Shop ${textureItem.itemType}", true) {
                     slot (0, item = textureItem.getItem()) {
                         onRender {
-                            val entity = PlayerManager.get(player)
+                            val entity = PlayerManager.getClonedData(player)
                             val item = textureItem.getItemWithPriceUnlock(entity).clone()
                             setItem(item)
                         }
@@ -108,7 +108,7 @@ object MenuPlayerZombieHeroStats {
 
                     slot (1, item= item(Material.GOLD_INGOT)) {
                         onRender {
-                            val data = PlayerManager.get(player)
+                            val data = PlayerManager.getClonedData(player)
                             setItem(item(Material.GOLD_INGOT, displayName = "${ChatColor.GOLD}所有コイン: ${data.coin}"))
                         }
                     }

@@ -12,7 +12,6 @@ import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.time.LocalDateTime
 import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
 object PlayerManager {
@@ -20,6 +19,68 @@ object PlayerManager {
         MELEE,
         GUN
     }
+    enum class QuestColumn {
+        ONE,
+        TWO,
+        THREE;
+    }
+
+    data class DailyQuest(
+        val quest: Quest,
+        var isFinished: Boolean,
+        var isReceived: Boolean,
+        var counter: Int
+    ) {
+        fun clone(): DailyQuest {
+            return DailyQuest(quest, isFinished, isReceived, counter)
+        }
+    }
+
+    fun getDailyQuests(userDailyQuest: UserDailyQuest): HashMap<QuestColumn, DailyQuest> {
+        val hashMap: HashMap<QuestColumn, DailyQuest> = hashMapOf()
+        hashMap[QuestColumn.ONE] = DailyQuest(
+            Quest.getById(userDailyQuest.dailyQuest1.value)!!,
+            userDailyQuest.dailyQuestFinished1,
+            userDailyQuest.dailyQuestReceived1,
+            userDailyQuest.dailyQuestCounter1
+        )
+        hashMap[QuestColumn.TWO] = DailyQuest(
+            Quest.getById(userDailyQuest.dailyQuest2.value)!!,
+            userDailyQuest.dailyQuestFinished2,
+            userDailyQuest.dailyQuestReceived2,
+            userDailyQuest.dailyQuestCounter2
+        )
+        hashMap[QuestColumn.THREE] = DailyQuest(
+            Quest.getById(userDailyQuest.dailyQuest3.value)!!,
+            userDailyQuest.dailyQuestFinished3,
+            userDailyQuest.dailyQuestReceived3,
+            userDailyQuest.dailyQuestCounter3
+        )
+        return hashMap
+    }
+
+    // プレイヤーのデータを取得するだけのデータ
+    data class ClonedPlayerData(
+        val coin: Int                ,
+        val name: String             ,
+        val firstLogin: LocalDateTime,
+        val lastLogin:  LocalDateTime,
+        val lastLogout: LocalDateTime,
+        val timesPlayed: Int         ,
+        val humanKills: Int          ,
+        val monsterKills: Int        ,
+        val gunKills: Int            ,
+        val meleeKills: Int          ,
+        val online: Boolean          ,
+        val autoLoadResourcePack: Boolean,
+        val itemMain: Item          ,
+        val itemSub: Item           ,
+        val itemMelee: Item         ,
+        val itemSkill: Item         ,
+        val dailyQuests : Map<QuestColumn, DailyQuest>,
+        val unlockedItems: Set<Item>
+    )
+    // データを書き換えて任意のタイミングでupdateすることでデータベースの値を書き換える
     data class PlayerData(private val dao: DaoPlayer) {
         var coin: Int               = dao.user.coin
         var name: String            = dao.user.name
@@ -37,60 +98,36 @@ object PlayerManager {
         var itemSub: Item           = Item.getSubById(dao.userOption.itemSub.value)
         var itemMelee: Item         = Item.getMeleeById(dao.userOption.itemMelee.value)
         var itemSkill: Item         = Item.getSkillById(dao.userOption.itemSkill.value)
-        var dailyQuest1Counter  = dao.userDailyQuest.dailyQuestCounter1
-        var dailyQuest2Counter  = dao.userDailyQuest.dailyQuestCounter2
-        var dailyQuest3Counter  = dao.userDailyQuest.dailyQuestCounter3
-        var dailyQuestReceived1       = dao.userDailyQuest.dailyQuestReceived1
-        var dailyQuestReceived2       = dao.userDailyQuest.dailyQuestReceived2
-        var dailyQuestReceived3       = dao.userDailyQuest.dailyQuestReceived3
-        var dailyQuestFinished1 = dao.userDailyQuest.dailyQuestFinished1
-        var dailyQuestFinished2 = dao.userDailyQuest.dailyQuestFinished2
-        var dailyQuestFinished3 = dao.userDailyQuest.dailyQuestFinished3
-        val dailyQuest1 = Quest.getById(dao.userDailyQuest.dailyQuest1.value)!!
-        val dailyQuest2 = Quest.getById(dao.userDailyQuest.dailyQuest2.value)!!
-        val dailyQuest3 = Quest.getById(dao.userDailyQuest.dailyQuest3.value)!!
-        fun receiveDailyQuest(quest: Quest) {
-            when (quest) {
-                Quest.KILL_ZOMBIE -> dailyQuestReceived1 = true
-                Quest.KILL_HUMAN -> dailyQuestReceived2  = true
-                Quest.PLAY_TIMES -> dailyQuestReceived3  = true
-            }
-            runTaskAsync {
-                transaction {
-                    update()
-                }
-            }
+        val dailyQuests : HashMap<QuestColumn, DailyQuest> = getDailyQuests(dao.userDailyQuest)
+        private fun clonedQuest(): Map<QuestColumn, DailyQuest> {
+            return dailyQuests.map {
+                (it.key
+                to
+                it.value.clone()
+                )
+            }.toMap()
         }
-        private fun extractDailyQuest(userDailyQuest: UserDailyQuest): ArrayList<Pair<Int, Quest>> {
-            val buf = arrayListOf<Pair<Int, Quest>>()
-            buf.add(Pair(1, Quest.getById(userDailyQuest.dailyQuest1.value)!!))
-            buf.add(Pair(2, Quest.getById(userDailyQuest.dailyQuest2.value)!!))
-            buf.add(Pair(3, Quest.getById(userDailyQuest.dailyQuest3.value)!!))
-            return buf
-        }
-
-        private val dailyQuests = extractDailyQuest(dao.userDailyQuest)
-        fun changeDailyQuestValue(quest: Quest) {
-            dailyQuests.forEach { pair ->
-                if (pair.second == quest) {
-                    when (pair.first) {
-                        1 -> if (dailyQuestReceived1) dailyQuest1Counter += 1
-                        2 -> if (dailyQuestReceived2) dailyQuest2Counter += 1
-                        3 -> if (dailyQuestReceived3) dailyQuest3Counter += 1
-                    }
-                }
-            }
-        }
-        fun changeDailyQuestFinished(quest: Quest) {
-            dailyQuests.forEach { pair ->
-                if (pair.second == quest) {
-                    when (pair.first) {
-                        1 -> if (dailyQuestReceived1 and (!dailyQuestFinished1)) if (dailyQuest1Counter >= quest.finishNum) {dailyQuestFinished1 = true; coin += quest.giveCoin}
-                        2 -> if (dailyQuestReceived2 and (!dailyQuestFinished2)) if (dailyQuest2Counter >= quest.finishNum) {dailyQuestFinished2 = true; coin += quest.giveCoin}
-                        3 -> if (dailyQuestReceived3 and (!dailyQuestFinished3)) if (dailyQuest3Counter >= quest.finishNum) {dailyQuestFinished3 = true; coin += quest.giveCoin}
-                    }
-                }
-            }
+        fun clone(): ClonedPlayerData {
+            return ClonedPlayerData(
+                coin,
+                name,
+                firstLogin,
+                lastLogin,
+                lastLogout,
+                timesPlayed,
+                humanKills,
+                monsterKills,
+                gunKills,
+                meleeKills,
+                online,
+                autoLoadResourcePack,
+                itemMain,
+                itemSub,
+                itemMelee,
+                itemSkill,
+                clonedQuest(),
+                unlockedItems.toSet()
+            )
         }
         private fun extractItem(userItem: UserItem): MutableSet<Item> {
             val buf = mutableSetOf<Item>()
@@ -167,33 +204,40 @@ object PlayerManager {
             if (dao.userOption.itemSkill.value != itemSkill.id) {
                 dao.userOption.itemSkill = click.recraft.share.database.dao.Item.findById(itemSkill.id)!!.id
             }
-            if (dao.userDailyQuest.dailyQuestCounter1 != dailyQuest1Counter) {
-                dao.userDailyQuest.dailyQuestCounter1 = dailyQuest1Counter
+
+            val dailyQuest1= dailyQuests[QuestColumn.ONE]!!
+            if (dailyQuest1.isReceived != dao.userDailyQuest.dailyQuestReceived1) {
+                dao.userDailyQuest.dailyQuestReceived1 = dailyQuest1.isReceived
             }
-            if (dao.userDailyQuest.dailyQuestCounter2 != dailyQuest2Counter) {
-                dao.userDailyQuest.dailyQuestCounter2 = dailyQuest2Counter
+            if (dailyQuest1.isFinished != dao.userDailyQuest.dailyQuestFinished1) {
+                dao.userDailyQuest.dailyQuestFinished1 = dailyQuest1.isFinished
             }
-            if (dao.userDailyQuest.dailyQuestCounter3 != dailyQuest3Counter) {
-                dao.userDailyQuest.dailyQuestCounter3 = dailyQuest3Counter
+            if (dailyQuest1.counter != dao.userDailyQuest.dailyQuestCounter1) {
+                dao.userDailyQuest.dailyQuestCounter1 = dailyQuest1.counter
             }
-            if (dao.userDailyQuest.dailyQuestReceived1 != dailyQuestReceived1) {
-                dao.userDailyQuest.dailyQuestReceived1 = dailyQuestReceived1
+
+            val dailyQuest2= dailyQuests[QuestColumn.TWO]!!
+            if (dailyQuest2.isReceived != dao.userDailyQuest.dailyQuestReceived2) {
+                dao.userDailyQuest.dailyQuestReceived2 = dailyQuest2.isReceived
             }
-            if (dao.userDailyQuest.dailyQuestReceived2 != dailyQuestReceived2) {
-                dao.userDailyQuest.dailyQuestReceived2 = dailyQuestReceived2
+            if (dailyQuest2.isFinished != dao.userDailyQuest.dailyQuestFinished2) {
+                dao.userDailyQuest.dailyQuestFinished2 = dailyQuest2.isFinished
             }
-            if (dao.userDailyQuest.dailyQuestReceived3 != dailyQuestReceived3) {
-                dao.userDailyQuest.dailyQuestReceived3 = dailyQuestReceived3
+            if (dailyQuest2.counter != dao.userDailyQuest.dailyQuestCounter2) {
+                dao.userDailyQuest.dailyQuestCounter2 = dailyQuest2.counter
             }
-            if (dao.userDailyQuest.dailyQuestFinished1 != dailyQuestFinished1) {
-                dao.userDailyQuest.dailyQuestFinished1 = dailyQuestFinished1
+
+            val dailyQuest3= dailyQuests[QuestColumn.THREE]!!
+            if (dailyQuest3.isReceived != dao.userDailyQuest.dailyQuestReceived3) {
+                dao.userDailyQuest.dailyQuestReceived3 = dailyQuest3.isReceived
             }
-            if (dao.userDailyQuest.dailyQuestFinished2 != dailyQuestFinished2) {
-                dao.userDailyQuest.dailyQuestFinished2 = dailyQuestFinished2
+            if (dailyQuest3.isFinished != dao.userDailyQuest.dailyQuestFinished3) {
+                dao.userDailyQuest.dailyQuestFinished3 = dailyQuest3.isFinished
             }
-            if (dao.userDailyQuest.dailyQuestFinished3 != dailyQuestFinished3) {
-                dao.userDailyQuest.dailyQuestFinished3 = dailyQuestFinished3
+            if (dailyQuest3.counter != dao.userDailyQuest.dailyQuestCounter3) {
+                dao.userDailyQuest.dailyQuestCounter3 = dailyQuest3.counter
             }
+
             unlockedItems.forEach { item ->
                 val userItem = dao.userItem
                 when (item) {
@@ -244,18 +288,23 @@ object PlayerManager {
                 }
             }
             Quest.values().forEach {
-                DailyQuest.findById(it.id) ?: DailyQuest.new(it.id) {name = it.name}
+                val daoDailyQuest = DailyQuest
+                daoDailyQuest.findById(it.id) ?: daoDailyQuest.new(it.id) {name = it.name}
             }
             SchemaUtils.create(TableUser, TableUserOption, TableUserItem, TableUserDailyQuest)
             SchemaUtils.create(TableUserDailyQuest)
         }
     }
 
-    fun get(player: Player): PlayerData {
+
+    private fun get(player: Player): PlayerData {
         if (!playerDatas.contains(player.uniqueId)) {
             player.kickPlayer("データベースから情報を得られませんでした｡")
         }
         return playerDatas[player.uniqueId]!!
+    }
+    fun getClonedData(player: Player): ClonedPlayerData {
+        return get(player).clone()
     }
 
     fun login(player: Player) {
@@ -370,11 +419,19 @@ object PlayerManager {
         return true
     }
 
+    private fun receivedChangeQuestCount(data: PlayerData, quest: Quest) {
+        data.dailyQuests.forEach {(_, dailyQuest) ->
+            if (dailyQuest.isReceived && dailyQuest.quest == quest) {
+                dailyQuest.counter += 1
+            }
+        }
+    }
+
     fun killZombie(player: Player, type: WeaponType) {
         val data = get(player)
         data.monsterKills += 1
         data.coin += 5
-        data.changeDailyQuestValue(Quest.KILL_ZOMBIE)
+        receivedChangeQuestCount(data, Quest.KILL_ZOMBIE)
         player.sendMessage("${ChatColor.GOLD}+5 coinを獲得した")
         when (type) {
             WeaponType.MELEE -> data.meleeKills += 1
@@ -391,16 +448,7 @@ object PlayerManager {
         data.humanKills += 1
         data.coin += 15
         player.sendMessage("${ChatColor.GOLD}+15 coinを獲得した")
-        data.changeDailyQuestValue(Quest.KILL_HUMAN)
-        runTaskAsync {
-            transaction {
-                data.update()
-            }
-        }
-    }
-    fun receivedQuest(player: Player, quest: Quest) {
-        val data = get(player)
-        data.receiveDailyQuest(quest)
+        receivedChangeQuestCount(data, Quest.KILL_HUMAN)
         runTaskAsync {
             transaction {
                 data.update()
@@ -410,19 +458,33 @@ object PlayerManager {
     fun playGame(player: Player) {
         val data = get(player)
         data.timesPlayed += 1
-        data.changeDailyQuestValue(Quest.PLAY_TIMES)
+        receivedChangeQuestCount(data,Quest.PLAY_TIMES)
         runTaskAsync {
             transaction {
                 data.update()
             }
         }
     }
-    fun dailyQuestFinish(player: Player, quest: Quest) {
+    fun receivedQuest(player: Player, column: QuestColumn) {
         val data = get(player)
-        data.changeDailyQuestFinished(quest)
+        data.dailyQuests[column]!!.isReceived = true
         runTaskAsync {
             transaction {
                 data.update()
+            }
+        }
+    }
+    fun dailyQuestFinish(player: Player, column: QuestColumn) {
+        val data = get(player)
+        val dailyQuest = data.dailyQuests[column]!!
+        if (dailyQuest.counter >= dailyQuest.quest.finishNum) {
+            data.coin += dailyQuest.quest.giveCoin
+            dailyQuest.isFinished = true
+            player.sendMessage("${ChatColor.GREEN}${dailyQuest.quest.displayName}を達成しました! ${ChatColor.GOLD}+${dailyQuest.quest.giveCoin} coin")
+            runTaskAsync {
+                transaction {
+                    data.update()
+                }
             }
         }
     }

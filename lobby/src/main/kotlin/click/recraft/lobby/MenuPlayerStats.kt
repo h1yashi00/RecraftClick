@@ -23,21 +23,23 @@ object MenuPlayerStats {
             onClick {
             }
             onRender {
-                PlayerManager.get(player).apply {
-                    setLore(listOf (
-                        "${ChatColor.WHITE}コイン: $coin",
-                        "${ChatColor.WHITE}プレイした: $timesPlayed",
-                        "${ChatColor.WHITE}モンスターを倒した: $monsterKills",
-                        "${ChatColor.WHITE}銃で倒した: $gunKills",
-                        "${ChatColor.WHITE}近接武器で倒した: $meleeKills",
-                        "${ChatColor.WHITE}感染させた: $humanKills",
-                    ))
+                PlayerManager.getClonedData(player).apply {
+                    setLore(
+                        listOf(
+                            "${ChatColor.WHITE}コイン: $coin",
+                            "${ChatColor.WHITE}プレイした: $timesPlayed",
+                            "${ChatColor.WHITE}モンスターを倒した: $monsterKills",
+                            "${ChatColor.WHITE}銃で倒した: $gunKills",
+                            "${ChatColor.WHITE}近接武器で倒した: $meleeKills",
+                            "${ChatColor.WHITE}感染させた: $humanKills",
+                        )
+                    )
                 }
             }
         }
         slot(0,7, item(Material.PAPER, displayName = "サーバステータス")) {
             onRender {
-                PlayerManager.get(player).apply {
+                PlayerManager.getClonedData(player).apply {
                     setLore(
                         listOf(
                             "${ChatColor.WHITE}現在の名前: $name",
@@ -55,9 +57,9 @@ object MenuPlayerStats {
                 player.closeInventory()
             }
             onRender {
-                PlayerManager.get(player).apply {
-                    selectedColoredGreenDye(autoLoadResourcePack)
-                }
+                selectedColoredGreenDye(
+                    PlayerManager.getClonedData(player).autoLoadResourcePack
+                )
             }
         }
     }

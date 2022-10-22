@@ -57,8 +57,8 @@ enum class TextureItem(val material: Material, val customModelData: Int, val ite
     fun getItem(displayName: String, lore : ArrayList<String> = arrayListOf()): ItemStack {
         return item(material, customModelData = customModelData, displayName = displayName, lore = lore)
     }
-    fun getItemWithPriceUnlock(data: PlayerManager.PlayerData): ItemStack {
-        val boolean = data.isItemUnlocked(itemType)
+    fun getItemWithPriceUnlock(data: PlayerManager.ClonedPlayerData): ItemStack {
+        val boolean = data.unlockedItems.contains(itemType)
         val lore : ArrayList<String> = arrayListOf()
         val msg = if (boolean) {
             "${ChatColor.GREEN}${displayName}開放済み"

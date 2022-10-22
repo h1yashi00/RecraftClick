@@ -5,79 +5,40 @@ import click.recraft.share.database.PlayerManager
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.Sound
+import org.bukkit.inventory.ItemStack
 
 object QuestMenu {
     fun load() {}
+    private fun getQuestMenuItem(dailyQuest: PlayerManager.DailyQuest): ItemStack {
+        val displayName = "${ChatColor.WHITE}${ChatColor.BOLD}デイリークエスト"
+        val quest = dailyQuest.quest
+        val loreEnd = "${ChatColor.GOLD}獲得コイン: ${quest.giveCoin}"
+        return when {
+            dailyQuest.isFinished -> item(Material.MAP,   displayName = displayName, lore = listOf(dailyQuest.quest.displayName, "${ChatColor.GREEN}完了"))
+            dailyQuest.isReceived -> item(Material.PAPER, displayName = displayName, lore = listOf(dailyQuest.quest.displayName, "${ChatColor.WHITE}${dailyQuest.counter} / ${quest.finishNum}", loreEnd), enchanted = true)
+            else ->                     item(Material.PAPER, displayName = displayName, lore = listOf(dailyQuest.quest.displayName, "${ChatColor.WHITE}${dailyQuest.counter} / ${quest.finishNum}", loreEnd))
+        }
+    }
     val menu = Main.plugin.menu("デイリークエストメニュー", true) {
-        slot(0, item(Material.PAPER)) {
-            onClick {
-                PlayerManager.get(player).apply {
-                    if (dailyQuestReceived1) {
-                        if (dailyQuestFinished1) {
-                            changeDailyQuestFinished(dailyQuest1)
-                            return@apply
+        PlayerManager.QuestColumn.values().forEachIndexed { i, questColumn ->
+            slot(i, item(Material.PAPER)) {
+                onClick {
+                    val dailyQuest = PlayerManager.getClonedData(player).dailyQuests[questColumn]!!
+                    if (dailyQuest.isReceived) {
+                        if (!dailyQuest.isFinished) {
+                            PlayerManager.dailyQuestFinish(player, questColumn)
                         }
                     }
-                    receiveDailyQuest(dailyQuest1)
+                    else {
+                        PlayerManager.receivedQuest(player, questColumn)
+                        player.playSound(player, Sound.ENTITY_ALLAY_AMBIENT_WITH_ITEM, 1F, 1F)
+                    }
+                    player.closeInventory()
                 }
-                player.playSound(player, Sound.ENTITY_ALLAY_AMBIENT_WITH_ITEM, 1F, 1F)
-                closeInv()
-            }
-            onRender {
-                PlayerManager.get(player).apply {
-                    setItem(
-                        item(
-                            if (dailyQuestFinished1) {Material.FILLED_MAP} else {Material.PAPER},
-                            displayName = dailyQuest1.displayName,
-                            enchanted = dailyQuestReceived1,
-                            lore = listOf(
-                                "${ChatColor.WHITE}$dailyQuest1Counter / ${dailyQuest1.finishNum}"
-                            )
-                    ))
-                }
-            }
-        }
-        slot(1, item(Material.PAPER)) {
-            onClick {
-                player.playSound(player, Sound.ENTITY_ALLAY_AMBIENT_WITH_ITEM, 1F, 1F)
-                PlayerManager.get(player).apply {
-                    receiveDailyQuest(dailyQuest2)
-                }
-                closeInv()
-            }
-            onRender {
-                PlayerManager.get(player).apply {
-                    setItem(
-                        item(
-                            Material.PAPER,
-                            displayName = dailyQuest2.displayName,
-                            enchanted = dailyQuestReceived2,
-                            lore = listOf(
-                                "${ChatColor.WHITE}$dailyQuest2Counter / ${dailyQuest2.finishNum}"
-                            )
-                        ))
-                }
-            }
-        }
-        slot(2, item(Material.PAPER)) {
-            onClick {
-                player.playSound(player, Sound.ENTITY_ALLAY_AMBIENT_WITH_ITEM, 1F, 1F)
-                PlayerManager.get(player).apply {
-                    receiveDailyQuest(dailyQuest3)
-                }
-                closeInv()
-            }
-            onRender {
-                PlayerManager.get(player).apply {
-                    setItem(
-                        item(
-                            Material.PAPER,
-                            displayName = dailyQuest3.displayName,
-                            enchanted = dailyQuestReceived3,
-                            lore = listOf(
-                                "${ChatColor.WHITE}$dailyQuest3Counter / ${dailyQuest3.finishNum}"
-                            )
-                        ))
+                onRender {
+                    PlayerManager.getClonedData(player).apply {
+                        setItem(getQuestMenuItem(dailyQuests[questColumn]!!))
+                    }
                 }
             }
         }

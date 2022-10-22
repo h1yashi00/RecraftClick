@@ -171,7 +171,7 @@ class GameManager {
             player.inventory.clear()
             player.foodLevel = 20
             val factory = ZombieHero.plugin.customItemFactory
-            PlayerManager.get(player).apply {
+            PlayerManager.getClonedData(player).apply {
                 player.inventory.addItem (
                     factory.create(itemMain).createItemStack(),
                     factory.create(itemSub).createItemStack(),

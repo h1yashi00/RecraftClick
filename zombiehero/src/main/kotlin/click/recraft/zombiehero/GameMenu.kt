@@ -36,7 +36,7 @@ object GameMenu {
                 player.openInventory(mainGunMenu.createInv(player))
             }
             onRender {
-                PlayerManager.get(player).apply {
+                PlayerManager.getClonedData(player).apply {
                     setItem(factory.create(itemMain).createItemStack())
                 }
             }
@@ -46,7 +46,7 @@ object GameMenu {
                 player.openInventory(subGunMenu.createInv(player))
             }
             onRender {
-                PlayerManager.get(player).apply {
+                PlayerManager.getClonedData(player).apply {
                     setItem(factory.create(itemSub).createItemStack())
                 }
             }
@@ -56,7 +56,7 @@ object GameMenu {
                 player.openInventory(meleeMenu.createInv(player))
             }
             onRender {
-                PlayerManager.get(player).apply {
+                PlayerManager.getClonedData(player).apply {
                     setItem(factory.create(itemMelee).createItemStack())
                 }
             }
@@ -66,7 +66,7 @@ object GameMenu {
                 player.openInventory(skillMenu.createInv(player))
             }
             onRender {
-                PlayerManager.get(player).apply {
+                PlayerManager.getClonedData(player).apply {
                     setItem(factory.create(itemSkill).createItemStack())
                 }
             }
@@ -96,7 +96,7 @@ object GameMenu {
                     player.sendMessage("メインウェポン: ${gunType.name}を選択しました")
                 }
                 onRender {
-                    PlayerManager.get(player).apply {
+                    PlayerManager.getClonedData(player).apply {
                         selectedColoredGreenDye(gunType == itemMain)
                     }
                 }
@@ -117,7 +117,7 @@ object GameMenu {
                     player.sendMessage("サブウェポン: ${sub.name}を選択しました")
                 }
                 onRender {
-                    PlayerManager.get(player).apply {
+                    PlayerManager.getClonedData(player).apply {
                         selectedColoredGreenDye(sub == itemSub)
                     }
                 }
@@ -154,7 +154,7 @@ object GameMenu {
                     player.sendMessage("剣: ${meleeType.name}を選択しました")
                 }
                 onRender {
-                    PlayerManager.get(player).apply {
+                    PlayerManager.getClonedData(player).apply {
                         selectedColoredGreenDye(meleeType == itemMelee)
                     }
                 }
@@ -176,7 +176,7 @@ object GameMenu {
                     player.sendMessage("スキル: ${skillType.name}を選択しました")
                 }
                 onRender {
-                    PlayerManager.get(player).apply {
+                    PlayerManager.getClonedData(player).apply {
                         selectedColoredGreenDye(skillType == itemSkill)
                     }
                 }

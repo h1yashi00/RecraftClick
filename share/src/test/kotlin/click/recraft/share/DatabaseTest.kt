@@ -2,9 +2,11 @@ package click.recraft.share
 
 import click.recraft.share.database.Item
 import click.recraft.share.database.PlayerManager
-import click.recraft.share.database.Quest
+import click.recraft.share.database.table.TableUserDailyQuest
 import org.junit.jupiter.api.Test
 import org.bukkit.entity.Player
+import org.jetbrains.exposed.sql.SchemaUtils
+import org.jetbrains.exposed.sql.transactions.transaction
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.mockito.Mockito.mock
@@ -72,11 +74,6 @@ class DatabaseTest {
         PlayerManager.unlock(player, Item.MAIN_AK47)
     }
     @Test
-    fun g() {
-        PlayerManager.login(player)
-        PlayerManager.receivedQuest(player, Quest.PLAY_TIMES)
-    }
-    @Test
     fun f() {
         PlayerManager.login(player)
         (1..10).forEach {
@@ -84,8 +81,42 @@ class DatabaseTest {
         }
     }
     @Test
-    fun finished() {
+    fun g() {
         PlayerManager.login(player)
-        PlayerManager.dailyQuestFinish(player, Quest.PLAY_TIMES)
+        PlayerManager.receivedQuest(player, PlayerManager.QuestColumn.ONE)
+    }
+    // questをreceiveしていなかったとき
+    @Test
+    fun playerDoestNotEnableReceived() {
+        transaction {
+            SchemaUtils.drop(TableUserDailyQuest)
+            SchemaUtils.create(TableUserDailyQuest)
+        }
+        PlayerManager.login(player)
+        val column = PlayerManager.QuestColumn.ONE
+        (0..15).forEach {
+            PlayerManager.killZombie(player, PlayerManager.WeaponType.GUN)
+            PlayerManager.killHuman(player)
+            PlayerManager.playGame(player)
+        }
+        println(PlayerManager.getClonedData(player).dailyQuests[column])
+    }
+    // questをreceiveしたとき
+    @Test
+    fun playerDoesEnableReceived() {
+        transaction {
+            SchemaUtils.drop(TableUserDailyQuest)
+            SchemaUtils.create(TableUserDailyQuest)
+        }
+        PlayerManager.login(player)
+        val column = PlayerManager.QuestColumn.ONE
+        PlayerManager.receivedQuest(player, column)
+        (0..15).forEach {
+            PlayerManager.killZombie(player, PlayerManager.WeaponType.GUN)
+            PlayerManager.killHuman(player)
+            PlayerManager.playGame(player)
+        }
+        PlayerManager.getClonedData(player).dailyQuests[column]
+        println(PlayerManager.getClonedData(player).dailyQuests[column])
     }
 }
