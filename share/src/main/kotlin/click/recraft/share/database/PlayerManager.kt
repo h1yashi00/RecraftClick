@@ -85,9 +85,9 @@ object PlayerManager {
             dailyQuests.forEach { pair ->
                 if (pair.second == quest) {
                     when (pair.first) {
-                        1 -> if (dailyQuestReceived1) if (dailyQuest1Counter >= quest.finishNum) {dailyQuestFinished1 = true}
-                        2 -> if (dailyQuestReceived2) if (dailyQuest2Counter >= quest.finishNum) {dailyQuestFinished2 = true}
-                        3 -> if (dailyQuestReceived3) if (dailyQuest3Counter >= quest.finishNum) {dailyQuestFinished3 = true}
+                        1 -> if (dailyQuestReceived1 and (!dailyQuestFinished1)) if (dailyQuest1Counter >= quest.finishNum) {dailyQuestFinished1 = true; coin += quest.giveCoin}
+                        2 -> if (dailyQuestReceived2 and (!dailyQuestFinished2)) if (dailyQuest2Counter >= quest.finishNum) {dailyQuestFinished2 = true; coin += quest.giveCoin}
+                        3 -> if (dailyQuestReceived3 and (!dailyQuestFinished3)) if (dailyQuest3Counter >= quest.finishNum) {dailyQuestFinished3 = true; coin += quest.giveCoin}
                     }
                 }
             }
