@@ -13,6 +13,7 @@ class QuestMenuAllay: Listener {
     private val allay = world.spawnEntity(world.spawnLocation.apply{chunk.load()}, EntityType.ALLAY).apply {
         if (this is LivingEntity) {
             setAI(false)
+            isInvulnerable = true
         }
         ticksLived  = 999999999
         isSilent = true
