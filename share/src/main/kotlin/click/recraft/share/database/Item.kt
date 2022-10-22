@@ -1,17 +1,17 @@
 package click.recraft.share.database
 
 enum class Item(val id: Int, val price: Int) {
-    MAIN_AK47    (1, 1000),
-    MAIN_AWP     (2, 1000),
-    MAIN_SAIGA   (3, 1000),
-    MAIN_M870    (4, 1000),
-    MAIN_MP5     (5, 1000),
-    MAIN_MOSIN   (6, 1000),
-    SUB_DESERT_EAGLE(7, 1000),
-    SUB_GLOCK   (8,  1000),
-    MELEE_NATA  (9, 10000),
-    MELEE_HAMMER(10, 1000),
-    SKILL_AMMO_DUMP(11, 10000),
+    MAIN_AK47    (1, 0),
+    MAIN_AWP     (2, 10000),
+    MAIN_SAIGA   (3, 10000),
+    MAIN_M870    (4, 5000),
+    MAIN_MP5     (5, 5000),
+    MAIN_MOSIN   (6, 5000),
+    SUB_DESERT_EAGLE(7, 0),
+    SUB_GLOCK   (8,  3000),
+    MELEE_NATA  (9, 0),
+    MELEE_HAMMER(10, 10000),
+    SKILL_AMMO_DUMP(11, 0),
     SKILL_GRENADE(12, 1000),
     SKILL_ZOMBIE_GRENADE(13, 1000),
     SKILL_ZOMBIE_GRENADE_TOUCH(14, 1000);
